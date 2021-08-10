@@ -1,0 +1,15 @@
+[package]
+name = "penguin-engine"
+version = "0.1.0"
+authors = ["Henrik Nilsson <github.com/Henrik-N> <n.henrik.g.nilsson@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+winit = { version = "0.25.0" }  # cross-platform window creation and management
+winapi = { version = "0.3.9"}  # Windows API bindings
+image = { version = "0.23.14" }  # image processing
+ash = { version = "0.32.1" }  # lightweight Vulkan wrapper / API bindings with type safety
+ash-window = { version = "0.7.0" }  # interop library between ash and raw-window-handle (surface creation)
+shaderc = { version = "0.7" }  # shader compilation tools
