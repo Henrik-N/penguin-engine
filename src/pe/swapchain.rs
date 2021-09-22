@@ -174,7 +174,7 @@ mod init {
     fn select_swapchain_extent(surface_capabilities: &vk::SurfaceCapabilitiesKHR) -> vk::Extent2D {
         // Translate the screen coordinates into pixel resolution if they are not the same. (On high DPI-displays for example, sometimes they differ).
 
-        if surface_capabilities.current_extent.width != u32::max_value() {
+        if surface_capabilities.current_extent.width != u32::MAX {
             // value is set to UINT32_MAX if they differ
             return surface_capabilities.current_extent;
         }

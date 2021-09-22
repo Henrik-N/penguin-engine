@@ -169,10 +169,7 @@ impl<'a> PipelineBuilder<'a> {
 
         // RENDER PASS
         let render_pass = Self::create_render_pass(&self.device);
-
-
         let vert_input = vk::PipelineVertexInputStateCreateInfo::builder().build();
-
 
         let graphics_pipeline_create_infos = [vk::GraphicsPipelineCreateInfo::builder()
             .stages(&shader_stages)
