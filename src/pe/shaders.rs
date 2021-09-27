@@ -3,7 +3,6 @@ use std::io::Read;
 use ash::vk;
 use ash::vk::ShaderModuleCreateInfo;
 use crate::pe;
-use ash::version::DeviceV1_0;
 
 const SHADERS_FOLDER_PATH: &'static str = "src/shaders/";
 

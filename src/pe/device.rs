@@ -1,5 +1,4 @@
 // -------------------------- DEVICE --------------------------
-use ash::version::DeviceV1_0;
 use ash::vk;
 
 pub struct QueueFamilyIndices {
@@ -34,10 +33,12 @@ pub struct Device {
     pub present_queue: vk::Queue,
 }
 
+trait AdditinalDeviceFunctions {}
+
 impl Device {
-    pub fn init(pe_instance: &crate::pe::Instance, window: &winit::window::Window) -> Self {
-        init::init_device(&pe_instance.entry, &pe_instance.instance, &window)
-    }
+    // pub fn init(entry: &ash::Entry, instance: &ash::Instance, window: &winit::window::Window) -> Self {
+    //     init::init_device(&entry, &instance, &window)
+    // }
 
     pub fn drop(&self) {
         unsafe {
@@ -57,7 +58,7 @@ impl Device {
                     self.surface_details.surface,
                 )
         }
-        .expect("Couldn't get surface capabilities");
+            .expect("Couldn't get surface capabilities");
 
         let surface_color_formats = unsafe {
             self.surface_details
@@ -67,7 +68,7 @@ impl Device {
                     self.surface_details.surface,
                 )
         }
-        .expect("Couldn't get surface formats.");
+            .expect("Couldn't get surface formats.");
 
         let surface_present_modes = unsafe {
             self.surface_details
@@ -77,7 +78,7 @@ impl Device {
                     self.surface_details.surface,
                 )
         }
-        .expect("Couldn't get surface presenet modes.");
+            .expect("Couldn't get surface presenet modes.");
 
         SwapchainSupportDetails {
             surface_capabilities,
@@ -87,82 +88,41 @@ impl Device {
     }
 }
 
-mod init {
-    use ash::version::{DeviceV1_0, InstanceV1_0};
+pub(crate) mod init {
     use ash::vk;
 
-    pub fn init_device(
-        entry: &ash::Entry,
-        instance: &ash::Instance,
-        window: &winit::window::Window,
-    ) -> super::Device {
-        let surface_details = create_surface(&entry, &instance, &window);
-        let physical_device = select_physical_device(&instance, &surface_details);
-        let queue_family_indices =
-            find_queue_families(&instance, physical_device, &surface_details);
-        let ash_device = create_logical_device(&instance, physical_device, &queue_family_indices);
-        let (graphics_queue, present_queue) =
-            get_device_queue_handles(&ash_device, &queue_family_indices);
+    // pub fn init_device(
+    //     instance: &ash::Instance,
+    // ) -> super::Device {
+    //
+    //     // let ash_device = create_logical_device(&instance, physical_device, &queue_family_indices);
+    //     let (graphics_queue, present_queue) =
+    //         get_device_queue_handles(&ash_device, &queue_family_indices);
+    //
+    //     super::Device {
+    //         physical_device,
+    //         surface_details,
+    //         logical_device: ash_device,
+    //         queue_family_indices,
+    //         graphics_queue,
+    //         present_queue,
+    //     }
+    // }
 
-        super::Device {
-            physical_device,
-            surface_details,
-            logical_device: ash_device,
-            queue_family_indices,
-            graphics_queue,
-            present_queue,
-        }
-    }
 
-    // --------------------- SURFACE -----------------------
-    fn create_surface(
-        entry: &ash::Entry,
-        instance: &ash::Instance,
-        window: &winit::window::Window,
-    ) -> crate::pe::device::SurfaceDetails {
-        // note: Windows specific implementation
-        //use ash::extensions::khr::Surface;
-        use ash::extensions::khr::Win32Surface;
-
-        // let required_extension_names = vec![
-        //     Surface::name().as_ptr(),
-        //     Win32Surface::name().as_ptr(),
-        //     DebugUtils::name().as_ptr(), // todo Add the actual debug stuff
-        // ];
-
-        use std::os::raw::c_void;
-        use std::ptr;
-        use winapi::shared::windef::HWND;
-        use winapi::um::libloaderapi::GetModuleHandleW;
-        use winit::platform::windows::WindowExtWindows;
-
-        let hwnd = window.hwnd() as HWND;
-        let hinstance = unsafe { GetModuleHandleW(ptr::null()) as *const c_void };
-        let win32_create_info = vk::Win32SurfaceCreateInfoKHR {
-            hinstance,
-            hwnd: hwnd as *const c_void,
-            ..Default::default()
-        };
-
-        let win32_surface_loader = Win32Surface::new(entry, instance);
-        let vk_surface =
-            unsafe { win32_surface_loader.create_win32_surface(&win32_create_info, None) }
-                .expect("Failed to create vk::SurfaceKHR");
-
-        let surface_loader = ash::extensions::khr::Surface::new(entry, instance);
-
-        crate::pe::device::SurfaceDetails {
-            surface_loader,
-            surface: vk_surface,
-        }
-    }
+    // #[macro_use] extern crate core;
 
     // --------------------- PHYSICAL DEVICE -----------------------
+    use anyhow::Result;
+    use ash::prelude::VkResult;
+
+    use crate::core::utility::{pbail, ppanic};
 
     pub fn select_physical_device(
         instance: &ash::Instance,
-        surface_details: &crate::pe::device::SurfaceDetails,
-    ) -> vk::PhysicalDevice {
+        surface: ash::vk::SurfaceKHR,
+        surface_fn: &ash::extensions::khr::Surface,
+    ) -> Result<vk::PhysicalDevice> {
         // Find devices with vulkan support
         let physical_devices = unsafe {
             instance
@@ -170,16 +130,13 @@ mod init {
                 .expect("Couldn't find any physical devices with vulkan support.")
         };
 
-        println!(
-            "Found {} physical devices with Vulkan support",
-            physical_devices.len()
-        );
+        log::debug!("Found {} physical devices with Vulkan support", physical_devices.len());
 
         // Select suitable physical device
         let mut suitable_device = None;
 
         for &physical_device in physical_devices.iter() {
-            if is_physical_device_suitable(&instance, physical_device, surface_details) {
+            if is_physical_device_suitable(&instance, physical_device, surface, surface_fn) {
                 if suitable_device.is_none() {
                     suitable_device = Some(physical_device);
                     break;
@@ -188,15 +145,19 @@ mod init {
         }
 
         match suitable_device {
-            None => panic!("Couldn't find a suitable physical device."),
-            Some(physical_device) => physical_device,
+            None => {
+                pbail!("Couldn't find a suitable physical device.");
+            },
+            Some(physical_device) => Ok(physical_device),
         }
     }
 
+    /// Checks if the given physical device supports the required device extensions.
     fn is_physical_device_suitable(
         instance: &ash::Instance,
         physical_device: vk::PhysicalDevice,
-        surface_details: &crate::pe::device::SurfaceDetails,
+        surface: ash::vk::SurfaceKHR,
+        surface_fn: &ash::extensions::khr::Surface,
     ) -> bool {
         let properties = unsafe { instance.get_physical_device_properties(physical_device) };
         //let features = unsafe { instance.get_physical_device_features(physical_device) };
@@ -209,15 +170,14 @@ mod init {
             vk::PhysicalDeviceType::OTHER => "Unknown",
             _ => panic!("Couldn't find physical device type"),
         };
-        println!("Found a physical device: {}", device_type);
-        println!(
-            "Current Vulkan API version: {}.{}.{}.",
-            vk::version_major(properties.api_version),
-            vk::version_minor(properties.api_version),
-            vk::version_patch(properties.api_version)
-        );
+        log::debug!("{}, Vulkan API version ({}, {}, {})",
+            device_type,
+            vk::api_version_major(properties.api_version),
+            vk::api_version_minor(properties.api_version),
+            vk::api_version_patch(properties.api_version)
+            );
 
-        let queue_family_indices = find_queue_families(&instance, physical_device, surface_details);
+        let queue_family_indices = find_queue_families(&instance, physical_device, surface, surface_fn);
 
         let are_required_extensions_supported =
             check_required_extensions_supported(&instance, physical_device);
@@ -225,23 +185,36 @@ mod init {
         queue_family_indices.is_complete() && are_required_extensions_supported
     }
 
+
+    use crate::core::{utility, config};
+    use std::ffi::CString;
+
+    /// Checks if the listed device extensions are supported on the given physical device.
     fn check_required_extensions_supported(
-        _instance: &ash::Instance,
-        _physical_device: vk::PhysicalDevice,
-    ) -> bool {
-        // enumerate available physical device extensions
-        // let available_extensions =
-        //     unsafe { instance.enumerate_device_extension_properties(physical_device) }.unwrap();
-
-        // todo check that required extensions are available
-
-        true
-    }
-
-    fn find_queue_families(
         instance: &ash::Instance,
         physical_device: vk::PhysicalDevice,
-        surface_details: &crate::pe::device::SurfaceDetails,
+    ) -> bool {
+        log::trace!("Checking extensions supported:");
+        let supported_extensions = unsafe { instance.enumerate_device_extension_properties(physical_device) }
+            .expect("Physical device: Couldn't get device extensions");
+
+        let mut supported_extensions_found: Vec<String> = supported_extensions
+            .into_iter()
+            .map(|extension| utility::raw_c_string_to_string(&extension.extension_name) ) // converts each raw string to strings
+            .filter(|extension_name| config::REQUIRED_DEVICE_EXTENSIONS.contains(&extension_name.as_str())) // filters out any extensions that aren't also in the DEVICE_EXTENSIONS array
+            .collect();
+
+
+        supported_extensions_found.iter().for_each(|name| log::debug!("Required extension: {} is supported.", name));
+
+        supported_extensions_found.len() == config::REQUIRED_DEVICE_EXTENSIONS.len()
+    }
+
+    pub(crate) fn find_queue_families(
+        instance: &ash::Instance,
+        physical_device: vk::PhysicalDevice,
+        surface: ash::vk::SurfaceKHR,
+        surface_fn: &ash::extensions::khr::Surface,
     ) -> crate::pe::device::QueueFamilyIndices {
         // Query physical device for which queue families it supports
         let available_queue_families =
@@ -263,15 +236,14 @@ mod init {
 
             // Check if queue family support a present queue
             let is_present_queue_supported = unsafe {
-                surface_details
-                    .surface_loader
+                surface_fn
                     .get_physical_device_surface_support(
                         physical_device,
                         queue_family_index as u32,
-                        surface_details.surface,
+                        surface,
                     )
             }
-            .unwrap();
+                .unwrap();
 
             if queue_family.queue_count > 0 && is_present_queue_supported {
                 queue_family_indices.present_queue = Some(queue_family_index);
@@ -288,8 +260,10 @@ mod init {
         queue_family_indices
     }
 
+    use std::ptr;
+
     // ------------------- LOGICAL DEVICE ---------------------------------
-    fn create_logical_device(
+    pub(crate) fn create_logical_device(
         instance: &ash::Instance,
         physical_device: vk::PhysicalDevice,
         queue_family_indices: &crate::pe::device::QueueFamilyIndices,
@@ -319,6 +293,20 @@ mod init {
 
         let enable_extension_names = [ash::extensions::khr::Swapchain::name().as_ptr()];
 
+
+        use crate::core::{config};
+
+        // validation layers
+        let enabled_validation_layers_raw: Vec<CString> = config::DEBUG.required_validation_layers
+            .iter()
+            .map(|name| CString::new(*name).expect("Couldn't unwrap layer name ptr"))
+            .collect();
+
+        let enabled_validation_layers: Vec<*const std::os::raw::c_char> = enabled_validation_layers_raw
+            .iter()
+            .map(|name| name.as_ptr())
+            .collect();
+
         // Create logical device info
         let create_info = vk::DeviceCreateInfo {
             queue_create_info_count: 1,
@@ -326,6 +314,16 @@ mod init {
             p_enabled_features: &physical_device_features,
             enabled_extension_count: enable_extension_names.len() as u32,
             pp_enabled_extension_names: enable_extension_names.as_ptr(),
+            enabled_layer_count: if config::DEBUG.is_enabled {
+                enabled_validation_layers_raw.len() as u32
+            } else {
+                0 as u32
+            },
+            pp_enabled_layer_names: if config::DEBUG.is_enabled {
+                enabled_validation_layers.as_ptr()
+            } else {
+                ptr::null()
+            },
             ..Default::default()
         };
 
@@ -336,7 +334,7 @@ mod init {
         }
     }
 
-    fn get_device_queue_handles(
+    pub fn get_device_queue_handles(
         logical_device: &ash::Device,
         queue_family_indices: &crate::pe::device::QueueFamilyIndices,
     ) -> (vk::Queue, vk::Queue) {
