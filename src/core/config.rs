@@ -1,3 +1,7 @@
+pub const WIDTH: u32 = 640;
+pub const HEIGHT: u32 = 400;
+
+
 /// The required extensions for the physical device that we will be selecting.
 pub(crate) const REQUIRED_DEVICE_EXTENSIONS: [&'static str; 1] = ["VK_KHR_swapchain"];
 
@@ -22,14 +26,8 @@ pub const DEBUG_MESSAGE_SEVERITY: log::LevelFilter =
 //     log::LevelFilter::Warn;
 //     log::LevelFilter::Info;
     log::LevelFilter::Debug;
-    // log::LevelFilter::Trace;
+//     log::LevelFilter::Trace;
 
-/// The severity of validation layer checks
-pub const VK_VALIDATION_LAYERS_MESSAGE_SEVERITY: ash::vk::DebugUtilsMessageSeverityFlagsEXT =
-// ash::vk::DebugUtilsMessageSeverityFlagsEXT::ERROR;
-// ash::vk::DebugUtilsMessageSeverityFlagsEXT::WARNING;
-    ash::vk::DebugUtilsMessageSeverityFlagsEXT::INFO;
-// ash::vk::DebugUtilsMessageSeverityFlagsEXT::VERBOSE;
 
 // -------------
 pub struct ValidationInfo {

@@ -1,16 +1,17 @@
 // -------------------------- DEVICE --------------------------
 use ash::vk;
+use anyhow::*;
 
-pub struct QueueFamilyIndices {
-    pub graphics_queue: Option<u32>,
-    pub present_queue: Option<u32>,
-}
+// pub struct QueueFamilyIndices {
+//     pub graphics_queue: Option<u32>,
+//     pub present_queue: Option<u32>,
+// }
 
-impl QueueFamilyIndices {
-    pub fn is_complete(&self) -> bool {
-        self.graphics_queue.is_some()
-    }
-}
+// impl QueueFamilyIndices {
+//     pub fn is_complete(&self) -> bool {
+//         self.graphics_queue.is_some()
+//     }
+// }
 
 pub struct SurfaceDetails {
     pub surface_loader: ash::extensions::khr::Surface,
@@ -23,102 +24,113 @@ pub struct SwapchainSupportDetails {
     pub surface_present_modes: Vec<vk::PresentModeKHR>,
 }
 
-/// DEVICE STRUCT
-pub struct Device {
-    pub physical_device: vk::PhysicalDevice,
-    pub surface_details: SurfaceDetails,
-    pub logical_device: ash::Device,
-    pub queue_family_indices: QueueFamilyIndices,
-    pub graphics_queue: vk::Queue,
-    pub present_queue: vk::Queue,
+// /// DEVICE STRUCT
+// pub struct PDevice {
+//     pub gpu: vk::PhysicalDevice,
+//     pub surface_details: SurfaceDetails,
+//     pub device: ash::Device,
+//     pub queue_family_indices: QueueFamilyIndices,
+//     // pub graphics_queue: vk::Queue,
+//     // pub present_queue: vk::Queue,
+// }
+
+pub fn select_physical_device(
+    instance: &ash::Instance,
+    surface: ash::vk::SurfaceKHR,
+    surface_fn: &ash::extensions::khr::Surface) -> Result<vk::PhysicalDevice> {
+    init::select_physical_device(&instance, surface, &surface_fn)
 }
 
-trait AdditinalDeviceFunctions {}
+pub fn find_graphics_queue_family(
+    instance: &ash::Instance,
+    physical_device: vk::PhysicalDevice,
+    surface: ash::vk::SurfaceKHR,
+    surface_fn: &ash::extensions::khr::Surface,
+) -> Option<u32> {
+    init::find_graphics_queue_family(&instance, physical_device, surface, &surface_fn)
+}
 
-impl Device {
-    // pub fn init(entry: &ash::Entry, instance: &ash::Instance, window: &winit::window::Window) -> Self {
-    //     init::init_device(&entry, &instance, &window)
-    // }
+pub fn create_logical_device(
+    instance: &ash::Instance,
+    physical_device: vk::PhysicalDevice,
+    graphics_queue_index: u32,
+) -> ash::Device {
+    init::create_logical_device(&instance, physical_device, graphics_queue_index)
+}
 
-    pub fn drop(&self) {
-        unsafe {
-            self.logical_device.destroy_device(None);
-            self.surface_details
-                .surface_loader
-                .destroy_surface(self.surface_details.surface, None);
-        }
+// pub fn create(entry: &ash::Entry, instance: &ash::Instance, window: &winit::window::Window) -> Result<Self> {
+
+//     init::init_device(&entry, &instance, &window)
+// }
+//
+// pub fn drop(&self) {
+//     // unsafe {
+//     //     self.device.destroy_device(None);
+//     //     self.surface_details
+//     //         .surface_loader
+//     //         .destroy_surface(self.surface_details.surface, None);
+//     // }
+// }
+
+pub fn query_swapchain_support(physical_device: vk::PhysicalDevice, surface: vk::SurfaceKHR, surface_loader: &ash::extensions::khr::Surface) -> SwapchainSupportDetails {
+    let surface_capabilities = unsafe {
+        surface_loader
+            .get_physical_device_surface_capabilities(
+                physical_device,
+                surface,
+            )
     }
+        .expect("Couldn't get surface capabilities");
 
-    pub fn query_swapchain_support(&self) -> SwapchainSupportDetails {
-        let surface_capabilities = unsafe {
-            self.surface_details
-                .surface_loader
-                .get_physical_device_surface_capabilities(
-                    self.physical_device,
-                    self.surface_details.surface,
-                )
-        }
-            .expect("Couldn't get surface capabilities");
+    let surface_color_formats = unsafe {
+        surface_loader
+            .get_physical_device_surface_formats(
+                physical_device,
+                surface,
+            )
+    }
+        .expect("Couldn't get surface formats.");
 
-        let surface_color_formats = unsafe {
-            self.surface_details
-                .surface_loader
-                .get_physical_device_surface_formats(
-                    self.physical_device,
-                    self.surface_details.surface,
-                )
-        }
-            .expect("Couldn't get surface formats.");
+    let surface_present_modes = unsafe {
+        surface_loader
+            .get_physical_device_surface_present_modes(
+                physical_device,
+                surface,
+            )
+    }
+        .expect("Couldn't get surface presenet modes.");
 
-        let surface_present_modes = unsafe {
-            self.surface_details
-                .surface_loader
-                .get_physical_device_surface_present_modes(
-                    self.physical_device,
-                    self.surface_details.surface,
-                )
-        }
-            .expect("Couldn't get surface presenet modes.");
-
-        SwapchainSupportDetails {
-            surface_capabilities,
-            surface_color_formats,
-            surface_present_modes,
-        }
+    SwapchainSupportDetails {
+        surface_capabilities,
+        surface_color_formats,
+        surface_present_modes,
     }
 }
 
-pub(crate) mod init {
+
+pub fn get_graphics_queue_handle(
+    logical_device: &ash::Device,
+    graphics_queue_index: u32,
+) -> vk::Queue {
+    // todo: Ensure safety
+
+    unsafe {
+        logical_device.get_device_queue(graphics_queue_index, 0)
+    }
+}
+
+
+mod init {
     use ash::vk;
 
-    // pub fn init_device(
-    //     instance: &ash::Instance,
-    // ) -> super::Device {
-    //
-    //     // let ash_device = create_logical_device(&instance, physical_device, &queue_family_indices);
-    //     let (graphics_queue, present_queue) =
-    //         get_device_queue_handles(&ash_device, &queue_family_indices);
-    //
-    //     super::Device {
-    //         physical_device,
-    //         surface_details,
-    //         logical_device: ash_device,
-    //         queue_family_indices,
-    //         graphics_queue,
-    //         present_queue,
-    //     }
-    // }
-
-
     // #[macro_use] extern crate core;
-
     // --------------------- PHYSICAL DEVICE -----------------------
     use anyhow::Result;
     use ash::prelude::VkResult;
 
     use crate::core::utility::{pbail, ppanic};
 
-    pub fn select_physical_device(
+    pub(crate) fn select_physical_device(
         instance: &ash::Instance,
         surface: ash::vk::SurfaceKHR,
         surface_fn: &ash::extensions::khr::Surface,
@@ -147,7 +159,7 @@ pub(crate) mod init {
         match suitable_device {
             None => {
                 pbail!("Couldn't find a suitable physical device.");
-            },
+            }
             Some(physical_device) => Ok(physical_device),
         }
     }
@@ -160,7 +172,7 @@ pub(crate) mod init {
         surface_fn: &ash::extensions::khr::Surface,
     ) -> bool {
         let properties = unsafe { instance.get_physical_device_properties(physical_device) };
-        //let features = unsafe { instance.get_physical_device_features(physical_device) };
+        let features = unsafe { instance.get_physical_device_features(physical_device) };
 
         let device_type = match properties.device_type {
             vk::PhysicalDeviceType::CPU => "Cpu",
@@ -177,12 +189,21 @@ pub(crate) mod init {
             vk::api_version_patch(properties.api_version)
             );
 
-        let queue_family_indices = find_queue_families(&instance, physical_device, surface, surface_fn);
+        let graphics_queue_index = find_graphics_queue_family(&instance, physical_device, surface, surface_fn);
 
         let are_required_extensions_supported =
             check_required_extensions_supported(&instance, physical_device);
 
-        queue_family_indices.is_complete() && are_required_extensions_supported
+        let is_swapchain_supported = if are_required_extensions_supported {
+            let swapchain_support = query_swapchain_support(physical_device, surface, surface_fn);
+            !swapchain_support.surface_color_formats.is_empty() && !swapchain_support.surface_present_modes.is_empty()
+        } else {
+            false
+        };
+
+        graphics_queue_index.is_some()
+            && are_required_extensions_supported
+            && is_swapchain_supported
     }
 
 
@@ -200,7 +221,7 @@ pub(crate) mod init {
 
         let mut supported_extensions_found: Vec<String> = supported_extensions
             .into_iter()
-            .map(|extension| utility::raw_c_string_to_string(&extension.extension_name) ) // converts each raw string to strings
+            .map(|extension| utility::raw_c_string_to_string(&extension.extension_name)) // converts each raw string to strings
             .filter(|extension_name| config::REQUIRED_DEVICE_EXTENSIONS.contains(&extension_name.as_str())) // filters out any extensions that aren't also in the DEVICE_EXTENSIONS array
             .collect();
 
@@ -210,81 +231,70 @@ pub(crate) mod init {
         supported_extensions_found.len() == config::REQUIRED_DEVICE_EXTENSIONS.len()
     }
 
-    pub(crate) fn find_queue_families(
+    pub(super) fn find_graphics_queue_family(
         instance: &ash::Instance,
         physical_device: vk::PhysicalDevice,
         surface: ash::vk::SurfaceKHR,
         surface_fn: &ash::extensions::khr::Surface,
-    ) -> crate::pe::device::QueueFamilyIndices {
+    ) -> Option<u32> {
+        log::trace!("Querying physical device for queue family support");
         // Query physical device for which queue families it supports
         let available_queue_families =
             unsafe { instance.get_physical_device_queue_family_properties(physical_device) };
 
-        let mut queue_family_indices = crate::pe::device::QueueFamilyIndices {
-            graphics_queue: None,
-            present_queue: None,
-        };
+        let graphics_queue: Option<u32>;
+        let present_queue: Option<u32>;
 
         let mut queue_family_index = 0;
-        for queue_family in available_queue_families.iter() {
-            // Check if queue family support a graphics queue
-            if queue_family.queue_count > 0
-                && queue_family.queue_flags.contains(vk::QueueFlags::GRAPHICS)
-            {
-                queue_family_indices.graphics_queue = Some(queue_family_index);
+        log::trace!("Trying to find graphics queue family");
+
+        let mut graphics_index: Option<u32> = None;
+        let mut present_index: Option<u32> = None;
+
+        available_queue_families.iter().enumerate().for_each(|(index, queue_family_property)| {
+            if queue_family_property.queue_count > 0
+                && queue_family_property.queue_flags.contains(vk::QueueFlags::GRAPHICS) {
+                graphics_index = Some(index as u32);
             }
 
-            // Check if queue family support a present queue
-            let is_present_queue_supported = unsafe {
+            let is_present_support = unsafe {
                 surface_fn
-                    .get_physical_device_surface_support(
-                        physical_device,
-                        queue_family_index as u32,
-                        surface,
-                    )
+                    .get_physical_device_surface_support(physical_device, index as u32, surface)
+            }.expect("Returned vk false.");
+
+            if queue_family_property.queue_count > 0 && is_present_support {
+                present_index = Some(index as u32);
             }
-                .unwrap();
+        });
 
-            if queue_family.queue_count > 0 && is_present_queue_supported {
-                queue_family_indices.present_queue = Some(queue_family_index);
+        if let Some(gfx) = graphics_index {
+            if let Some(present) = present_index {
+                log::debug!("GRAPHICS INDEX: {}, PRESENT INDEX {}", gfx, present);
+                log::warn!("Currently only using the graphics queue, present queue ignored")
             }
+        };
 
-            // Break loop if all queues are found
-            if queue_family_indices.is_complete() {
-                break;
-            }
-
-            queue_family_index += 1;
-        }
-
-        queue_family_indices
+        graphics_index
     }
 
     use std::ptr;
+    use crate::engine::pe::device::{SurfaceDetails, query_swapchain_support};
 
     // ------------------- LOGICAL DEVICE ---------------------------------
-    pub(crate) fn create_logical_device(
+    pub(super) fn create_logical_device(
         instance: &ash::Instance,
         physical_device: vk::PhysicalDevice,
-        queue_family_indices: &crate::pe::device::QueueFamilyIndices,
+        graphics_queue_index: u32,
     ) -> ash::Device {
-        let mut unique_queue_family_indices = std::collections::HashSet::new();
-        unique_queue_family_indices.insert(queue_family_indices.graphics_queue.unwrap());
-        unique_queue_family_indices.insert(queue_family_indices.present_queue.unwrap());
+        let priorities = [1.0_f32];
 
-        let queue_priorities = [1.0_f32];
-        let mut queue_create_infos = vec![];
+        let graphics_queue_create_info = vk::DeviceQueueCreateInfo {
+            queue_family_index: graphics_queue_index,
+            queue_count: 1,
+            p_queue_priorities: priorities.as_ptr(),
+            ..Default::default()
+        };
 
-        // Fill out info for device queue family
-        for queue_family_index in unique_queue_family_indices {
-            let queue_create_info = vk::DeviceQueueCreateInfo {
-                queue_family_index,
-                queue_count: queue_priorities.len() as u32,
-                p_queue_priorities: queue_priorities.as_ptr(),
-                ..Default::default()
-            };
-            queue_create_infos.push(queue_create_info);
-        }
 
         // Specify device features to use
         let physical_device_features = vk::PhysicalDeviceFeatures {
@@ -310,7 +320,7 @@ pub(crate) mod init {
         // Create logical device info
         let create_info = vk::DeviceCreateInfo {
             queue_create_info_count: 1,
-            p_queue_create_infos: queue_create_infos.as_ptr(),
+            p_queue_create_infos: &graphics_queue_create_info,
             p_enabled_features: &physical_device_features,
             enabled_extension_count: enable_extension_names.len() as u32,
             pp_enabled_extension_names: enable_extension_names.as_ptr(),
@@ -334,20 +344,21 @@ pub(crate) mod init {
         }
     }
 
-    pub fn get_device_queue_handles(
-        logical_device: &ash::Device,
-        queue_family_indices: &crate::pe::device::QueueFamilyIndices,
-    ) -> (vk::Queue, vk::Queue) {
-        // todo: Ensure safety
 
-        let graphics_queue = unsafe {
-            logical_device.get_device_queue(queue_family_indices.graphics_queue.unwrap(), 0)
-        };
-
-        let present_queue = unsafe {
-            logical_device.get_device_queue(queue_family_indices.present_queue.unwrap(), 0)
-        };
-
-        (graphics_queue, present_queue)
-    }
+    // pub fn get_device_queue_handles(
+    //     logical_device: &ash::Device,
+    //     graphics_queue_index: u32
+    // ) -> (vk::Queue, vk::Queue) {
+    //     // todo: Ensure safety
+    //
+    //     let graphics_queue = unsafe {
+    //         logical_device.get_device_queue(queue_family_indices.graphics_queue.unwrap(), 0)
+    //     };
+    //
+    //     // let present_queue = unsafe {
+    //     //     logical_device.get_device_queue(queue_family_indices.present_queue.unwrap(), 0)
+    //     // };
+    //
+    //     (graphics_queue, present_queue)
+    // }
 }

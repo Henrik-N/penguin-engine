@@ -2,7 +2,7 @@ use shaderc::{OptimizationLevel, CompilationArtifact};
 use std::io::Read;
 use ash::vk;
 use ash::vk::ShaderModuleCreateInfo;
-use crate::pe;
+use crate::engine::pe;
 
 const SHADERS_FOLDER_PATH: &'static str = "src/shaders/";
 
@@ -16,86 +16,91 @@ pub struct Shader {
     pub shader_module: vk::ShaderModule,
 }
 
-impl Shader {
-    pub fn drop(&self, device: &pe::Device) {
-        unsafe {
-           device.logical_device.destroy_shader_module(self.shader_module, None);
-        }
-    }
+// impl Shader {
+//     pub fn drop(&self, device: &pe::Device) {
+//         unsafe {
+//            device.logical_device.destroy_shader_module(self.shader_module, None);
+//         }
+//     }
+//
+//     #[no_mangle]
+//     pub extern "C" fn get_entry_name() -> *const std::os::raw::c_char {
+//         ENTRY_NAME.as_ptr() as *const std::os::raw::c_char
+//     }
+//
+//     pub fn create_and_compile(device: &pe::Device, file_name: &str) -> Shader {
+//         let mut compiler = shaderc::Compiler::new().unwrap();
+//         let mut options = shaderc::CompileOptions::new().unwrap();
+//         options.set_optimization_level(OptimizationLevel::Zero); // OptimizationLevel::Performance
+//         options.set_generate_debug_info();
+//
+//         let file_path = String::from(SHADERS_FOLDER_PATH.clone().to_string() + file_name);
+//
+//         // read file content into source variable
+//         let mut source = String::new();
+//         match std::fs::File::open(&file_path) {
+//             Ok(mut file) => {
+//                 file.read_to_string(&mut source)
+//                     .expect("Shader file content couldn't be read.");
+//             },
+//             Err(error) => println!("Error opening file {}: {}", file_name, error),
+//         };
+//
+//         let shader_kind = Self::shader_kind_from_file_name(&file_name);
+//
+//         let binary_result = compiler
+//             .compile_into_spirv(
+//                 source.as_str(),
+//                 shader_kind,
+//                 file_path.as_str(),
+//                 "main",
+//                 Some(&options),
+//             )
+//             .expect("Couldn't compile shader source code.");
+//
+//         assert_eq!(Some(&0x07230203), binary_result.as_binary().first());
+//
+//
+//         let shader_module = Self::create_shader_module(&binary_result, &device);
+//
+//
+//         Shader {
+//             binary_code: binary_result,
+//             shader_stage: match shader_kind {
+//                 shaderc::ShaderKind::Vertex => vk::ShaderStageFlags::VERTEX,
+//                 shaderc::ShaderKind::Fragment => vk::ShaderStageFlags::FRAGMENT,
+//                 shaderc::ShaderKind::Compute => vk::ShaderStageFlags::COMPUTE,
+//                 _ => panic!("Shader type not implemented"),
+//             },
+//             shader_module
+//         }
+//     }
+//
+//     fn create_shader_module(binary_code: &CompilationArtifact, device: &pe::Device) -> vk::ShaderModule {
+//         let create_info = vk::ShaderModuleCreateInfo::builder()
+//             .code(&binary_code.as_binary());
+//
+//         unsafe {
+//             device.logical_device.create_shader_module(&create_info, None)
+//         }.expect("Couldn't create ShaderModule")
+//     }
+//
+//     fn shader_kind_from_file_name(file_name: &str) -> shaderc::ShaderKind {
+//         let file_path = String::from(SHADERS_FOLDER_PATH.clone().to_string() + file_name);
+//         let file_extension = std::path::Path::new(&file_path).extension().and_then(std::ffi::OsStr::to_str).expect("Shader: Couldn't receive file extension.");
+//         match file_extension {
+//             "vert" => shaderc::ShaderKind::Vertex,
+//             "frag" => shaderc::ShaderKind::Fragment,
+//             "comp" => shaderc::ShaderKind::Compute,
+//             _ => panic!("Undefined shader file extension.")
+//         }
+//     }
+// }
+//
 
-    #[no_mangle]
-    pub extern "C" fn get_entry_name() -> *const std::os::raw::c_char {
-        ENTRY_NAME.as_ptr() as *const std::os::raw::c_char
-    }
-
-    pub fn create_and_compile(device: &pe::Device, file_name: &str) -> Shader {
-        let mut compiler = shaderc::Compiler::new().unwrap();
-        let mut options = shaderc::CompileOptions::new().unwrap();
-        options.set_optimization_level(OptimizationLevel::Zero); // OptimizationLevel::Performance
-        options.set_generate_debug_info();
-
-        let file_path = String::from(SHADERS_FOLDER_PATH.clone().to_string() + file_name);
-
-        // read file content into source variable
-        let mut source = String::new();
-        match std::fs::File::open(&file_path) {
-            Ok(mut file) => {
-                file.read_to_string(&mut source)
-                    .expect("Shader file content couldn't be read.");
-            },
-            Err(error) => println!("Error opening file {}: {}", file_name, error),
-        };
-
-        let shader_kind = Self::shader_kind_from_file_name(&file_name);
-
-        let binary_result = compiler
-            .compile_into_spirv(
-                source.as_str(),
-                shader_kind,
-                file_path.as_str(),
-                "main",
-                Some(&options),
-            )
-            .expect("Couldn't compile shader source code.");
-
-        assert_eq!(Some(&0x07230203), binary_result.as_binary().first());
 
 
-        let shader_module = Self::create_shader_module(&binary_result, &device);
 
-
-        Shader {
-            binary_code: binary_result,
-            shader_stage: match shader_kind {
-                shaderc::ShaderKind::Vertex => vk::ShaderStageFlags::VERTEX,
-                shaderc::ShaderKind::Fragment => vk::ShaderStageFlags::FRAGMENT,
-                shaderc::ShaderKind::Compute => vk::ShaderStageFlags::COMPUTE,
-                _ => panic!("Shader type not implemented"),
-            },
-            shader_module
-        }
-    }
-
-    fn create_shader_module(binary_code: &CompilationArtifact, device: &pe::Device) -> vk::ShaderModule {
-        let create_info = vk::ShaderModuleCreateInfo::builder()
-            .code(&binary_code.as_binary());
-
-        unsafe {
-            device.logical_device.create_shader_module(&create_info, None)
-        }.expect("Couldn't create ShaderModule")
-    }
-
-    fn shader_kind_from_file_name(file_name: &str) -> shaderc::ShaderKind {
-        let file_path = String::from(SHADERS_FOLDER_PATH.clone().to_string() + file_name);
-        let file_extension = std::path::Path::new(&file_path).extension().and_then(std::ffi::OsStr::to_str).expect("Shader: Couldn't receive file extension.");
-        match file_extension {
-            "vert" => shaderc::ShaderKind::Vertex,
-            "frag" => shaderc::ShaderKind::Fragment,
-            "comp" => shaderc::ShaderKind::Compute,
-            _ => panic!("Undefined shader file extension.")
-        }
-    }
-}
 
 
 // pub struct Shaders {
