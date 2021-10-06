@@ -30,5 +30,9 @@ winit = { version = "0.22.2" }  # cross-platform window creation and management
 shaderc = { version = "0.7" }  # shader compilation tools
 
 
+### ------------------------------- Math ------------------------------- ###
+glam = "0.19.0"
+
+
 
 #image = { version = "0.23.14" }  # image processing

@@ -1,3 +1,6 @@
+use std::collections::HashMap;
+use std::ffi::{CStr, CString};
+use std::io::Read;
 use crate::engine::pe;
 use ash::vk;
 
@@ -6,11 +9,210 @@ use crate::engine::pe::shaders::Shader;
 
 pub struct Pipeline {
     graphics_pipeline: vk::Pipeline,
-    vertex_shader: Shader,
-    fragment_shader: Shader,
-    pipeline_layout: vk::PipelineLayout,
-    render_pass: vk::RenderPass,
+    // vertex_shader: Shader,
+    // fragment_shader: Shader,
+    // pipeline_layout: vk::PipelineLayout,
+    // render_pass: vk::RenderPass,
 }
+
+use std::path::Path;
+use ash::vk::ShaderModuleCreateFlags;
+
+pub fn create_graphics_pipeline(device: &ash::Device, swapchain_extent: vk::Extent2D, render_pass: vk::RenderPass) -> (vk::Pipeline, vk::PipelineLayout) {
+    let vert_shader = Shader::create_and_compile(device, "simple.vert");
+    let frag_shader = Shader::create_and_compile(device, "simple.frag");
+
+    let shader_stages = [
+        vk::PipelineShaderStageCreateInfo {
+            module: vert_shader.shader_module,
+            p_name: vert_shader.entry_function_name,
+            stage: vert_shader.shader_stage,
+            ..Default::default()
+        },
+        vk::PipelineShaderStageCreateInfo {
+            module: frag_shader.shader_module,
+            p_name: frag_shader.entry_function_name,
+            stage: frag_shader.shader_stage,
+            ..Default::default()
+        }
+    ];
+
+    let vertex_input_state_create_info = vk::PipelineVertexInputStateCreateInfo::builder()
+        // .vertex_attribute_descriptions()
+        // .vertex_binding_descriptions()
+        ;
+
+    let input_assembly_state_create_info = vk::PipelineInputAssemblyStateCreateInfo::builder()
+        .primitive_restart_enable(false)
+        .topology(vk::PrimitiveTopology::TRIANGLE_LIST);
+
+
+    let viewports = [vk::Viewport::builder()
+        .x(0.0)
+        .y(0.0)
+        .width(swapchain_extent.width as f32)
+        .height(swapchain_extent.height as f32)
+        .min_depth(0.0)
+        .max_depth(1.0)
+        .build()
+    ];
+
+    let scissors = [vk::Rect2D::builder()
+        .offset(vk::Offset2D { x: 0, y: 0 })
+        .extent(swapchain_extent)
+        .build()
+    ];
+
+    let viewport_state_create_info = vk::PipelineViewportStateCreateInfo::builder()
+        .viewports(&viewports)
+        .scissors(&scissors);
+
+
+    let rasterization_state_create_info = vk::PipelineRasterizationStateCreateInfo::builder()
+        .depth_clamp_enable(false)
+        //
+        .depth_bias_enable(false)
+        .depth_bias_clamp(0.0_f32)
+        .depth_bias_constant_factor(0.0_f32)
+        .depth_bias_slope_factor(0.0_f32)
+        //
+        .cull_mode(vk::CullModeFlags::BACK)
+        .front_face(vk::FrontFace::CLOCKWISE)
+        .line_width(1.0_f32)
+        //
+        .polygon_mode(vk::PolygonMode::FILL)
+        .rasterizer_discard_enable(false);
+
+
+    let multisample_state_create_info = vk::PipelineMultisampleStateCreateInfo::builder()
+        .sample_shading_enable(false)
+        .rasterization_samples(vk::SampleCountFlags::TYPE_1)
+        .min_sample_shading(0.0_f32)
+        // .sample_mask()
+        .alpha_to_one_enable(false)
+        .alpha_to_coverage_enable(false);
+
+    let stencil_state = vk::StencilOpState::builder()
+        .fail_op(vk::StencilOp::KEEP)
+        .pass_op(vk::StencilOp::KEEP)
+        .depth_fail_op(vk::StencilOp::KEEP)
+        .compare_op(vk::CompareOp::ALWAYS)
+        .compare_mask(0_u32)
+        .write_mask(0_u32)
+        .reference(0_u32)
+        .build();
+
+    let depth_state_create_info = vk::PipelineDepthStencilStateCreateInfo::builder()
+        .depth_test_enable(false)
+        .depth_write_enable(false)
+        .depth_compare_op(vk::CompareOp::LESS_OR_EQUAL)
+        .depth_bounds_test_enable(false)
+        //
+        .stencil_test_enable(false)
+        .front(stencil_state.clone())
+        .back(stencil_state)
+        .max_depth_bounds(1.0_f32)
+        .min_depth_bounds(1.0_f32);
+
+    let color_blend_attachment_states = [vk::PipelineColorBlendAttachmentState::builder()
+        .blend_enable(false)
+        .color_write_mask(vk::ColorComponentFlags::all()) // RGBA
+        // RGB
+        .src_color_blend_factor(vk::BlendFactor::ONE)
+        .dst_color_blend_factor(vk::BlendFactor::ZERO)
+        .color_blend_op(vk::BlendOp::ADD)
+        // A
+        .src_alpha_blend_factor(vk::BlendFactor::ONE)
+        .dst_alpha_blend_factor(vk::BlendFactor::ZERO)
+        .alpha_blend_op(vk::BlendOp::ADD)
+        //
+        .build()
+    ];
+
+    let color_blend_state = vk::PipelineColorBlendStateCreateInfo::builder()
+        .logic_op_enable(false)
+        .logic_op(vk::LogicOp::COPY)
+        .attachments(&color_blend_attachment_states)
+        .blend_constants([0.0, 0.0, 0.0, 0.0]);
+
+    // todo: Dynamic state?
+
+
+    let pipeline_layout_create_info = vk::PipelineLayoutCreateInfo::builder()
+        // .set_layouts()
+        // .push_constant_ranges()
+        ;
+
+    let pipeline_layout = unsafe {
+        device.create_pipeline_layout(&pipeline_layout_create_info, None)
+    }
+        .expect("Couldn't create pipeline layout");
+
+
+    let graphics_pipeline_create_infos = [vk::GraphicsPipelineCreateInfo::builder()
+        .stages(&shader_stages)
+        .vertex_input_state(&vertex_input_state_create_info)
+        .input_assembly_state(&input_assembly_state_create_info)
+        // .tessellation_state()
+        .viewport_state(&viewport_state_create_info)
+        .rasterization_state(&rasterization_state_create_info)
+        .multisample_state(&multisample_state_create_info)
+        .depth_stencil_state(&depth_state_create_info)
+        .color_blend_state(&color_blend_state)
+        // .dynamic_state()
+        .layout(pipeline_layout)
+        //
+        .render_pass(render_pass)
+        .subpass(0)
+        // .base_pipeline_handle()
+        .base_pipeline_index(-1)
+        //
+        .build()];
+
+
+    let graphics_pipelines = unsafe {
+        device.create_graphics_pipelines(vk::PipelineCache::null(), &graphics_pipeline_create_infos, None)
+    }.expect("Couldn't create graphics pipeline");
+
+
+    // unsafe {
+    //     device.destroy_shader_module(vert_shader_mod, None);
+    //     device.destroy_shader_module(frag_shader_mod, None);
+    // }
+
+    (graphics_pipelines[0], pipeline_layout)
+}
+
+
+fn create_shader_module_from_source(device: &ash::Device, shader_source_path: &Path) -> vk::ShaderModule {
+    /*
+    Create bytecode
+     */
+    use std::fs::File;
+    use std::io::Read;
+
+    let spv_file = File::open(shader_source_path)
+        .expect(&format!("Couldn't find shader at path: {:?}", shader_source_path));
+
+    let byte_code: Vec<u8> = spv_file.bytes()
+        .filter_map(|byte| byte.ok())
+        .collect();
+
+    /*
+    Create shader mod
+     */
+    let shader_mod_create_info = vk::ShaderModuleCreateInfo {
+        flags: ShaderModuleCreateFlags::empty(),
+        code_size: byte_code.len(),
+        p_code: byte_code.as_ptr() as *const u32,
+        ..Default::default()
+    };
+
+
+    unsafe { device.create_shader_module(&shader_mod_create_info, None) }
+        .expect("Failed to create shader module")
+}
+
 
 //
 // impl Pipeline {
@@ -261,29 +463,6 @@ pub struct Pipeline {
 //         }
 //     }
 // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // #[derive(Debug)]

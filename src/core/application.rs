@@ -4,7 +4,7 @@ use winit::event_loop::{ControlFlow, EventLoop};
 use winit::event::{Event, WindowEvent, KeyboardInput, VirtualKeyCode, ElementState};
 
 use anyhow::Result;
-use crate::engine::PenguinEngine;
+use crate::engine::{Renderer};
 use super::config;
 
 use crate::core::{logger, events};
@@ -28,8 +28,6 @@ impl Application {
         let ptime = PTime::create_system();
         log::trace!("Time system created");
 
-
-
         Self {
             ptime,
             window,
@@ -49,12 +47,13 @@ impl Application {
     }
 
     pub(crate) fn run(mut self, event_loop: EventLoop<()>) -> Result<()> {
-        let mut game_instance = PenguinEngine::create(&self.window)?;
-
+        let mut renderer = Renderer::create(&self.window).expect("Couldn't create game!");
 
 
         event_loop.run(move |event, _, control_flow| {
+            // game_instance.render(1_f32);
             *control_flow = ControlFlow::Poll;
+
 
             match event {
                 // Window events ------------
@@ -82,15 +81,19 @@ impl Application {
                 | Event::MainEventsCleared => {
                     self.ptime.tick();
 
-                    game_instance.update(self.ptime.resource().delta());
+                    // game_instance.update(self.ptime.resource().delta());
 
-                    self.window.request_redraw();
+                    renderer.draw(self.ptime.resource().delta());
+
+                    // self.window.request_redraw();
                 },
                 | Event::RedrawRequested(_window_id) => {
-                    game_instance.render(self.ptime.resource().delta());
+                    // game_instance.render_frame(self.ptime.resource().delta());
                 },
                 | Event::LoopDestroyed => {
-                    game_instance.shutdown();
+
+                    renderer.shutdown();
+
                 },
                 _ => (),
             }

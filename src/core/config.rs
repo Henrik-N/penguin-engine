@@ -26,7 +26,7 @@ pub const DEBUG_MESSAGE_SEVERITY: log::LevelFilter =
 //     log::LevelFilter::Warn;
 //     log::LevelFilter::Info;
     log::LevelFilter::Debug;
-//     log::LevelFilter::Trace;
+    // log::LevelFilter::Trace;
 
 
 // -------------

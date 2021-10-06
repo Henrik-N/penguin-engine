@@ -248,33 +248,25 @@ mod init {
         let mut queue_family_index = 0;
         log::trace!("Trying to find graphics queue family");
 
-        let mut graphics_index: Option<u32> = None;
-        let mut present_index: Option<u32> = None;
+        let queue_family_index = available_queue_families.iter().enumerate().find_map(|(index, queue_family_property)| {
+            let graphics_support = queue_family_property.queue_flags.contains(vk::QueueFlags::GRAPHICS);
 
-        available_queue_families.iter().enumerate().for_each(|(index, queue_family_property)| {
-            if queue_family_property.queue_count > 0
-                && queue_family_property.queue_flags.contains(vk::QueueFlags::GRAPHICS) {
-                graphics_index = Some(index as u32);
+            if !graphics_support {
+                return None;
             }
 
-            let is_present_support = unsafe {
+            let present_support = unsafe {
                 surface_fn
                     .get_physical_device_surface_support(physical_device, index as u32, surface)
             }.expect("Returned vk false.");
 
-            if queue_family_property.queue_count > 0 && is_present_support {
-                present_index = Some(index as u32);
+            if present_support {
+                return Some(index as u32);
             }
+            None
         });
 
-        if let Some(gfx) = graphics_index {
-            if let Some(present) = present_index {
-                log::debug!("GRAPHICS INDEX: {}, PRESENT INDEX {}", gfx, present);
-                log::warn!("Currently only using the graphics queue, present queue ignored")
-            }
-        };
-
-        graphics_index
+        queue_family_index
     }
 
     use std::ptr;

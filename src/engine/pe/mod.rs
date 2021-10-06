@@ -3,6 +3,7 @@ pub(crate) mod instance;
 pub(crate) mod pipeline;
 pub(crate) mod shaders;
 pub(crate) mod swapchain;
+pub(crate) mod command_buffers;
 
 // pub use instance;
 // pub use device;

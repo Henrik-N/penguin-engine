@@ -13,7 +13,8 @@ pub struct PSwapchain {
     pub swapchain: vk::SwapchainKHR, // can probably make these private by moving some things
     pub swapchain_format: vk::Format,
     pub swapchain_extent: vk::Extent2D,
-    pub swapchain_images: Vec<SwapchainImage>,
+    pub swapchain_images: Vec<vk::Image>,
+    pub swapchain_image_views: Vec<vk::ImageView>,
 }
 //
 impl PSwapchain {
@@ -71,27 +72,24 @@ pub(crate) mod init {
                 // Use exclusive mode if same, as it is more performant
                 (vk::SharingMode::EXCLUSIVE, 1, vec![graphics_queue_index]);
 
+        // let graphics_queue_family_index = [graphics_queue_index];
+
 
         // Swapchain create info
-        let create_info = vk::SwapchainCreateInfoKHR {
-            surface,
-            min_image_count: image_count as u32,
-            image_format: surface_format.format,
-            image_color_space: Default::default(),
-            image_extent: extent,
-            image_array_layers: 1,
-            image_usage: vk::ImageUsageFlags::COLOR_ATTACHMENT,
-            image_sharing_mode,
-            queue_family_index_count: 0,
-            p_queue_family_indices: queue_family_indices.as_ptr(),
-            pre_transform: swapchain_support_details
-                .surface_capabilities
-                .current_transform,
-            composite_alpha: vk::CompositeAlphaFlagsKHR::OPAQUE,
-            present_mode,
-            clipped: vk::TRUE,
-            ..Default::default()
-        };
+        let create_info = vk::SwapchainCreateInfoKHR::builder()
+            .surface(surface)
+            .min_image_count(image_count as u32)
+            .image_format(surface_format.format)
+            .image_color_space(surface_format.color_space)
+            .image_extent(extent)
+            .image_array_layers(1)
+            .image_usage(vk::ImageUsageFlags::COLOR_ATTACHMENT)
+            .image_sharing_mode(image_sharing_mode)
+            // .queue_family_indices(&graphics_queue_family_index)
+            .pre_transform(swapchain_support_details.surface_capabilities.current_transform)
+            .composite_alpha(vk::CompositeAlphaFlagsKHR::OPAQUE)
+            .present_mode(present_mode)
+            .clipped(true);
 
         let swapchain_loader =
             ash::extensions::khr::Swapchain::new(instance, &device);
@@ -108,20 +106,19 @@ pub(crate) mod init {
                 .expect("Coudln't get swapchain images")
         };
 
-        let swapchain_image_structs = create_swapchain_image_structs(
+        let swapchain_image_views = create_swapchain_images(
             &device,
             surface_format.format,
             &swapchain_images,
         );
-
-        // todo MAKE IT CLEANER, CREATE BOTH VECS AT THE SAME TIME INSTEAD
 
         super::PSwapchain {
             swapchain_loader,
             swapchain,
             swapchain_format: surface_format.format,
             swapchain_extent: extent,
-            swapchain_images: swapchain_image_structs,
+            swapchain_images,
+            swapchain_image_views,
         }
     }
 
@@ -183,57 +180,34 @@ pub(crate) mod init {
         true_extent
     }
 
-    fn create_swapchain_image_structs(
+    fn create_swapchain_images(
         logical_device: &ash::Device,
         swapchain_format: vk::Format,
         swapchain_images: &Vec<vk::Image>,
-    ) -> Vec<super::SwapchainImage> {
-        let mut struct_images: Vec<super::SwapchainImage> = vec![];
+    ) -> Vec<vk::ImageView> {
+        let image_views: Vec<vk::ImageView> = swapchain_images.iter().map(|&image| {
+            let image_view_create_info= vk::ImageViewCreateInfo::builder()
+                .view_type(vk::ImageViewType::TYPE_2D)
+                .format(swapchain_format)
+                .components(vk::ComponentMapping {
+                    r: vk::ComponentSwizzle::R,
+                    g: vk::ComponentSwizzle::G,
+                    b: vk::ComponentSwizzle::B,
+                    a: vk::ComponentSwizzle::A,
+                })
+                .subresource_range(vk::ImageSubresourceRange {
+                    aspect_mask: vk::ImageAspectFlags::COLOR,
+                    base_mip_level: 0,
+                    level_count: 1,
+                    base_array_layer: 0,
+                    layer_count: 1
+                })
+                .image(image);
 
-        for &image in swapchain_images.iter() {
-            let image_view_create_info1 =
-                image_view_create_info(swapchain_format, image, vk::ImageAspectFlags::COLOR);
+                unsafe { logical_device.create_image_view(&image_view_create_info, None) }
+                    .expect("Couldn't create image view")
+        }).collect();
 
-            let image_view =
-                unsafe { logical_device.create_image_view(&image_view_create_info1, None) }
-                    .expect("Couldn't create image view");
-
-            let struct_image = super::SwapchainImage { image, image_view };
-
-            struct_images.push(struct_image);
-        }
-
-        struct_images
-    }
-
-    fn image_view_create_info(
-        format: vk::Format,
-        image: vk::Image,
-        aspect_mask: vk::ImageAspectFlags,
-    ) -> vk::ImageViewCreateInfo {
-        vk::ImageViewCreateInfo {
-            // Image data interpretation
-            view_type: vk::ImageViewType::TYPE_2D,
-            image,
-            format,
-
-            // Color channel mapping
-            components: vk::ComponentMapping {
-                r: vk::ComponentSwizzle::IDENTITY,
-                g: vk::ComponentSwizzle::IDENTITY,
-                b: vk::ComponentSwizzle::IDENTITY,
-                a: vk::ComponentSwizzle::IDENTITY,
-            },
-
-            // Info about where the image points to
-            subresource_range: vk::ImageSubresourceRange {
-                base_mip_level: 0,
-                level_count: 1,
-                base_array_layer: 0,
-                layer_count: 1, // texture layer
-                aspect_mask,    // basically the image usage
-            },
-            ..Default::default()
-        }
+        image_views
     }
 }
