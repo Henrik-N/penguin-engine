@@ -9,7 +9,7 @@ edition = "2021"
 [dependencies]
 ### ------------------------------- Debugging ------------------------------- ###
 # error handling
-anyhow = "~1.0.44"  # error handling, simplified Result enum (return anyhow::Result<T>)
+anyhow = { version = "~1.0.44", features = ["backtrace"]}  # error handling, simplified Result enum (return anyhow::Result<T>)
 
 # logging
 log = "0.4"

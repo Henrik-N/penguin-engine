@@ -18,6 +18,7 @@ pub struct Renderer {
 impl Renderer {
     pub(crate) fn create(window: &winit::window::Window) -> Result<Self> {
         let core = Core::create(&window)?;
+
         let context = RenderContext::create(&core)?;
 
 
@@ -31,13 +32,12 @@ impl Renderer {
     pub fn draw(&mut self, delta_time: f32) {
         self.frame_num += 1;
 
+
+
         self.context.submit_render_commands(|device, command_buffer, frame_buffer| {
 
             let flash = f32::abs(f32::sin(self.frame_num as f32 / 120_f32));
-            log::debug!("Flash value: {}", flash);
-
             let color = [0.0_f32, 0.0_f32, flash, 1.0_f32];
-            log::debug!("Color: {:?}", color);
 
             let clear_value = [vk::ClearValue {
                 color: vk::ClearColorValue { float32: color }
@@ -66,8 +66,8 @@ impl Renderer {
 
 
     pub fn shutdown(&mut self) {
-        // this function call ensures the renderer doesn't get dropped until the event loop has ended
-        log::debug!("Shutting down.")
+        // The call to this function call ensures the renderer doesn't get dropped until the event loop has ended
+        log::debug!("Shutting down.");
     }
 }
 
@@ -78,7 +78,6 @@ impl Drop for Renderer {
         self.core.shutdown();
     }
 }
-
 
 struct Mesh;
 
@@ -155,10 +154,12 @@ mod render_backend {
     pub struct Core {
         debug_utils_loader: ash::extensions::ext::DebugUtils,
         debug_messenger: vk::DebugUtilsMessengerEXT,
-        pub(super) instance: ash::Instance,
-        pub(super) physical_device: vk::PhysicalDevice,
-        pub(super) surface: vk::SurfaceKHR,
-        pub(super) surface_loader: ash::extensions::khr::Surface,
+        pub entry: ash::Entry,
+        pub instance: ash::Instance,
+        pub surface: vk::SurfaceKHR,
+        pub surface_loader: ash::extensions::khr::Surface,
+        pub physical_device: vk::PhysicalDevice,
+        pub queue_index: u32,
     }
 
     impl Core {
@@ -186,15 +187,17 @@ mod render_backend {
             let surface_loader = ash::extensions::khr::Surface::new(&entry, &instance);
 
             log::trace!("Selecting physical device");
-            let physical_device = pe::device::select_physical_device(&instance, surface, &surface_loader)?;
+            let (physical_device, queue_index) = pe::device::select_physical_device(&instance, surface, &surface_loader)?;
 
             Ok(Self {
                 debug_utils_loader,
                 debug_messenger,
+                entry,
                 instance,
-                physical_device,
                 surface,
                 surface_loader,
+                physical_device,
+                queue_index,
             })
         }
 
@@ -216,7 +219,7 @@ mod render_backend {
     /// Struct containing most Vulkan object handles and global states.
     pub(super) struct RenderContext {
         pub(super) device: ash::Device,
-        pub(super) graphics_queue_index: u32,
+        // pub(super) graphics_queue_index: u32,
         pub(super) queue_handle: vk::Queue,
 
         pub(super) swapchain_loader: ash::extensions::khr::Swapchain,
@@ -285,30 +288,24 @@ mod render_backend {
 
 
         pub fn create(core: &Core) -> Result<Self> {
-            log::trace!("Finding queue family indices");
-            let queue_index = pe::device::find_graphics_queue_family(&core.instance, core.physical_device, core.surface, &core.surface_loader);
+            log::trace!("Queue index: {}", core.queue_index);
 
-            let queue_index = match queue_index {
-                Some(queue) => queue,
-                None => {
-                    log::error!("Graphics queue index was None");
-                    panic!("Graphics queue index was None");
-                }
-            };
 
+            log::trace!("Test try");
+            let test = unsafe { core.instance.enumerate_device_extension_properties(core.physical_device)};
 
             log::trace!("Creating logical device");
-            let device = pe::device::create_logical_device(&core.instance, core.physical_device, queue_index);
+            let device = pe::device::create_logical_device(&core.instance, core.physical_device, core.queue_index);
 
             log::trace!("Getting graphics queue handle");
-            let queue_handle: vk::Queue = pe::device::get_graphics_queue_handle(&device, queue_index);
+            let queue_handle: vk::Queue = pe::device::get_graphics_queue_handle(&device, core.queue_index);
 
 
             log::trace!("Quering device for swapchain support");
             let swapchain_support_details = pe::device::query_swapchain_support(core.physical_device, core.surface, &core.surface_loader);
 
             log::trace!("Creating swapchain");
-            let swapchain = pe::swapchain::PSwapchain::create(&core.instance, &device, core.surface, swapchain_support_details, queue_index);
+            let swapchain = pe::swapchain::PSwapchain::create(&core.instance, &device, core.surface, swapchain_support_details, core.queue_index);
 
             let pe::swapchain::PSwapchain {
                 swapchain_loader,
@@ -320,7 +317,7 @@ mod render_backend {
             } = swapchain;
 
 
-            let (command_pool, setup_command_buffer) = pe::command_buffers::init::create_command_pool_and_buffer(&device, queue_index);
+            let (command_pool, setup_command_buffer) = pe::command_buffers::init::create_command_pool_and_buffer(&device, core.queue_index);
 
             // fences ---------
             let render_fence_create_info = vk::FenceCreateInfo::builder()
@@ -357,7 +354,7 @@ mod render_backend {
 
             Ok(Self {
                 device,
-                graphics_queue_index: queue_index,
+                // graphics_queue_index: queue_index,
                 queue_handle,
                 swapchain,
                 swapchain_loader,

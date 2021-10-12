@@ -24,9 +24,6 @@ pub struct PTime {
 
 impl PTime {
     pub fn create_system() -> Self {
-        log::trace!("Initializing time");
-
-
         Self {
             previous_frame_time: Instant::now(),
             resource: PTimeResource {

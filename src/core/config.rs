@@ -18,6 +18,9 @@ pub const DEBUG: ValidationInfo = ValidationInfo {
     required_validation_layers: ["VK_LAYER_KHRONOS_validation"],
 };
 
+/// Weather to use verbose vulkan validation layer logging
+pub const VK_VERBOSE_LOGGING_ENABLE: bool = false;
+
 /// Filter for which messages to log.
 pub const DEBUG_MESSAGE_SEVERITY: log::LevelFilter =
 // * OPTIONS:
@@ -25,9 +28,8 @@ pub const DEBUG_MESSAGE_SEVERITY: log::LevelFilter =
 //     log::LevelFilter::Error;
 //     log::LevelFilter::Warn;
 //     log::LevelFilter::Info;
-    log::LevelFilter::Debug;
-    // log::LevelFilter::Trace;
-
+//     log::LevelFilter::Debug;
+    log::LevelFilter::Trace;
 
 // -------------
 pub struct ValidationInfo {

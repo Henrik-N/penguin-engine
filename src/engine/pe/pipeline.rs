@@ -18,6 +18,35 @@ pub struct Pipeline {
 use std::path::Path;
 use ash::vk::ShaderModuleCreateFlags;
 
+
+
+pub struct PPipelineBuilder<'a> {
+    shaders: Vec<String>,
+    vertex_input: vk::PipelineVertexInputStateCreateInfoBuilder<'a>,
+    input_assembly: vk::PipelineInputAssemblyStateCreateInfoBuilder<'a>,
+    viewports: Vec<vk::ViewportBuilder<'a>>,
+    scissors: Vec<vk::Rect2DBuilder<'a>>,
+    rasterization: vk::PipelineRasterizationStateCreateInfoBuilder<'a>,
+    multisampling: vk::PipelineMultisampleStateCreateInfoBuilder<'a>,
+    stencil: vk::StencilOpStateBuilder<'a>,
+
+}
+
+// impl PPipelineBuilder {
+//     // pub fn default(device: &ash::Device, swapchain_extent: vk::Extent2D, render_pass: vk::RenderPass) -> Self {
+//     //
+//     //
+//     //     Self {
+//     //
+//     //     }
+//     // }
+//
+//     pub fn shader_stage(mut self, shader: String) {
+//
+//     }
+// }
+
+
 pub fn create_graphics_pipeline(device: &ash::Device, swapchain_extent: vk::Extent2D, render_pass: vk::RenderPass) -> (vk::Pipeline, vk::PipelineLayout) {
     let vert_shader = Shader::create_and_compile(device, "simple.vert");
     let frag_shader = Shader::create_and_compile(device, "simple.frag");
@@ -70,24 +99,24 @@ pub fn create_graphics_pipeline(device: &ash::Device, swapchain_extent: vk::Exte
 
     let rasterization_state_create_info = vk::PipelineRasterizationStateCreateInfo::builder()
         .depth_clamp_enable(false)
+        .rasterizer_discard_enable(false)
         //
-        .depth_bias_enable(false)
-        .depth_bias_clamp(0.0_f32)
-        .depth_bias_constant_factor(0.0_f32)
-        .depth_bias_slope_factor(0.0_f32)
-        //
+        .polygon_mode(vk::PolygonMode::FILL)
         .cull_mode(vk::CullModeFlags::BACK)
         .front_face(vk::FrontFace::CLOCKWISE)
         .line_width(1.0_f32)
         //
-        .polygon_mode(vk::PolygonMode::FILL)
-        .rasterizer_discard_enable(false);
+        .depth_bias_enable(false)
+        .depth_bias_clamp(0.0_f32)
+        .depth_bias_constant_factor(0.0_f32)
+        .depth_bias_slope_factor(0.0_f32);
+        //
 
 
     let multisample_state_create_info = vk::PipelineMultisampleStateCreateInfo::builder()
         .sample_shading_enable(false)
         .rasterization_samples(vk::SampleCountFlags::TYPE_1)
-        .min_sample_shading(0.0_f32)
+        .min_sample_shading(1.0_f32)
         // .sample_mask()
         .alpha_to_one_enable(false)
         .alpha_to_coverage_enable(false);

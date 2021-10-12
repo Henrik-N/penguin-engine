@@ -2,16 +2,7 @@
 use ash::vk;
 use anyhow::*;
 
-// pub struct QueueFamilyIndices {
-//     pub graphics_queue: Option<u32>,
-//     pub present_queue: Option<u32>,
-// }
-
-// impl QueueFamilyIndices {
-//     pub fn is_complete(&self) -> bool {
-//         self.graphics_queue.is_some()
-//     }
-// }
+pub type PhysicalDeviceQueueIndex = u32;
 
 pub struct SurfaceDetails {
     pub surface_loader: ash::extensions::khr::Surface,
@@ -24,20 +15,10 @@ pub struct SwapchainSupportDetails {
     pub surface_present_modes: Vec<vk::PresentModeKHR>,
 }
 
-// /// DEVICE STRUCT
-// pub struct PDevice {
-//     pub gpu: vk::PhysicalDevice,
-//     pub surface_details: SurfaceDetails,
-//     pub device: ash::Device,
-//     pub queue_family_indices: QueueFamilyIndices,
-//     // pub graphics_queue: vk::Queue,
-//     // pub present_queue: vk::Queue,
-// }
-
 pub fn select_physical_device(
     instance: &ash::Instance,
     surface: ash::vk::SurfaceKHR,
-    surface_fn: &ash::extensions::khr::Surface) -> Result<vk::PhysicalDevice> {
+    surface_fn: &ash::extensions::khr::Surface) -> Result<(vk::PhysicalDevice, PhysicalDeviceQueueIndex)> {
     init::select_physical_device(&instance, surface, &surface_fn)
 }
 
@@ -57,20 +38,6 @@ pub fn create_logical_device(
 ) -> ash::Device {
     init::create_logical_device(&instance, physical_device, graphics_queue_index)
 }
-
-// pub fn create(entry: &ash::Entry, instance: &ash::Instance, window: &winit::window::Window) -> Result<Self> {
-
-//     init::init_device(&entry, &instance, &window)
-// }
-//
-// pub fn drop(&self) {
-//     // unsafe {
-//     //     self.device.destroy_device(None);
-//     //     self.surface_details
-//     //         .surface_loader
-//     //         .destroy_surface(self.surface_details.surface, None);
-//     // }
-// }
 
 pub fn query_swapchain_support(physical_device: vk::PhysicalDevice, surface: vk::SurfaceKHR, surface_loader: &ash::extensions::khr::Surface) -> SwapchainSupportDetails {
     let surface_capabilities = unsafe {
@@ -120,6 +87,7 @@ pub fn get_graphics_queue_handle(
 }
 
 
+
 mod init {
     use ash::vk;
 
@@ -130,11 +98,12 @@ mod init {
 
     use crate::core::utility::{pbail, ppanic};
 
+
     pub(crate) fn select_physical_device(
         instance: &ash::Instance,
         surface: ash::vk::SurfaceKHR,
         surface_fn: &ash::extensions::khr::Surface,
-    ) -> Result<vk::PhysicalDevice> {
+    ) -> Result<(vk::PhysicalDevice, PhysicalDeviceQueueIndex)> {
         // Find devices with vulkan support
         let physical_devices = unsafe {
             instance
@@ -148,9 +117,11 @@ mod init {
         let mut suitable_device = None;
 
         for &physical_device in physical_devices.iter() {
-            if is_physical_device_suitable(&instance, physical_device, surface, surface_fn) {
+            let device_info = check_device_suitablity_info(&instance, physical_device, surface, surface_fn);
+
+            if device_info.is_suitable() {
                 if suitable_device.is_none() {
-                    suitable_device = Some(physical_device);
+                    suitable_device = Some((physical_device, device_info));
                     break;
                 }
             }
@@ -160,17 +131,34 @@ mod init {
             None => {
                 pbail!("Couldn't find a suitable physical device.");
             }
-            Some(physical_device) => Ok(physical_device),
+            Some((physical_device, info)) => {
+                let queue_index = info.graphics_queue_index.expect("No graphics queue index");
+
+                Ok((physical_device, queue_index))
+            },
+        }
+    }
+
+    struct PhysicalDeviceInfo {
+        graphics_queue_index: Option<PhysicalDeviceQueueIndex>,
+        required_extensions_supported: bool,
+        swapchain_supported: bool,
+    }
+    impl PhysicalDeviceInfo {
+        fn is_suitable(&self) -> bool {
+            self.graphics_queue_index.is_some()
+                && self.required_extensions_supported
+                && self.swapchain_supported
         }
     }
 
     /// Checks if the given physical device supports the required device extensions.
-    fn is_physical_device_suitable(
+    fn check_device_suitablity_info(
         instance: &ash::Instance,
         physical_device: vk::PhysicalDevice,
         surface: ash::vk::SurfaceKHR,
         surface_fn: &ash::extensions::khr::Surface,
-    ) -> bool {
+    ) -> PhysicalDeviceInfo {
         let properties = unsafe { instance.get_physical_device_properties(physical_device) };
         let features = unsafe { instance.get_physical_device_features(physical_device) };
 
@@ -201,9 +189,14 @@ mod init {
             false
         };
 
-        graphics_queue_index.is_some()
-            && are_required_extensions_supported
-            && is_swapchain_supported
+        PhysicalDeviceInfo {
+            graphics_queue_index,
+            required_extensions_supported: are_required_extensions_supported,
+            swapchain_supported: is_swapchain_supported,
+        }
+        // graphics_queue_index.is_some()
+        //     && are_required_extensions_supported
+        //     && is_swapchain_supported
     }
 
 
@@ -242,6 +235,7 @@ mod init {
         let available_queue_families =
             unsafe { instance.get_physical_device_queue_family_properties(physical_device) };
 
+
         let graphics_queue: Option<u32>;
         let present_queue: Option<u32>;
 
@@ -270,7 +264,7 @@ mod init {
     }
 
     use std::ptr;
-    use crate::engine::pe::device::{SurfaceDetails, query_swapchain_support};
+    use crate::engine::pe::device::{SurfaceDetails, query_swapchain_support, PhysicalDeviceQueueIndex};
 
     // ------------------- LOGICAL DEVICE ---------------------------------
     pub(super) fn create_logical_device(
@@ -287,14 +281,12 @@ mod init {
             ..Default::default()
         };
 
-
         // Specify device features to use
         let physical_device_features = vk::PhysicalDeviceFeatures {
             ..Default::default()
         }; // todo: Support separate depth stencil layouts if feature is available. This allows for optimal tiling rather than linear (render pass create info -> pAttachemnts[1].finalLayout
 
         let enable_extension_names = [ash::extensions::khr::Swapchain::name().as_ptr()];
-
 
         use crate::core::{config};
 

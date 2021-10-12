@@ -1,9 +1,14 @@
+use std::fmt::{Debug, Display, Formatter};
 use chrono;
 use fern::colors::{Color, ColoredLevelConfig};
 use super::config;
+use anyhow::Result;
 
-use log::{debug, error, info, trace, warn};
+use log::{info, trace, warn, debug, error};
 
+pub mod prelude {
+    pub use log::{info, trace, warn, debug, error};
+}
 
 /// Initializes the fern logger.
 pub fn init_logger() -> Result<(), fern::InitError> {
@@ -21,7 +26,7 @@ pub fn init_logger() -> Result<(), fern::InitError> {
     fern::Dispatch::new()
         .format(move |out, message, record| {
             out.finish(format_args!(
-                "{color_arg}{time} | {level} {message} \t\t\t\t Module: [{module}]\x1B[0m",
+                "{color_arg} {time} | {level} | {color_arg}[{module}] \x1B[0m\n\t{message}\n",
                 color_arg = format_args!(
                     "\x1B[{}m",
                     line_colors.get_color(&record.level()).to_fg_str()
@@ -37,7 +42,6 @@ pub fn init_logger() -> Result<(), fern::InitError> {
         .chain(fern::log_file(format!("logs/output.log"))?)
         .apply()?;
 
-    log::trace!("Logger initialized.");
     Ok(())
 }
 
@@ -51,20 +55,20 @@ pub(crate) mod init {
     use log::LevelFilter;
     use crate::core::config;
 
-    /// Sets up VkDebugUtilsMessengerEXT https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkDebugUtilsMessengerEXT.html.
-    pub fn setup_vk_debug_utils(
-        entry: &ash::Entry,
-        instance: &ash::Instance,
-    ) -> Result<(ash::extensions::ext::DebugUtils, vk::DebugUtilsMessengerEXT)> {
-        let debug_utils_loader = ash::extensions::ext::DebugUtils::new(entry, instance);
-
-        // let messenger_create_info = vk_debug_messenger_create_info();
-        let messenger_create_info = debug_messenger_create_info();
-
-        let utils_messenger =
-            unsafe { debug_utils_loader.create_debug_utils_messenger(&messenger_create_info, None)? };
-        Ok((debug_utils_loader, utils_messenger))
-    }
+    // /// Sets up VkDebugUtilsMessengerEXT https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkDebugUtilsMessengerEXT.html.
+    // pub fn setup_vk_debug_utils(
+    //     entry: &ash::Entry,
+    //     instance: &ash::Instance,
+    // ) -> Result<(ash::extensions::ext::DebugUtils, vk::DebugUtilsMessengerEXT)> {
+    //     let debug_utils_loader = ash::extensions::ext::DebugUtils::new(entry, instance);
+    //
+    //     // let messenger_create_info = vk_debug_messenger_create_info();
+    //     let messenger_create_info = debug_messenger_create_info();
+    //
+    //     let utils_messenger =
+    //         unsafe { debug_utils_loader.create_debug_utils_messenger(&messenger_create_info, None)? };
+    //     Ok((debug_utils_loader, utils_messenger))
+    // }
 
     /// Initializes VkDebugUtilsMessengerEXT https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkDebugUtilsMessengerEXT.html/.
     pub fn init_vk_debug_messenger(entry: &ash::Entry, instance: &ash::Instance) -> Result<(ash::extensions::ext::DebugUtils, vk::DebugUtilsMessengerEXT)> {
@@ -77,9 +81,7 @@ pub(crate) mod init {
         let utils_messenger =
             unsafe { debug_utils_loader.create_debug_utils_messenger(&messenger_create_info, None)? };
         Ok((debug_utils_loader, utils_messenger))
-
     }
-
 
     fn debug_messenger_create_info() -> vk::DebugUtilsMessengerCreateInfoEXT {
         let message_severity = match config::DEBUG_MESSAGE_SEVERITY {
@@ -151,7 +153,11 @@ pub(crate) mod init {
                 let msg = parser::parse_vk_general_message(msg);
                 log::info!("{} {}", vk_message_type, msg);
             }
-            vk::DebugUtilsMessageSeverityFlagsEXT::VERBOSE => log::trace!("{} [{:?}]", vk_message_type, message),
+            vk::DebugUtilsMessageSeverityFlagsEXT::VERBOSE => {
+                if config::VK_VERBOSE_LOGGING_ENABLE {
+                    log::trace!("{} [{:?}]", vk_message_type, message);
+                }
+            },
             _ => log::error!("Unknown message severity. This code should never be reached."),
         };
 

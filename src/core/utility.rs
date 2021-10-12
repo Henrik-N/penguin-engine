@@ -36,7 +36,6 @@ pub fn raw_c_string_to_string(c_string: &[std::os::raw::c_char]) -> String {
 
 use anyhow::*;
 
-
 /// Throws an early anyhow::Result error and logs the given provided string.
 macro_rules! pbail {
     ($msg:literal $(,)?) => {
