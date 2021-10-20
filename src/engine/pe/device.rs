@@ -66,8 +66,8 @@ mod init {
 
     // #[macro_use] extern crate core;
     // --------------------- PHYSICAL DEVICE -----------------------
-    use anyhow::Result;
     use crate::core::utility::pbail;
+    use anyhow::Result;
 
     pub(crate) fn select_physical_device(
         instance: &ash::Instance,
@@ -152,7 +152,7 @@ mod init {
             vk::api_version_patch(properties.api_version)
         );
 
-        let graphics_queue_index =
+        let graphics_queue_index = 
             find_graphics_queue_family(&instance, physical_device, surface, surface_fn);
 
         let are_required_extensions_supported =
@@ -160,6 +160,7 @@ mod init {
 
         let is_swapchain_supported = if are_required_extensions_supported {
             let swapchain_support = query_swapchain_support(physical_device, surface, surface_fn);
+            
             !swapchain_support.surface_color_formats.is_empty()
                 && !swapchain_support.surface_present_modes.is_empty()
         } else {
@@ -171,9 +172,6 @@ mod init {
             required_extensions_supported: are_required_extensions_supported,
             swapchain_supported: is_swapchain_supported,
         }
-        // graphics_queue_index.is_some()
-        //     && are_required_extensions_supported
-        //     && is_swapchain_supported
     }
 
     use crate::core::{config, utility};
@@ -246,9 +244,7 @@ mod init {
         queue_family_index
     }
 
-    use crate::engine::pe::device::{
-        query_swapchain_support, PhysicalDeviceQueueIndex,
-    };
+    use crate::engine::pe::device::{query_swapchain_support, PhysicalDeviceQueueIndex};
     use std::ptr;
 
     // ------------------- LOGICAL DEVICE ---------------------------------
@@ -267,9 +263,7 @@ mod init {
         };
 
         // Specify device features to use
-        let physical_device_features = vk::PhysicalDeviceFeatures {
-            ..Default::default()
-        }; // todo: Support separate depth stencil layouts if feature is available. This allows for optimal tiling rather than linear (render pass create info -> pAttachemnts[1].finalLayout
+        let physical_device_features = config::required_device_features();
 
         let enable_extension_names = [ash::extensions::khr::Swapchain::name().as_ptr()];
 
@@ -313,4 +307,3 @@ mod init {
         }
     }
 }
-

@@ -2,9 +2,8 @@ mod core;
 mod ecs;
 mod engine;
 
-use anyhow::*;
 use crate::core::application::Application;
-
+use anyhow::*;
 
 fn main() -> Result<()> {
     // request game instance from app

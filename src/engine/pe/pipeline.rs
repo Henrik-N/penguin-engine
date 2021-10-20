@@ -4,9 +4,16 @@ use ash::vk;
 pub struct PPipeline {
     pub pipeline: vk::Pipeline,
     pub pipeline_layout: vk::PipelineLayout,
+    pub pipeline_bindpoint: vk::PipelineBindPoint,
 }
 
 impl PPipeline {
+    pub fn bind(&self, device: &ash::Device, command_buffer: vk::CommandBuffer) {
+        unsafe {
+            device.cmd_bind_pipeline(command_buffer, self.pipeline_bindpoint, self.pipeline);
+        }
+    }
+
     pub fn destroy(&mut self, device: &ash::Device) {
         unsafe {
             device.destroy_pipeline(self.pipeline, None);
@@ -15,10 +22,10 @@ impl PPipeline {
     }
 }
 
-
 pub struct PPipelineBuilder<'a> {
     device: &'a ash::Device,
     render_pass: vk::RenderPass,
+    pipeline_bindpoint: vk::PipelineBindPoint,
 
     shaders: Vec<Shader<'a>>,
     vertex_input: vk::PipelineVertexInputStateCreateInfoBuilder<'a>,
@@ -43,6 +50,7 @@ impl<'a> PPipelineBuilder<'a> {
         device: &'a ash::Device,
         swapchain_extent: vk::Extent2D,
         render_pass: vk::RenderPass,
+        pipeline_bindpoint: vk::PipelineBindPoint,
     ) -> Self {
         let shaders = Vec::new();
 
@@ -148,6 +156,7 @@ impl<'a> PPipelineBuilder<'a> {
         Self {
             device,
             render_pass,
+            pipeline_bindpoint,
             shaders,
             vertex_input,
             input_assembly,
@@ -164,6 +173,20 @@ impl<'a> PPipelineBuilder<'a> {
         }
     }
 
+    #[allow(dead_code)]
+    pub fn wireframe_mode(mut self) -> Self {
+        self.rasterization = self.rasterization.polygon_mode(vk::PolygonMode::LINE);
+        self
+    }
+
+    /// Specify a list of shaders to be compiled at runtime.
+    /// Searches in src/shaders/ for the listed shaders and compiles them.
+    ///
+    /// The function detects the shader type based on the file type of the
+    /// passed file (.frag/.vert/.comp).
+    /// # Arguments
+    /// * `shader_names` - A list of shaders in the path src/shaders.
+    ///
     pub fn shaders(mut self, shader_names: &[&str]) -> Self {
         self.shaders = shader_names
             .into_iter()
@@ -173,6 +196,7 @@ impl<'a> PPipelineBuilder<'a> {
         self
     }
 
+    /// Creates the pipeline and returns the compiled shaders for reuse if
     pub fn build(self) -> PPipeline {
         let shader_stages: Vec<vk::PipelineShaderStageCreateInfo> = self
             .shaders
@@ -267,7 +291,7 @@ impl<'a> PPipelineBuilder<'a> {
         PPipeline {
             pipeline: graphics_pipelines[0],
             pipeline_layout,
+            pipeline_bindpoint: self.pipeline_bindpoint,
         }
     }
 }
-

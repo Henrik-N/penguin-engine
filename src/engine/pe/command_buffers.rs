@@ -102,6 +102,8 @@ pub fn record_submit_command_buffer<
 
     unsafe {
         // the render fence will block until the graphics commands finish execution
-        device.queue_submit(submit_queue, &[submit_info.build()], fence).expect("Couldn't submit command queue");
+        device
+            .queue_submit(submit_queue, &[submit_info.build()], fence)
+            .expect("Couldn't submit command queue");
     }
 }

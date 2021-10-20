@@ -4,4 +4,3 @@ pub(crate) mod instance;
 pub(crate) mod pipeline;
 pub(crate) mod shaders;
 pub(crate) mod swapchain;
-

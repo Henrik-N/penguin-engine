@@ -1,8 +1,20 @@
+use ash::vk;
+
 pub const WIDTH: u32 = 640;
 pub const HEIGHT: u32 = 400;
 
 /// The required extensions for the physical device that we will be selecting.
 pub(crate) const REQUIRED_DEVICE_EXTENSIONS: [&'static str; 1] = ["VK_KHR_swapchain"];
+
+pub(crate) fn required_device_features() -> vk::PhysicalDeviceFeatures {
+    // TODO: Support separate depth stencil layouts if feature is available. This allows for optimal tiling rather than linear (render pass create info -> pAttachemnts[1].finalLayout
+
+    vk::PhysicalDeviceFeatures {
+        fill_mode_non_solid: 1, // for wireframe mode
+        ..Default::default()
+    }
+}
+
 
 /// **********************
 /// DEBUG CONFIGURATION
@@ -28,7 +40,7 @@ pub const DEBUG_MESSAGE_SEVERITY: log::LevelFilter =
     //     log::LevelFilter::Warn;
     //     log::LevelFilter::Info;
     log::LevelFilter::Debug;
-    //log::LevelFilter::Trace;
+//log::LevelFilter::Trace;
 
 // -------------
 pub struct ValidationInfo {

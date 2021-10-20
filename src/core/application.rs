@@ -60,7 +60,9 @@ impl Application {
                             (Some(VirtualKeyCode::Escape), ElementState::Pressed) => {
                                 *control_flow = ControlFlow::Exit
                             }
-                            _ => Self::process_keyboard_input(virtual_keycode, state),
+                            _ => {
+                                Self::process_keyboard_input(virtual_keycode, state, &mut renderer)
+                            }
                         },
                     },
                     _ => {}
@@ -87,10 +89,17 @@ impl Application {
         });
     }
 
-    fn process_keyboard_input(virtual_keycode: Option<VirtualKeyCode>, state: ElementState) {
+    fn process_keyboard_input(
+        virtual_keycode: Option<VirtualKeyCode>,
+        state: ElementState,
+        renderer: &mut Renderer,
+    ) {
         match (virtual_keycode, state) {
             (Some(VirtualKeyCode::A), ElementState::Pressed) => {
                 println!("Pressing A");
+            }
+            (Some(VirtualKeyCode::U), ElementState::Pressed) => {
+                renderer.toggle_wireframe_mode();
             }
             _ => {}
         }

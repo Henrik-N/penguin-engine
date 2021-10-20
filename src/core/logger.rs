@@ -3,7 +3,6 @@ use anyhow::Result;
 use chrono;
 use fern::colors::{Color, ColoredLevelConfig};
 
-
 pub mod prelude {
     pub use log::{debug, error, info, trace, warn};
 }
@@ -70,7 +69,10 @@ pub(crate) mod init {
     pub fn init_vk_debug_messenger(
         entry: &ash::Entry,
         instance: &ash::Instance,
-    ) -> Result<(ash::extensions::ext::DebugUtils, Option<vk::DebugUtilsMessengerEXT>)> {
+    ) -> Result<(
+        ash::extensions::ext::DebugUtils,
+        Option<vk::DebugUtilsMessengerEXT>,
+    )> {
         log::trace!("Creating Vulkan utility messenger");
 
         let debug_utils_loader = ash::extensions::ext::DebugUtils::new(entry, instance);
@@ -79,7 +81,10 @@ pub(crate) mod init {
 
         let utils_messenger = if config::DEBUG.is_enabled {
             unsafe {
-                Some(debug_utils_loader.create_debug_utils_messenger(&messenger_create_info, None)?)
+                Some(
+                    debug_utils_loader
+                        .create_debug_utils_messenger(&messenger_create_info, None)?,
+                )
             }
         } else {
             None

@@ -57,8 +57,6 @@ macro_rules! pbail {
     };
 }
 
-
-
 /// Same as panic!, but it also logs to the console.
 #[allow(unused_macros)]
 macro_rules! ppanic {

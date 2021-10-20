@@ -6,12 +6,12 @@
 // ----------------------------------------------------------------------------------
 
 // type ComponentId = u32;
-// 
+//
 // struct Entity {
 //     id: u32,
 //     components: Vec<ComponentId>,
 // }
-// 
+//
 // impl Entity {
 //     fn has_component(&self, component: ComponentId) -> bool {
 //         self.components.contains(&component)

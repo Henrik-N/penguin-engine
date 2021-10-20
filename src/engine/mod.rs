@@ -1,21 +1,30 @@
+use crate::engine::render_backend::Core;
 use anyhow::*;
 use ash::vk;
 use log;
-use render_backend::RenderContext;
 use pe::pipeline::{PPipeline, PPipelineBuilder};
-use crate::engine::render_backend::Core;
+use render_backend::RenderContext;
 
 pub struct Renderer {
     core: Core,
     context: RenderContext,
     frame_num: usize,
     pipeline: PPipeline,
+    wireframe_pipeline: PPipeline,
+    wireframe_mode: bool,
 }
 
 impl Drop for Renderer {
     fn drop(&mut self) {
         log::debug!("Destroying renderer");
+        unsafe {
+            self.context
+                .device
+                .device_wait_idle()
+                .expect("Device: couldn't wait for idle");
+        }
         self.pipeline.destroy(&self.context.device);
+        self.wireframe_pipeline.destroy(&self.context.device);
         self.context.shutdown();
         self.core.shutdown();
     }
@@ -27,9 +36,7 @@ impl Renderer {
     }
 }
 
-
 impl Renderer {
-
     pub(crate) fn create(window: &winit::window::Window) -> Result<Self> {
         let core = Core::create(&window)?;
 
@@ -39,8 +46,19 @@ impl Renderer {
             &context.device,
             context.swapchain_extent,
             context.render_pass,
+            vk::PipelineBindPoint::GRAPHICS,
         )
         .shaders(&["simple.vert", "simple.frag"])
+        .build();
+
+        let wireframe_pipeline = PPipelineBuilder::default(
+            &context.device,
+            context.swapchain_extent,
+            context.render_pass,
+            vk::PipelineBindPoint::GRAPHICS,
+        )
+        .shaders(&["simple.vert", "simple.frag"])
+        .wireframe_mode()
         .build();
 
         Ok(Self {
@@ -48,18 +66,23 @@ impl Renderer {
             context,
             frame_num: 0,
             pipeline,
+            wireframe_pipeline,
+            wireframe_mode: false,
         })
+    }
+
+    pub fn toggle_wireframe_mode(&mut self) {
+        self.wireframe_mode = !self.wireframe_mode;
     }
 
     pub fn draw(&mut self, delta_time: f32) {
         let _ = delta_time;
-        
+
         self.frame_num += 1;
 
-        self.context
-            .submit_render_commands(
-                &[vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT],
-                |device, command_buffer, frame_buffer| {
+        self.context.submit_render_commands(
+            &[vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT],
+            |device, command_buffer, frame_buffer| {
                 let flash = f32::abs(f32::sin(self.frame_num as f32 / 120_f32));
                 let color = [0.0_f32, 0.0_f32, flash, 1.0_f32];
 
@@ -76,7 +99,6 @@ impl Renderer {
                     })
                     .clear_values(&clear_value);
 
-
                 unsafe {
                     device.cmd_begin_render_pass(
                         command_buffer,
@@ -84,22 +106,20 @@ impl Renderer {
                         vk::SubpassContents::INLINE,
                     );
 
+                    if !self.wireframe_mode {
+                        self.pipeline.bind(device, command_buffer);
+                    } else {
+                        self.wireframe_pipeline.bind(device, command_buffer);
+                    }
                     // actual render commands area
-                    device.cmd_bind_pipeline(
-                        command_buffer,
-                        vk::PipelineBindPoint::GRAPHICS,
-                        self.pipeline.pipeline);
-
 
                     device.cmd_draw(command_buffer, 3_u32, 1_u32, 0_u32, 0_u32);
 
-
-
                     device.cmd_end_render_pass(command_buffer);
                 }
-            });
+            },
+        );
     }
-
 }
 
 // TODO
@@ -108,9 +128,7 @@ struct _Texture;
 struct _Material;
 struct _RenderGraph;
 
-
 pub(crate) struct PRenderPass;
-
 
 impl PRenderPass {
     pub fn create_default_render_pass(
@@ -312,7 +330,6 @@ mod render_backend {
         pub fn create(core: &Core) -> Result<Self> {
             log::trace!("Queue index: {}", core.queue_index);
 
-
             log::trace!("Creating logical device");
             let device = pe::device::create_logical_device(
                 &core.instance,
@@ -419,7 +436,8 @@ mod render_backend {
             unsafe {
                 log::debug!("Dropping render context");
                 self.device
-                    .wait_for_fences(&[self.render_fence], true, u64::MAX).expect("Failed waiting for fences");
+                    .wait_for_fences(&[self.render_fence], true, u64::MAX)
+                    .expect("Failed waiting for fences");
 
                 self.frame_buffers.iter().for_each(|&frame_buffer| {
                     self.device.destroy_framebuffer(frame_buffer, None);
