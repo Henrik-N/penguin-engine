@@ -1,5 +1,4 @@
-use std::time::{Instant, Duration};
-
+use std::time::{Duration, Instant};
 
 // Resource
 pub struct PTimeResource {
@@ -11,7 +10,7 @@ impl PTimeResource {
         self.delta_time.as_secs_f32()
     }
 
-    pub fn delta_f64(&self) -> f64 {
+    pub fn _delta_f64(&self) -> f64 {
         self.delta_time.as_secs_f64()
     }
 }
@@ -27,7 +26,7 @@ impl PTime {
         Self {
             previous_frame_time: Instant::now(),
             resource: PTimeResource {
-                delta_time: Duration::new(0, 0)
+                delta_time: Duration::new(0, 0),
             },
         }
     }

@@ -1,25 +1,17 @@
 // -------------------------- EVENT LOOP ----------------------------
-use winit::event_loop::EventLoop;
-
-struct EventSender {
-
-}
-
-impl EventSender {
-
-}
-
-trait EventP {
-
-}
+// 
+// NOTE: Currently, events are managed in src/corer/application.rs
 
 
-// struct EventSystem {
-//     event_loop: winit::event_loop::EventLoop<()>,
+// use winit::event_loop::EventLoop;
+// 
+// struct EventSender {}
+// 
+// impl EventSender {}
+// 
+// trait EventP {}
+// 
+// pub fn init_event_loop() -> EventLoop<()> {
+//     EventLoop::new()
 // }
 
-
-
-pub fn init_event_loop() -> EventLoop<()> {
-    EventLoop::new()
-}

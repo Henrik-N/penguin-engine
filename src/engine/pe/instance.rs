@@ -4,12 +4,10 @@ use std::ffi::{CStr, CString};
 
 use crate::core::{config, utility};
 
-
 pub fn create_ash_instance(
     entry: &ash::Entry,
     surface_extensions: &Vec<&CStr>,
 ) -> Result<ash::Instance, ash::InstanceError> {
-
     log::info!("Using Vulkan version 1.0.0");
     let app_info = vk::ApplicationInfo::builder()
         .application_name(CString::new("penguin application").unwrap().as_c_str())
@@ -20,11 +18,10 @@ pub fn create_ash_instance(
     // let x = 5;
     // p_bail!("test {}", x);
 
-    let mut extension_names =
-        surface_extensions
-            .iter()
-            .map(|extension| extension.as_ptr())
-            .collect::<Vec<_>>();
+    let mut extension_names = surface_extensions
+        .iter()
+        .map(|extension| extension.as_ptr())
+        .collect::<Vec<_>>();
 
     if config::DEBUG.is_enabled {
         extension_names.push(ash::extensions::ext::DebugUtils::name().as_ptr());

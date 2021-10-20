@@ -1,12 +1,6 @@
 // // -------------------------- SWAPCHAIN --------------------------
+use crate::engine::pe::device::SwapchainSupportDetails;
 use ash::vk;
-use crate::engine::pe;
-use crate::engine::pe::device::{SwapchainSupportDetails};
-
-pub struct SwapchainImage {
-    pub image: vk::Image,
-    pub image_view: vk::ImageView,
-}
 
 pub struct PSwapchain {
     pub swapchain_loader: ash::extensions::khr::Swapchain, // todo can probably make these private by moving some things
@@ -16,24 +10,35 @@ pub struct PSwapchain {
     pub swapchain_images: Vec<vk::Image>,
     pub swapchain_image_views: Vec<vk::ImageView>,
 }
-//
+
 impl PSwapchain {
-    pub fn create(instance: &ash::Instance, device: &ash::Device, surface: vk::SurfaceKHR, swapchain_support_details: SwapchainSupportDetails, graphics_queue_index: u32) -> PSwapchain {
-        init::init_swapchain(instance, device, surface, swapchain_support_details, graphics_queue_index)
+    pub fn create(
+        instance: &ash::Instance,
+        device: &ash::Device,
+        surface: vk::SurfaceKHR,
+        swapchain_support_details: SwapchainSupportDetails,
+        graphics_queue_index: u32,
+    ) -> PSwapchain {
+        init::init_swapchain(
+            instance,
+            device,
+            surface,
+            swapchain_support_details,
+            graphics_queue_index,
+        )
     }
 }
 
 pub(crate) mod init {
+    use crate::engine::pe::device::SwapchainSupportDetails;
     use ash::vk;
-    use crate::engine::pe;
-    use crate::engine::pe::device::{SwapchainSupportDetails};
 
     pub(super) fn init_swapchain(
         instance: &ash::Instance,
         device: &ash::Device,
         surface: vk::SurfaceKHR,
         swapchain_support_details: SwapchainSupportDetails,
-        graphics_queue_index: u32
+        graphics_queue_index: u32,
     ) -> super::PSwapchain {
         // Physical device swapchain support info
 
@@ -74,7 +79,6 @@ pub(crate) mod init {
 
         // let graphics_queue_family_index = [graphics_queue_index];
 
-
         // Swapchain create info
         let create_info = vk::SwapchainCreateInfoKHR::builder()
             .surface(surface)
@@ -85,14 +89,17 @@ pub(crate) mod init {
             .image_array_layers(1)
             .image_usage(vk::ImageUsageFlags::COLOR_ATTACHMENT)
             .image_sharing_mode(image_sharing_mode)
-            // .queue_family_indices(&graphics_queue_family_index)
-            .pre_transform(swapchain_support_details.surface_capabilities.current_transform)
+            .queue_family_indices(&queue_family_indices) // NOTE: Seems like this entry almost isn't needed?
+            .pre_transform(
+                swapchain_support_details
+                    .surface_capabilities
+                    .current_transform,
+            )
             .composite_alpha(vk::CompositeAlphaFlagsKHR::OPAQUE)
             .present_mode(present_mode)
             .clipped(true);
 
-        let swapchain_loader =
-            ash::extensions::khr::Swapchain::new(instance, &device);
+        let swapchain_loader = ash::extensions::khr::Swapchain::new(instance, &device);
 
         let swapchain = unsafe {
             swapchain_loader
@@ -106,11 +113,8 @@ pub(crate) mod init {
                 .expect("Coudln't get swapchain images")
         };
 
-        let swapchain_image_views = create_swapchain_images(
-            &device,
-            surface_format.format,
-            &swapchain_images,
-        );
+        let swapchain_image_views =
+            create_swapchain_images(&device, surface_format.format, &swapchain_images);
 
         super::PSwapchain {
             swapchain_loader,
@@ -185,28 +189,31 @@ pub(crate) mod init {
         swapchain_format: vk::Format,
         swapchain_images: &Vec<vk::Image>,
     ) -> Vec<vk::ImageView> {
-        let image_views: Vec<vk::ImageView> = swapchain_images.iter().map(|&image| {
-            let image_view_create_info= vk::ImageViewCreateInfo::builder()
-                .view_type(vk::ImageViewType::TYPE_2D)
-                .format(swapchain_format)
-                .components(vk::ComponentMapping {
-                    r: vk::ComponentSwizzle::R,
-                    g: vk::ComponentSwizzle::G,
-                    b: vk::ComponentSwizzle::B,
-                    a: vk::ComponentSwizzle::A,
-                })
-                .subresource_range(vk::ImageSubresourceRange {
-                    aspect_mask: vk::ImageAspectFlags::COLOR,
-                    base_mip_level: 0,
-                    level_count: 1,
-                    base_array_layer: 0,
-                    layer_count: 1
-                })
-                .image(image);
+        let image_views: Vec<vk::ImageView> = swapchain_images
+            .iter()
+            .map(|&image| {
+                let image_view_create_info = vk::ImageViewCreateInfo::builder()
+                    .view_type(vk::ImageViewType::TYPE_2D)
+                    .format(swapchain_format)
+                    .components(vk::ComponentMapping {
+                        r: vk::ComponentSwizzle::R,
+                        g: vk::ComponentSwizzle::G,
+                        b: vk::ComponentSwizzle::B,
+                        a: vk::ComponentSwizzle::A,
+                    })
+                    .subresource_range(vk::ImageSubresourceRange {
+                        aspect_mask: vk::ImageAspectFlags::COLOR,
+                        base_mip_level: 0,
+                        level_count: 1,
+                        base_array_layer: 0,
+                        layer_count: 1,
+                    })
+                    .image(image);
 
                 unsafe { logical_device.create_image_view(&image_view_create_info, None) }
                     .expect("Couldn't create image view")
-        }).collect();
+            })
+            .collect();
 
         image_views
     }

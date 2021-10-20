@@ -1,18 +1,16 @@
-use std::fmt::{Debug, Display, Formatter};
-use chrono;
-use fern::colors::{Color, ColoredLevelConfig};
 use super::config;
 use anyhow::Result;
+use chrono;
+use fern::colors::{Color, ColoredLevelConfig};
 
-use log::{info, trace, warn, debug, error};
 
 pub mod prelude {
-    pub use log::{info, trace, warn, debug, error};
+    pub use log::{debug, error, info, trace, warn};
 }
 
 /// Initializes the fern logger.
 pub fn init_logger() -> Result<(), fern::InitError> {
-    let mut colors = ColoredLevelConfig::new()
+    let colors = ColoredLevelConfig::new()
         .trace(Color::Cyan)
         .debug(Color::Magenta)
         .info(Color::Green)
@@ -20,7 +18,6 @@ pub fn init_logger() -> Result<(), fern::InitError> {
         .error(Color::Red); // testa bright red
 
     let time = chrono::Local::now().format("%H:%M:%S").to_string();
-    let date = chrono::Local::now().format("[%Y-%m-%d]");
 
     let line_colors = colors.clone().info(Color::Green);
     fern::Dispatch::new()
@@ -45,15 +42,14 @@ pub fn init_logger() -> Result<(), fern::InitError> {
     Ok(())
 }
 
-
 pub(crate) mod init {
     //////////////
-    use ash::vk;
+    use crate::core::config;
     use anyhow::*;
+    use ash::vk;
+    use log::LevelFilter;
     use std::ffi::CStr;
     use std::os::raw::c_void;
-    use log::LevelFilter;
-    use crate::core::config;
 
     // /// Sets up VkDebugUtilsMessengerEXT https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkDebugUtilsMessengerEXT.html.
     // pub fn setup_vk_debug_utils(
@@ -71,15 +67,24 @@ pub(crate) mod init {
     // }
 
     /// Initializes VkDebugUtilsMessengerEXT https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkDebugUtilsMessengerEXT.html/.
-    pub fn init_vk_debug_messenger(entry: &ash::Entry, instance: &ash::Instance) -> Result<(ash::extensions::ext::DebugUtils, vk::DebugUtilsMessengerEXT)> {
+    pub fn init_vk_debug_messenger(
+        entry: &ash::Entry,
+        instance: &ash::Instance,
+    ) -> Result<(ash::extensions::ext::DebugUtils, Option<vk::DebugUtilsMessengerEXT>)> {
         log::trace!("Creating Vulkan utility messenger");
 
         let debug_utils_loader = ash::extensions::ext::DebugUtils::new(entry, instance);
 
         let messenger_create_info = debug_messenger_create_info();
 
-        let utils_messenger =
-            unsafe { debug_utils_loader.create_debug_utils_messenger(&messenger_create_info, None)? };
+        let utils_messenger = if config::DEBUG.is_enabled {
+            unsafe {
+                Some(debug_utils_loader.create_debug_utils_messenger(&messenger_create_info, None)?)
+            }
+        } else {
+            None
+        };
+
         Ok((debug_utils_loader, utils_messenger))
     }
 
@@ -95,13 +100,13 @@ pub(crate) mod init {
                 vk::DebugUtilsMessageSeverityFlagsEXT::INFO
                     | vk::DebugUtilsMessageSeverityFlagsEXT::WARNING
                     | vk::DebugUtilsMessageSeverityFlagsEXT::ERROR
-            },
+            }
             LevelFilter::Trace => {
                 vk::DebugUtilsMessageSeverityFlagsEXT::VERBOSE
                     | vk::DebugUtilsMessageSeverityFlagsEXT::INFO
                     | vk::DebugUtilsMessageSeverityFlagsEXT::WARNING
                     | vk::DebugUtilsMessageSeverityFlagsEXT::ERROR
-            },
+            }
         };
 
         vk::DebugUtilsMessengerCreateInfoEXT::builder()
@@ -131,13 +136,16 @@ pub(crate) mod init {
 
         let message = CStr::from_ptr((*p_callback_data).p_message);
 
-        let output = match message_severity {
+        match message_severity {
             vk::DebugUtilsMessageSeverityFlagsEXT::ERROR => {
                 let msg = message.to_str().expect("Failed to convert &CStr to &str.");
                 let tokens = parser::parse_vk_validation_error_message(msg);
 
                 let mut context_objs: String = String::new();
-                tokens.context_objects.iter().for_each(|obj| { context_objs += &format!("\t| {} | {}: {}\n", obj.index, obj.vk_type, obj.handle); });
+                tokens.context_objects.iter().for_each(|obj| {
+                    context_objs +=
+                        &format!("\t| {} | {}: {}\n", obj.index, obj.vk_type, obj.handle);
+                });
 
                 let string =
                     format!("\nCONTEXT:\n\t{vulkan_id}\n{context_objects}\nMSG: {message}\n\n_______________\n",
@@ -147,7 +155,9 @@ pub(crate) mod init {
 
                 log::error!("{}", string);
             }
-            vk::DebugUtilsMessageSeverityFlagsEXT::WARNING => log::warn!("{} [{:?}]", vk_message_type, message),
+            vk::DebugUtilsMessageSeverityFlagsEXT::WARNING => {
+                log::warn!("{} [{:?}]", vk_message_type, message)
+            }
             vk::DebugUtilsMessageSeverityFlagsEXT::INFO => {
                 let msg = message.to_str().expect("Failed to convert &Cstr to &str.");
                 let msg = parser::parse_vk_general_message(msg);
@@ -157,10 +167,9 @@ pub(crate) mod init {
                 if config::VK_VERBOSE_LOGGING_ENABLE {
                     log::trace!("{} [{:?}]", vk_message_type, message);
                 }
-            },
+            }
             _ => log::error!("Unknown message severity. This code should never be reached."),
         };
-
 
         ash::vk::FALSE
     }
@@ -183,18 +192,18 @@ pub(crate) mod init {
         }
 
         pub fn parse_vk_validation_error_message(input: &str) -> ValidationError {
+            let sections: Vec<String> = input
+                .clone()
+                .split("|")
+                .map(|str| str.to_string())
+                .collect();
 
-            let mut sections: Vec<String> =
-                input
-                    .clone()
-                    .split("|")
-                    .map(|str| str.to_string())
-                    .collect();
-
-            let context_section = sections.iter().enumerate().find_map(|(i, s)| {
+            let context_section = sections.iter().find_map(|s| {
                 if s.contains("[ ") && s.contains(" ]") {
                     Some(s)
-                } else { None }
+                } else {
+                    None
+                }
             });
 
             if let Some(context) = context_section {
@@ -211,8 +220,17 @@ pub(crate) mod init {
                             let index = index.replace(" ", "");
 
                             if let Some((handle, vk_type)) = rest.split_once(",") {
-                                let handle = handle.split_once("= ").unwrap_or(("", "Unknown handle")).1.replace(" ", "");
-                                let vk_type = vk_type.split_once("= ").unwrap_or(("", "Unknown type")).1.replace(" ", "").replace(";", "");
+                                let handle = handle
+                                    .split_once("= ")
+                                    .unwrap_or(("", "Unknown handle"))
+                                    .1
+                                    .replace(" ", "");
+                                let vk_type = vk_type
+                                    .split_once("= ")
+                                    .unwrap_or(("", "Unknown type"))
+                                    .1
+                                    .replace(" ", "")
+                                    .replace(";", "");
 
                                 let err = ContextObj {
                                     index,
@@ -220,24 +238,27 @@ pub(crate) mod init {
                                     handle,
                                 };
                                 Some(err)
-                            } else { None }
-                        } else { None }
-                    }).collect();
-
+                            } else {
+                                None
+                            }
+                        } else {
+                            None
+                        }
+                    })
+                    .collect();
 
                 let vuid = vuid.split_once("VUID-").unwrap_or(("", vuid)).1;
                 let vuid = vuid.rsplit_once("-").unwrap_or((vuid, "")).0;
 
-
-                let msg = sections.iter().enumerate()
-                    .find_map(|(i, s)| {
-                        if s.contains("(") {
-                            Some(s.to_owned())
-                        } else { None }
-                    });
+                let msg = sections.iter().find_map(|s| {
+                    if s.contains("(") {
+                        Some(s.to_owned())
+                    } else {
+                        None
+                    }
+                });
 
                 if let Some(msg) = msg {
-
                     ValidationError {
                         vulkan_id: vuid.to_string(),
                         context_objects: processed_context_objs,
@@ -250,7 +271,7 @@ pub(crate) mod init {
                         context_objects: vec![ContextObj {
                             index: "".to_string(),
                             vk_type: "".to_string(),
-                            handle: "".to_string()
+                            handle: "".to_string(),
                         }],
                         message: input.to_string(),
                     }
@@ -262,7 +283,7 @@ pub(crate) mod init {
                     context_objects: vec![ContextObj {
                         index: "".to_string(),
                         vk_type: "".to_string(),
-                        handle: "".to_string()
+                        handle: "".to_string(),
                     }],
                     message: input.to_string(),
                 }
