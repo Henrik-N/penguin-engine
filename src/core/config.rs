@@ -15,7 +15,6 @@ pub(crate) fn required_device_features() -> vk::PhysicalDeviceFeatures {
     }
 }
 
-
 /// **********************
 /// DEBUG CONFIGURATION
 /// **********************

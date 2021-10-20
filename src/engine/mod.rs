@@ -1,9 +1,51 @@
+mod buffers;
+use buffers::PAllocatedBuffer;
+
+mod math;
+use math::prelude::*;
+
 use crate::engine::render_backend::Core;
 use anyhow::*;
 use ash::vk;
 use log;
 use pe::pipeline::{PPipeline, PPipelineBuilder};
 use render_backend::RenderContext;
+
+#[derive(Clone, Copy)]
+pub struct Vertex {
+    position: Vec2,
+    color: Vec3,
+}
+
+impl Vertex {
+    fn get_binding_descriptions() -> [vk::VertexInputBindingDescription; 1] {
+        [vk::VertexInputBindingDescription {
+            binding: 0,
+            stride: std::mem::size_of::<Self>() as u32,
+            input_rate: vk::VertexInputRate::VERTEX,
+        }]
+    }
+
+    fn get_attribute_descriptions() -> [vk::VertexInputAttributeDescription; 2] {
+        let offset0 = 0;
+        let offset1 = std::mem::size_of::<Vec2>();
+
+        [
+            vk::VertexInputAttributeDescription {
+                binding: 0,
+                location: 0,
+                format: Vec2::vk_format(),
+                offset: offset0 as u32,
+            },
+            vk::VertexInputAttributeDescription {
+                binding: 0,
+                location: 1,
+                format: Vec3::vk_format(),
+                offset: offset1 as u32,
+            },
+        ]
+    }
+}
 
 pub struct Renderer {
     core: Core,
@@ -12,6 +54,7 @@ pub struct Renderer {
     pipeline: PPipeline,
     wireframe_pipeline: PPipeline,
     wireframe_mode: bool,
+    vertex_buffer: PAllocatedBuffer,
 }
 
 impl Drop for Renderer {
@@ -25,6 +68,8 @@ impl Drop for Renderer {
         }
         self.pipeline.destroy(&self.context.device);
         self.wireframe_pipeline.destroy(&self.context.device);
+        self.vertex_buffer.destroy(&self.context.device);
+
         self.context.shutdown();
         self.core.shutdown();
     }
@@ -42,6 +87,34 @@ impl Renderer {
 
         let context = RenderContext::create(&core)?;
 
+        let vertices = [
+            Vertex {
+                position: Vec2::new(0.0, -0.5),
+                color: Vec3::new(1.0, 0.0, 0.0),
+            },
+            Vertex {
+                position: Vec2::new(0.5, 0.5),
+                color: Vec3::new(0.0, 1.0, 0.0),
+            },
+            Vertex {
+                position: Vec2::new(-0.5, 0.5),
+                color: Vec3::new(0.0, 0.0, 1.0),
+            },
+        ];
+
+
+        let vertex_buffer = buffers::create_vertex_buffer(
+            &context.device,
+            core.physical_device_memory_properties,
+            &vertices);
+
+
+        let vertex_input_bindings = Vertex::get_binding_descriptions();
+        let attribute_descriptions = Vertex::get_attribute_descriptions();
+
+        //
+        // Pipelines creation
+        //
         let pipeline = PPipelineBuilder::default(
             &context.device,
             context.swapchain_extent,
@@ -49,6 +122,7 @@ impl Renderer {
             vk::PipelineBindPoint::GRAPHICS,
         )
         .shaders(&["simple.vert", "simple.frag"])
+        .vertex_input(&vertex_input_bindings, &attribute_descriptions)
         .build();
 
         let wireframe_pipeline = PPipelineBuilder::default(
@@ -58,6 +132,7 @@ impl Renderer {
             vk::PipelineBindPoint::GRAPHICS,
         )
         .shaders(&["simple.vert", "simple.frag"])
+        .vertex_input(&vertex_input_bindings, &attribute_descriptions)
         .wireframe_mode()
         .build();
 
@@ -68,6 +143,7 @@ impl Renderer {
             pipeline,
             wireframe_pipeline,
             wireframe_mode: false,
+            vertex_buffer,
         })
     }
 
@@ -79,6 +155,10 @@ impl Renderer {
         let _ = delta_time;
 
         self.frame_num += 1;
+
+
+
+
 
         self.context.submit_render_commands(
             &[vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT],
@@ -99,6 +179,9 @@ impl Renderer {
                     })
                     .clear_values(&clear_value);
 
+
+
+
                 unsafe {
                     device.cmd_begin_render_pass(
                         command_buffer,
@@ -111,8 +194,20 @@ impl Renderer {
                     } else {
                         self.wireframe_pipeline.bind(device, command_buffer);
                     }
-                    // actual render commands area
 
+                
+
+                    let offsets = [0];
+                    device.cmd_bind_vertex_buffers(
+                        command_buffer, 
+                        0, 
+                        &[self.vertex_buffer.buffer],
+                        &offsets);
+
+
+
+
+                    // actual render commands area
                     device.cmd_draw(command_buffer, 3_u32, 1_u32, 0_u32, 0_u32);
 
                     device.cmd_end_render_pass(command_buffer);
@@ -195,6 +290,7 @@ mod render_backend {
         pub surface: vk::SurfaceKHR,
         pub surface_loader: ash::extensions::khr::Surface,
         pub physical_device: vk::PhysicalDevice,
+        pub physical_device_memory_properties: vk::PhysicalDeviceMemoryProperties,
         pub queue_index: u32,
     }
 
@@ -217,6 +313,13 @@ mod render_backend {
             let (physical_device, queue_index) =
                 pe::device::select_physical_device(&instance, surface, &surface_loader)?;
 
+
+            let physical_device_memory_properties = 
+                unsafe {
+                    instance.get_physical_device_memory_properties(physical_device)
+                };
+
+
             Ok(Self {
                 debug_utils_loader,
                 debug_messenger,
@@ -225,6 +328,7 @@ mod render_backend {
                 surface,
                 surface_loader,
                 physical_device,
+                physical_device_memory_properties,
                 queue_index,
             })
         }

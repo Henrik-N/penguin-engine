@@ -173,6 +173,18 @@ impl<'a> PPipelineBuilder<'a> {
         }
     }
 
+    pub fn vertex_input(
+        mut self,
+        vertex_binding_descriptions: &'a [vk::VertexInputBindingDescription],
+        vertex_attribute_descriptions: &'a [vk::VertexInputAttributeDescription],
+    ) -> Self {
+        self.vertex_input = self
+            .vertex_input
+            .vertex_binding_descriptions(&vertex_binding_descriptions)
+            .vertex_attribute_descriptions(&vertex_attribute_descriptions);
+        self
+    }
+
     #[allow(dead_code)]
     pub fn wireframe_mode(mut self) -> Self {
         self.rasterization = self.rasterization.polygon_mode(vk::PolygonMode::LINE);
@@ -206,6 +218,7 @@ impl<'a> PPipelineBuilder<'a> {
 
         // Vertex input
         let vertex_input = self.vertex_input;
+
 
         // Input assembly
         let input_assembly = self.input_assembly;

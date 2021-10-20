@@ -18,6 +18,7 @@ pub fn select_physical_device(
     init::select_physical_device(&instance, surface, &surface_fn)
 }
 
+
 pub fn create_logical_device(
     instance: &ash::Instance,
     physical_device: vk::PhysicalDevice,
@@ -152,7 +153,7 @@ mod init {
             vk::api_version_patch(properties.api_version)
         );
 
-        let graphics_queue_index = 
+        let graphics_queue_index =
             find_graphics_queue_family(&instance, physical_device, surface, surface_fn);
 
         let are_required_extensions_supported =
@@ -160,7 +161,7 @@ mod init {
 
         let is_swapchain_supported = if are_required_extensions_supported {
             let swapchain_support = query_swapchain_support(physical_device, surface, surface_fn);
-            
+
             !swapchain_support.surface_color_formats.is_empty()
                 && !swapchain_support.surface_present_modes.is_empty()
         } else {
