@@ -6,8 +6,6 @@ use super::config;
 use crate::engine::Renderer;
 use anyhow::Result;
 
-/// Settings for the window when first starting the application
-
 pub struct Application {
     pub(crate) ptime: PTime,
     pub window: winit::window::Window,

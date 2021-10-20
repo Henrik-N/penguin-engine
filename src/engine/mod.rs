@@ -57,7 +57,9 @@ impl Renderer {
         self.frame_num += 1;
 
         self.context
-            .submit_render_commands(|device, command_buffer, frame_buffer| {
+            .submit_render_commands(
+                &[vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT],
+                |device, command_buffer, frame_buffer| {
                 let flash = f32::abs(f32::sin(self.frame_num as f32 / 120_f32));
                 let color = [0.0_f32, 0.0_f32, flash, 1.0_f32];
 
@@ -74,6 +76,7 @@ impl Renderer {
                     })
                     .clear_values(&clear_value);
 
+
                 unsafe {
                     device.cmd_begin_render_pass(
                         command_buffer,
@@ -82,6 +85,15 @@ impl Renderer {
                     );
 
                     // actual render commands area
+                    device.cmd_bind_pipeline(
+                        command_buffer,
+                        vk::PipelineBindPoint::GRAPHICS,
+                        self.pipeline.pipeline);
+
+
+                    device.cmd_draw(command_buffer, 3_u32, 1_u32, 0_u32, 0_u32);
+
+
 
                     device.cmd_end_render_pass(command_buffer);
                 }
@@ -245,6 +257,7 @@ mod render_backend {
             RenderPassFn: FnOnce(&ash::Device, vk::CommandBuffer, vk::Framebuffer),
         >(
             &self,
+            pipeline_stage_flags: &[vk::PipelineStageFlags],
             render_pass_fn: RenderPassFn,
         ) {
             let wait_semaphores = [self.presenting_complete_semaphore];
@@ -273,7 +286,7 @@ mod render_backend {
                 self.command_buffer,
                 self.render_fence,
                 self.queue_handle,
-                &[vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT],
+                pipeline_stage_flags,
                 &wait_semaphores,
                 &[self.rendering_complete_semaphore],
                 *frame_buffer,
