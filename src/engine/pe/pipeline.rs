@@ -1,4 +1,4 @@
-use crate::engine::pe::shaders::Shader;
+use crate::engine::{pe::shaders::Shader, push_constants::PushConstants};
 use ash::vk;
 
 pub struct PPipeline {
@@ -43,6 +43,9 @@ pub struct PPipelineBuilder<'a> {
     color_blending: vk::PipelineColorBlendStateCreateInfoBuilder<'a>,
 
     pipeline_layout: vk::PipelineLayoutCreateInfoBuilder<'a>,
+
+    vertex_shader_push_constants_byte_offset: Option<u32>,
+    fragment_shader_push_constants_byte_offset: Option<u32>,
 }
 
 impl<'a> PPipelineBuilder<'a> {
@@ -170,6 +173,8 @@ impl<'a> PPipelineBuilder<'a> {
             color_blend_attachments,
             color_blending,
             pipeline_layout,
+            vertex_shader_push_constants_byte_offset: None,
+            fragment_shader_push_constants_byte_offset: None,
         }
     }
 
@@ -208,6 +213,50 @@ impl<'a> PPipelineBuilder<'a> {
         self
     }
 
+    #[allow(dead_code)]
+    pub fn add_push_constants<PushConstantType: PushConstants>(mut self) -> Self {
+        let size = std::mem::size_of::<PushConstantType>() as u32;
+
+        match PushConstantType::shader_stage() {
+            vk::ShaderStageFlags::VERTEX => {
+                self.add_vertex_shader_push_constants::<PushConstantType>(size);
+            }
+            vk::ShaderStageFlags::FRAGMENT => {
+                self.add_fragment_shader_push_constants::<PushConstantType>(size);
+            }
+            _ => {
+                panic!(
+                    "Push constants for that shader stage are not yet 
+                         implemented in the pipeline builder."
+                )
+            }
+        }
+
+        self
+    }
+
+    fn add_vertex_shader_push_constants<PushConstantType>(&mut self, size: u32) {
+        log::trace!("Adding vertex shader push constants of size: {}", size);
+        log::debug!("Adding vertex shader push constants of size: {}", size);
+
+        if let Some(offset) = &mut self.vertex_shader_push_constants_byte_offset {
+            *offset += size;
+        } else {
+            self.vertex_shader_push_constants_byte_offset = Some(size);
+        }
+    }
+
+    fn add_fragment_shader_push_constants<PushConstantType>(&mut self, size: u32) {
+        log::trace!("Adding fragment shader push constants of size: {}", size);
+        log::debug!("Adding fragment shader push constants of size: {}", size);
+
+        if let Some(offset) = &mut self.fragment_shader_push_constants_byte_offset {
+            *offset += size;
+        } else {
+            self.fragment_shader_push_constants_byte_offset = Some(size);
+        }
+    }
+
     /// Creates the pipeline and returns the compiled shaders for reuse if
     pub fn build(self) -> PPipeline {
         let shader_stages: Vec<vk::PipelineShaderStageCreateInfo> = self
@@ -218,7 +267,6 @@ impl<'a> PPipelineBuilder<'a> {
 
         // Vertex input
         let vertex_input = self.vertex_input;
-
 
         // Input assembly
         let input_assembly = self.input_assembly;
@@ -262,12 +310,71 @@ impl<'a> PPipelineBuilder<'a> {
         let color_blending = self.color_blending.attachments(&color_blend_attachments);
 
         // Pipeline layout
-        let pipeline_layout_create_info = self.pipeline_layout;
+        //
+
+        let byte_offsets: &[Option<u32>] = &[
+            self.vertex_shader_push_constants_byte_offset,
+            self.fragment_shader_push_constants_byte_offset,
+        ];
+
+        // FIXME: Using push constants results in a validation error that
+        // says that vk::PushConstantRange doesn't contain vk::ShaderStageFlags::VERTEX,
+        // even though I am providing it.
+        // I'm guessing some memory is getting cleaned up somewhere it shouldn't.
+
+        let mut current_offset = 0;
+        let push_constant_ranges: Vec<vk::PushConstantRange> = byte_offsets
+            .iter()
+            .enumerate()
+            .filter_map(|(i, &size)| {
+                if let Some(size) = size {
+                    log::debug!(
+                        "Push constant index {} has size {} and offset {}.",
+                        i,
+                        size,
+                        current_offset
+                    );
+
+                    let stage_flag = match i {
+                        0 => vk::ShaderStageFlags::VERTEX,
+                        _ => vk::ShaderStageFlags::FRAGMENT,
+                    };
+                    log::debug!("Shader stage: {:?}", stage_flag);
+
+                    let range = vk::PushConstantRange::builder()
+                        .offset(current_offset)
+                        .size(size)
+                        .stage_flags(stage_flag)
+                        .build();
+                    current_offset += size;
+                    Some(range)
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        push_constant_ranges.iter().for_each(|pc| {
+            log::debug!(
+                "Push constant with flag: {:#?} has range offset: {}",
+                pc.stage_flags,
+                pc.offset
+            );
+        });
+
+        log::debug!("Reached here 0!");
+
+        let pipeline_layout_create_info = self
+            .pipeline_layout
+            .push_constant_ranges(&push_constant_ranges);
+
         let pipeline_layout = unsafe {
             self.device
                 .create_pipeline_layout(&pipeline_layout_create_info, None)
         }
         .expect("Couldn't create pipeline layout");
+
+        log::debug!("Reached here 1!");
 
         // Render pass
         let render_pass = self.render_pass;

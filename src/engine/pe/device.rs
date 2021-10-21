@@ -18,7 +18,6 @@ pub fn select_physical_device(
     init::select_physical_device(&instance, surface, &surface_fn)
 }
 
-
 pub fn create_logical_device(
     instance: &ash::Instance,
     physical_device: vk::PhysicalDevice,
