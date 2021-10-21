@@ -47,10 +47,8 @@ impl Mesh {
             },
         ];
 
-        let vertex_buffer = AllocatedBuffer::new_vertex_buffer(
-            device, 
-            pd_memory_properties, 
-            &vertices);
+        let vertex_buffer =
+            AllocatedBuffer::new_vertex_buffer(device, pd_memory_properties, &vertices);
 
         Self {
             vertices: vertices.to_vec(),
@@ -62,6 +60,9 @@ impl Mesh {
 struct _Texture;
 struct _Material;
 struct _RenderGraph;
+
+// 2 == double buffering
+const MAX_FRAMES_COUNT: usize = 2;
 
 pub struct Renderer {
     core: Core,
@@ -99,13 +100,10 @@ impl Renderer {
     pub(crate) fn create(window: &winit::window::Window) -> Result<Self> {
         let core = Core::create(&window)?;
 
-        let context = RenderContext::create(&core)?;
+        let context = RenderContext::create(&core, MAX_FRAMES_COUNT)?;
 
-
-        let triangle_mesh = Mesh::create_triangle_mesh(
-            &context.device,
-            core.physical_device_memory_properties);
-
+        let triangle_mesh =
+            Mesh::create_triangle_mesh(&context.device, core.physical_device_memory_properties);
 
         let vertex_input_bindings = Vertex::get_binding_descriptions();
         let vertex_attribute_descriptions = Vertex::get_attribute_descriptions();
@@ -156,9 +154,11 @@ impl Renderer {
         let _ = delta_time;
 
         self.frame_num += 1;
+        let frame_index = self.frame_num % MAX_FRAMES_COUNT;
 
         self.context.submit_render_commands(
             &[vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT],
+            frame_index,
             |device, command_buffer, frame_buffer| {
                 let flash = f32::abs(f32::sin(self.frame_num as f32 / 120_f32));
                 let color = [0.0_f32, 0.0_f32, flash, 1.0_f32];
@@ -212,7 +212,6 @@ impl Renderer {
                     let projection =
                         Mat4::perspective_rh(fov_y_radians, aspect_ratio, z_near, z_far);
 
-
                     let mvp = projection * view;
 
                     // let constants = MeshPushConstants {
@@ -228,17 +227,10 @@ impl Renderer {
                     //     constants.as_u8_slice(),
                     // );
 
-
                     let buffers = [self.triangle_mesh.vertex_buffer.buffer_handle];
                     let device_sizes = [0_u64];
 
-                    device.cmd_bind_vertex_buffers(
-                        command_buffer,
-                        0,
-                        &buffers,
-                        &device_sizes
-                        );
-
+                    device.cmd_bind_vertex_buffers(command_buffer, 0, &buffers, &device_sizes);
 
                     device.cmd_draw(command_buffer, 3_u32, 1_u32, 0_u32, 0_u32);
 
@@ -252,6 +244,7 @@ impl Renderer {
 mod pe;
 
 mod render_backend {
+    use crate::core::config;
     use crate::core::logger;
     use crate::engine::pe;
     use crate::engine::pe::command_buffers::record_submit_command_buffer;
@@ -322,11 +315,58 @@ mod render_backend {
         }
     }
 
+    pub(super) struct FrameData {
+        pub(super) command_pool: vk::CommandPool,
+        pub(super) command_buffer: vk::CommandBuffer,
+
+        pub(super) render_fence: vk::Fence,
+        pub(super) rendering_complete_semaphore: vk::Semaphore,
+        pub(super) presenting_complete_semaphore: vk::Semaphore,
+    }
+    impl FrameData {
+        pub fn new(device: &ash::Device, queue_index: u32) -> Self {
+            // command pool and command buffer ---------
+            let (command_pool, command_buffer) =
+                pe::command_buffers::init::create_command_pool_and_buffer(device, queue_index);
+
+            // fences ---------
+            let render_fence_create_info =
+                vk::FenceCreateInfo::builder().flags(vk::FenceCreateFlags::SIGNALED); // start signaled, to wait for it before the first gpu command
+
+            let render_fence = unsafe { device.create_fence(&render_fence_create_info, None) }
+                .expect("Failed to create render fence.");
+
+            // semaphores --------------
+            let semaphore_create_info = vk::SemaphoreCreateInfo::default();
+
+            let rendering_complete_semaphore =
+                unsafe { device.create_semaphore(&semaphore_create_info, None) }
+                    .expect("Failed to create semaphore");
+            let presenting_complete_semaphore =
+                unsafe { device.create_semaphore(&semaphore_create_info, None) }
+                    .expect("Failed to create semaphore");
+
+            Self {
+                command_pool,
+                command_buffer,
+                render_fence,
+                rendering_complete_semaphore,
+                presenting_complete_semaphore,
+            }
+        }
+
+        pub unsafe fn destroy(&mut self, device: &ash::Device) {
+            device.destroy_semaphore(self.presenting_complete_semaphore, None);
+            device.destroy_semaphore(self.rendering_complete_semaphore, None);
+            device.destroy_fence(self.render_fence, None);
+            device.destroy_command_pool(self.command_pool, None);
+        }
+    }
+
     /// Struct containing most Vulkan object handles and global states.
     #[allow(dead_code)]
     pub(super) struct RenderContext {
         pub(super) device: ash::Device,
-        // pub(super) graphics_queue_index: u32,
         pub(super) queue_handle: vk::Queue,
 
         pub(super) swapchain_loader: ash::extensions::khr::Swapchain,
@@ -336,12 +376,7 @@ mod render_backend {
         pub(super) swapchain_images: Vec<vk::Image>,
         pub(super) swapchain_image_views: Vec<vk::ImageView>,
 
-        pub(super) command_pool: vk::CommandPool,
-        pub(super) command_buffer: vk::CommandBuffer,
-
-        pub(super) render_fence: vk::Fence,
-        pub(super) rendering_complete_semaphore: vk::Semaphore,
-        pub(super) presenting_complete_semaphore: vk::Semaphore,
+        pub(super) frame_data: Vec<FrameData>,
 
         pub(super) render_pass: vk::RenderPass,
         pub(super) frame_buffers: Vec<vk::Framebuffer>,
@@ -353,9 +388,12 @@ mod render_backend {
         >(
             &self,
             pipeline_stage_flags: &[vk::PipelineStageFlags],
+            frame_index: usize,
             render_pass_fn: RenderPassFn,
         ) {
-            let wait_semaphores = [self.presenting_complete_semaphore];
+            let frame = &self.frame_data[frame_index];
+
+            let wait_semaphores = [frame.presenting_complete_semaphore];
 
             // request new image from swapchain
             let (image_index, _is_suboptimal) = unsafe {
@@ -378,19 +416,19 @@ mod render_backend {
 
             record_submit_command_buffer(
                 &self.device,
-                self.command_buffer,
-                self.render_fence,
+                frame.command_buffer,
+                frame.render_fence,
                 self.queue_handle,
                 pipeline_stage_flags,
                 &wait_semaphores,
-                &[self.rendering_complete_semaphore],
+                &[frame.rendering_complete_semaphore],
                 *frame_buffer,
                 render_pass_fn,
             );
 
             // after commands are submitted, wait for rending to complete and then display the image to the screen
             let swapchains = [self.swapchain];
-            let wait_semaphores = [self.rendering_complete_semaphore];
+            let wait_semaphores = [frame.rendering_complete_semaphore];
             let image_indices = [image_index];
             let present_info = vk::PresentInfoKHR::builder()
                 .swapchains(&swapchains)
@@ -404,7 +442,7 @@ mod render_backend {
             }
         }
 
-        pub fn create(core: &Core) -> Result<Self> {
+        pub fn create(core: &Core, overlapped_frames_count: usize) -> Result<Self> {
             log::trace!("Queue index: {}", core.queue_index);
 
             log::trace!("Creating logical device");
@@ -443,30 +481,6 @@ mod render_backend {
                 swapchain_image_views,
             } = swapchain;
 
-            let (command_pool, setup_command_buffer) =
-                pe::command_buffers::init::create_command_pool_and_buffer(
-                    &device,
-                    core.queue_index,
-                );
-
-            // fences ---------
-            let render_fence_create_info =
-                vk::FenceCreateInfo::builder().flags(vk::FenceCreateFlags::SIGNALED); // start signaled, to wait for it before the first gpu command
-
-            let render_fence = unsafe { device.create_fence(&render_fence_create_info, None) }
-                .expect("Failed to create render fence.");
-
-            // semaphores --------------
-
-            let semaphore_create_info = vk::SemaphoreCreateInfo::default();
-
-            let rendering_complete_semaphore =
-                unsafe { device.create_semaphore(&semaphore_create_info, None) }
-                    .expect("Failed to create semaphore");
-            let presenting_complete_semaphore =
-                unsafe { device.create_semaphore(&semaphore_create_info, None) }
-                    .expect("Failed to create semaphore");
-
             // render pass --------------
 
             let (render_pass, _attachment_count) =
@@ -489,9 +503,14 @@ mod render_backend {
                 })
                 .collect();
 
+            
+            let frame_data: Vec<FrameData> = (0..overlapped_frames_count).map(|_|{
+                FrameData::new(&device, core.queue_index)
+            }).collect();
+
+
             Ok(Self {
                 device,
-                // graphics_queue_index: queue_index,
                 queue_handle,
                 swapchain,
                 swapchain_loader,
@@ -499,11 +518,7 @@ mod render_backend {
                 swapchain_extent,
                 swapchain_images,
                 swapchain_image_views,
-                command_pool,
-                command_buffer: setup_command_buffer,
-                rendering_complete_semaphore,
-                presenting_complete_semaphore,
-                render_fence,
+                frame_data,
                 render_pass,
                 frame_buffers,
             })
@@ -512,9 +527,6 @@ mod render_backend {
         pub fn shutdown(&mut self) {
             unsafe {
                 log::debug!("Dropping render context");
-                self.device
-                    .wait_for_fences(&[self.render_fence], true, u64::MAX)
-                    .expect("Failed waiting for fences");
 
                 self.frame_buffers.iter().for_each(|&frame_buffer| {
                     self.device.destroy_framebuffer(frame_buffer, None);
@@ -522,17 +534,13 @@ mod render_backend {
 
                 self.device.destroy_render_pass(self.render_pass, None);
 
-                self.device
-                    .destroy_semaphore(self.presenting_complete_semaphore, None);
-                self.device
-                    .destroy_semaphore(self.rendering_complete_semaphore, None);
-                self.device.destroy_fence(self.render_fence, None);
+                self.frame_data.iter_mut().for_each(|frame| {
+                    frame.destroy(&self.device);
+                });
 
                 self.swapchain_image_views.iter().for_each(|&image_view| {
                     self.device.destroy_image_view(image_view, None);
                 });
-
-                self.device.destroy_command_pool(self.command_pool, None);
 
                 self.swapchain_loader
                     .destroy_swapchain(self.swapchain, None);

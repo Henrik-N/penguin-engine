@@ -118,4 +118,3 @@ fn find_memory_type_index(
         })
         .map(|(index, _memory_type)| index as _)
 }
-
