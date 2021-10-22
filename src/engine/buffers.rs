@@ -1,22 +1,25 @@
 use super::Vertex;
 use ash::util::Align;
 use ash::vk;
+use std::rc::Rc;
 
 // ------------------------
 pub struct AllocatedBuffer {
+    device: Rc<ash::Device>,
     pub buffer_handle: vk::Buffer, // handle to gpu-side buffer
     buffer_memory: vk::DeviceMemory,
 }
+impl Drop for AllocatedBuffer {
+  fn drop(&mut self) {
+      unsafe {
+          self.device.destroy_buffer(self.buffer_handle, None);
+          self.device.free_memory(self.buffer_memory, None);
+      }
+  }
+}
 impl AllocatedBuffer {
-    pub fn destroy(&mut self, device: &ash::Device) {
-        unsafe {
-            device.destroy_buffer(self.buffer_handle, None);
-            device.free_memory(self.buffer_memory, None);
-        }
-    }
-
     pub fn new_vertex_buffer(
-        device: &ash::Device,
+        device: Rc<ash::Device>,
         physical_device_memory_properties: vk::PhysicalDeviceMemoryProperties,
         vertices: &[Vertex],
     ) -> AllocatedBuffer {
@@ -93,6 +96,7 @@ impl AllocatedBuffer {
         };
 
         AllocatedBuffer {
+            device,
             buffer_handle: buffer,
             buffer_memory: allocated_memory,
         }

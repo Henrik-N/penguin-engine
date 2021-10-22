@@ -1,20 +1,16 @@
 use crate::engine::{pe::shaders::Shader, push_constants::PushConstants};
 use ash::vk;
 
+#[derive(Eq, PartialEq)]
 pub struct PPipeline {
     pub pipeline: vk::Pipeline,
     pub pipeline_layout: vk::PipelineLayout,
     pub pipeline_bindpoint: vk::PipelineBindPoint,
 }
-
 impl PPipeline {
-    pub fn bind(&self, device: &ash::Device, command_buffer: vk::CommandBuffer) {
-        unsafe {
-            device.cmd_bind_pipeline(command_buffer, self.pipeline_bindpoint, self.pipeline);
-        }
-    }
-
     pub fn destroy(&mut self, device: &ash::Device) {
+
+        log::debug!("Pipeline gets destroyed!");
         unsafe {
             device.destroy_pipeline(self.pipeline, None);
             device.destroy_pipeline_layout(self.pipeline_layout, None);
