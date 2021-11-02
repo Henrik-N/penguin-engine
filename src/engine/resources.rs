@@ -4,13 +4,11 @@ use crate::engine::pe::pipeline::PPipeline;
 use ash::vk;
 use std::collections::hash_map::HashMap;
 use std::rc::{Rc, Weak};
-use anyhow::*;
-
 
 pub mod prelude {
     pub use super::{
-        DescriptorSet, HashResource, Material, Mesh, MeshResource, RenderObject,
-        UniformBufferGlobalData, Vertex,
+        HashResource, Material, Mesh, MeshResource, RenderObject,
+        Vertex,
     };
 }
 
@@ -201,59 +199,6 @@ impl Vertex {
     }
 }
 
-pub trait DescriptorSet {
-    fn create_descriptor_set_layout(device: &ash::Device) -> vk::DescriptorSetLayout;
-    fn binding_index() -> u32;
-}
-/// Uniform buffer intended for global data, i.e data that will be bound once per frame.
-/// TODO: Change to only camera data,
-/// model data will be seperate
-#[derive(Clone, Copy, Default)]
-pub struct UniformBufferGlobalData {
-    pub data: Vec4,
-    pub render_matrix: Mat4,
-
-    // pub model: Mat4,
-    // pub view: Mat4,
-    // pub projection: Mat4,
-    
-    // **
-    // GPU camera data
-    // **
-    //view: Mat4, // camera transform
-    //projection: Mat4, // perspective matrix
-    // view_proj: Mat4, // both of the above multiplied together,
-    // to avoid having to multiply them in the shader
-}
-impl DescriptorSet for UniformBufferGlobalData {
-    fn binding_index() -> u32 {
-        0_u32
-    }
-
-    fn create_descriptor_set_layout(device: &ash::Device) -> vk::DescriptorSetLayout {
-        let layout_bindings = [vk::DescriptorSetLayoutBinding::builder()
-            .binding(0)
-            .descriptor_count(1)
-            .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER)
-            .stage_flags(vk::ShaderStageFlags::VERTEX)
-            //.immutable_samplers()
-            .build()];
-
-        let create_info = vk::DescriptorSetLayoutCreateInfo::builder().bindings(&layout_bindings);
-
-        unsafe { device.create_descriptor_set_layout(&create_info, None) }
-            .expect("Couldn't create descriptor set layout")
-    }
-}
-
-/// Uniform buffer intended for data that only needs to be bound
-/// once per pass
-//pub struct PassData {}
-
-// Data bound in the inner render loops
-//pub struct MaterialData {}
-// Data bound in the inner render loops
-//pub struct ObjectData {}
 
 const MESHES_FOLDER_PATH: &'static str = "assets/meshes/";
 
@@ -295,13 +240,10 @@ impl Mesh {
     ) -> Self {
         let file_path = String::from(MESHES_FOLDER_PATH.clone().to_string() + file_name);
 
-        log::debug!("Mesh file path: {}", file_path);
-
         let (vertices, vertex_count) = Self::load_verts_indices_from_obj(&file_path);
 
         let vertex_buffer =
             AllocatedBuffer::new_vertex_buffer(Rc::clone(&device), pd_memory_properties, &vertices);
-
 
         Self {
             vertex_count,
@@ -309,20 +251,17 @@ impl Mesh {
         }
     }
 
-
-
     // NOTE: Only supports triangulated meshes, not the entire OBJ spec.
-    fn load_verts_indices_from_obj(file_path: &str) -> (Vec<Vertex>,
-                                                        usize) {
-
+    fn load_verts_indices_from_obj(file_path: &str) -> (Vec<Vertex>, usize) {
         let model = wavefront::Obj::from_file(file_path).expect("Couldn't load obj file");
 
         let mut verts: Vec<Vertex> = Vec::new();
 
-        let (red, green, blue) = (Vec3::new(1., 0., 0.), 
-                         Vec3::new(0., 1., 0.), 
-                         Vec3::new(0., 0., 1.));
-
+        let (red, green, blue) = (
+            Vec3::new(1., 0., 0.),
+            Vec3::new(0., 1., 0.),
+            Vec3::new(0., 0., 1.),
+        );
 
         for [a, b, c] in model.triangles() {
             let a = a.position();
@@ -350,25 +289,12 @@ impl Mesh {
             });
         }
 
-        //let verts: Vec<Vertex> = 
-//         model.triangles().for_each(|[a, b, c]| {
-//             println!("Pos: {:?} {:?} {:?}", a.position(), b.position(), c.position());
-//         });
-//         //.collect();
-
         let verts_count = verts.len();
-        
+
         (verts, verts_count)
     }
 
-
-
-
-
-
-
-
-    // 
+    //
     // fn load_verts_from_obj(file_path: &str) -> Vec<Vertex> {
     //     let (models, _materials) = tobj::load_obj(file_path, &tobj::LoadOptions::default())
     //         .expect("Failed to load obj file.");
@@ -429,19 +355,6 @@ impl Mesh {
 
     //     vertices
     // }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // fn from_obj_old(
     //     file_name: &str,

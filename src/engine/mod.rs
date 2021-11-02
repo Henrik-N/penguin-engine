@@ -3,12 +3,15 @@ pub mod math;
 mod pe;
 pub mod push_constants;
 pub mod resources;
+pub mod descriptor_sets;
+
 
 use math::prelude::*;
 use resources::prelude::*;
 
 #[allow(unused_imports)]
 use push_constants::prelude::*;
+
 
 use crate::core::config;
 use crate::engine::render_backend::Core;
@@ -18,10 +21,9 @@ use log;
 use pe::pipeline::PPipelineBuilder;
 use render_backend::RenderContext;
 
-use crate::engine::buffers::prelude::*;
-use crate::engine::resources::prelude::*;
-
 use render_backend::FrameData;
+
+use crate::engine::descriptor_sets::*;
 
 // TODO
 struct _Texture;
@@ -82,7 +84,11 @@ impl Renderer {
         let vertex_input_bindings = Vertex::get_binding_descriptions();
         let vertex_attribute_descriptions = Vertex::get_attribute_descriptions();
 
-        let descriptor_set_layouts = vec![context.global_descriptor_set_layout];
+
+        let global_layout = UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&context.device);
+        //let global_layout = UniformBufferGlobalData::create_descriptor_set_layout(&context.device);
+
+        let descriptor_set_layouts = vec![global_layout];
 
         // ***
         // Pipelines creation
@@ -99,6 +105,13 @@ impl Renderer {
         .descriptor_set_layouts(descriptor_set_layouts)
         //.add_push_constants::<MeshPushConstants>()
         .build();
+
+
+        unsafe {
+            context.device.destroy_descriptor_set_layout(global_layout, None);
+        }
+
+
 
         let mut materials = HashResource::new();
         materials.insert(
@@ -136,29 +149,13 @@ impl Renderer {
         frame_data: &FrameData,
         frame_num: usize,
     ) {
-        // create mvp matrix
-        // let camera_loc = Vec3::new(0.0, 0.0, 3.0);
-        // let camera_forward = Vec3::new(0.0, 0.0, -1.0);
-        // let camera_up = Vec3::new(0.0, 1.0, 0.0);
-
-        // let view = Mat4::look_at_rh(camera_loc, camera_loc + camera_forward, camera_up);
-
-        // let model = Mat4::IDENTITY;
-
-        // let vec = Vec4::new(1., 0., 0., 1.);
-        //let translation_matrix = Mat4::from_translation(Vec3::new(1., 1., 0.));
-
-        //let translation_matrix = Mat4::from_translation(Vec3::new(0., 0., 0.));
-
-        //log::debug!("Vec: {:?}", vec);
 
         let fov_y_radians = 70.0_f32.to_radians();
         let aspect_ratio = config::WIDTH as f32 / config::HEIGHT as f32;
         let (z_near, z_far) = (0.1_f32, 200.0_f32);
-        let mut projection = Mat4::perspective_rh(fov_y_radians, aspect_ratio, z_near, z_far);
+        let projection = Mat4::perspective_rh(fov_y_radians, aspect_ratio, z_near, z_far);
 
         //projection[1][1] *= -1;
-        log::debug!("Projection matrix: {:#?}", projection);
 
 
         let mat = self.materials.get_rc("default");
@@ -197,9 +194,6 @@ impl Renderer {
             data: Vec4::default(),
             render_matrix: mesh_matrix,
         };
-
-
-
         frame_data.update_global_uniform_buffer(uniform_buffer_data);
 
 
@@ -209,7 +203,6 @@ impl Renderer {
 
         // bind global descriptor sets
         frame_data.bind_global_descriptor_set(
-            &self.context.device,
             command_buffer,
             mat.pipeline.pipeline_layout,
         );
@@ -375,7 +368,6 @@ pub mod render_backend {
     use crate::engine::pe;
     use crate::engine::pe::command_buffers::record_submit_command_buffer;
     use crate::engine::pe::render_pass::PRenderPass;
-    use crate::engine::resources::prelude::*;
     use anyhow::*;
     use ash::vk;
     use std::rc::Rc;
@@ -414,6 +406,15 @@ pub mod render_backend {
             let physical_device_memory_properties =
                 unsafe { instance.get_physical_device_memory_properties(physical_device) };
 
+            let physical_device_properties = 
+                unsafe { instance.get_physical_device_properties(physical_device)};
+            let min_ubuffer_offset_alignment = 
+                physical_device_properties.limits.min_uniform_buffer_offset_alignment;
+           
+            log::info!("GPU min uniform buffer offset alignment is {}", min_ubuffer_offset_alignment);
+            // 256
+
+
             Ok(Self {
                 debug_utils_loader,
                 debug_messenger,
@@ -450,6 +451,11 @@ pub mod render_backend {
         }
     }
 
+
+
+
+    use super::descriptor_sets::{UniformBuffer, UniformBufferGlobalData};
+
     pub(crate) struct FrameData {
         pub(super) command_pool: vk::CommandPool,
         pub(super) command_buffer: vk::CommandBuffer,
@@ -458,37 +464,23 @@ pub mod render_backend {
         pub(super) rendering_complete_semaphore: vk::Semaphore,
         pub(super) presenting_complete_semaphore: vk::Semaphore,
 
-        global_uniform_buffer: AllocatedBuffer,
+        pub(super) uniform_buffer: UniformBuffer,
 
+        //global_uniform_buffer: AllocatedBuffer,
         //global_descriptor_pool: vk::DescriptorPool,
-        global_descriptor_set: vk::DescriptorSet,
+        //global_descriptor_set: vk::DescriptorSet,
     }
     impl FrameData {
         pub fn update_global_uniform_buffer(&self, buffer_data: UniformBufferGlobalData) {
-            let buffer_data = [buffer_data];
-            self.global_uniform_buffer.update_memory(&buffer_data);
+            self.uniform_buffer.update_global_memory(buffer_data);
         }
 
         pub fn bind_global_descriptor_set(
             &self,
-            device: &ash::Device,
             command_buffer: vk::CommandBuffer,
             pipeline_layout: vk::PipelineLayout,
-        ) {
-            let first_set = 0;
-            let descriptor_sets = [self.global_descriptor_set];
-            let dynamic_offsets = [];
-
-            unsafe {
-                device.cmd_bind_descriptor_sets(
-                    command_buffer,
-                    vk::PipelineBindPoint::GRAPHICS,
-                    pipeline_layout,
-                    first_set,
-                    &descriptor_sets,
-                    &dynamic_offsets,
-                );
-            }
+        ) { 
+            self.uniform_buffer.bind_global_set(command_buffer, pipeline_layout);
         }
 
         pub fn new(
@@ -519,53 +511,60 @@ pub mod render_backend {
                 unsafe { device.create_semaphore(&semaphore_create_info, None) }
                     .expect("Failed to create semaphore");
 
-            //Decscriptor buffer
-            let initial_data = [UniformBufferGlobalData::default()];
 
-            let global_uniform_buffer = AllocatedBuffer::create_buffer_updateable(
+            //Decscriptor buffer
+            let uniform_buffer = UniformBuffer::new(
                 Rc::clone(&device),
                 pd_memory_properties,
-                &initial_data,
-                vk::BufferUsageFlags::UNIFORM_BUFFER,
-                MemoryUsage::CpuToGpu,
-            );
+                descriptor_pool);
 
-            // descriptor sets
-            //
-            let descriptor_set_layouts = [global_descriptor_set_layout];
+            //Decscriptor buffer
+            // let initial_data = [UniformBufferGlobalData::default()];
 
-            assert_eq!(descriptor_set_layouts.len(), 1);
+            // let global_uniform_buffer = AllocatedBuffer::create_buffer_updateable(
+            //     Rc::clone(&device),
+            //     pd_memory_properties,
+            //     &initial_data,
+            //     vk::BufferUsageFlags::UNIFORM_BUFFER,
+            //     MemoryUsage::CpuToGpu,
+            // );
 
-            let descriptor_set_allocate_info = vk::DescriptorSetAllocateInfo::builder()
-                .descriptor_pool(descriptor_pool)
-                //.descriptor_set_count(1)
-                .set_layouts(&descriptor_set_layouts);
+            // // descriptor sets
+            // //
+            // let descriptor_set_layouts = [global_descriptor_set_layout];
 
-            log::debug!("Allocating a descriptor set.");
-            let allocated_descriptor_sets =
-                unsafe { device.allocate_descriptor_sets(&descriptor_set_allocate_info) }
-                    .expect("Couldn't allocate global descriptor set");
+            // assert_eq!(descriptor_set_layouts.len(), 1);
 
-            log::debug!("Descriptor set count {}", allocated_descriptor_sets.len());
+            // let descriptor_set_allocate_info = vk::DescriptorSetAllocateInfo::builder()
+            //     .descriptor_pool(descriptor_pool)
+            //     //.descriptor_set_count(1)
+            //     .set_layouts(&descriptor_set_layouts);
 
-            // point descriptor set to buffer
-            let buffer_info = [vk::DescriptorBufferInfo::builder()
-                .buffer(global_uniform_buffer.handle)
-                .offset(0)
-                .range(std::mem::size_of::<UniformBufferGlobalData>() as u64)
-                .build()];
+            // log::debug!("Allocating a descriptor set.");
+            // let allocated_descriptor_sets =
+            //     unsafe { device.allocate_descriptor_sets(&descriptor_set_allocate_info) }
+            //         .expect("Couldn't allocate global descriptor set");
 
-            let set_write = [vk::WriteDescriptorSet::builder()
-                // writing to binding 0
-                .dst_binding(UniformBufferGlobalData::binding_index())
-                .dst_set(allocated_descriptor_sets[0])
-                .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER)
-                .buffer_info(&buffer_info)
-                .build()];
+            // log::debug!("Descriptor set count {}", allocated_descriptor_sets.len());
 
-            unsafe {
-                device.update_descriptor_sets(&set_write, &[]);
-            }
+            // // point descriptor set to buffer
+            // let buffer_info = [vk::DescriptorBufferInfo::builder()
+            //     .buffer(global_uniform_buffer.handle)
+            //     .offset(0)
+            //     .range(std::mem::size_of::<UniformBufferGlobalData>() as u64)
+            //     .build()];
+
+            // let set_write = [vk::WriteDescriptorSet::builder()
+            //     // writing to binding 0
+            //     .dst_binding(UniformBufferGlobalData::binding_index())
+            //     .dst_set(allocated_descriptor_sets[0])
+            //     .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER)
+            //     .buffer_info(&buffer_info)
+            //     .build()];
+
+            // unsafe {
+            //     device.update_descriptor_sets(&set_write, &[]);
+            // }
 
             Self {
                 command_pool,
@@ -573,8 +572,9 @@ pub mod render_backend {
                 render_fence,
                 rendering_complete_semaphore,
                 presenting_complete_semaphore,
-                global_uniform_buffer,
-                global_descriptor_set: allocated_descriptor_sets[0],
+                uniform_buffer,
+                //global_uniform_buffer,
+                //global_descriptor_set: allocated_descriptor_sets[0],
             }
         }
 
@@ -584,27 +584,6 @@ pub mod render_backend {
             device.destroy_fence(self.render_fence, None);
             device.destroy_command_pool(self.command_pool, None);
         }
-    }
-
-
-
-    enum DescriptorSetUsageFrequency {
-        Global,
-        PerPass,
-        PerFrame,
-    }
-    
-
-    pub struct DescriptorPool {
-        descriptor_pool: vk::DescriptorPool,
-        // global resources, bound once per frame
-        global_layout: vk::DescriptorSetLayout,
-        global_set: vk::DescriptorSetLayout,
-        // pass resources, bound once per render pass
-        pass_set: vk::DescriptorSet,
-        // render resources, bound once per render object (at most)
-        material_set: vk::DescriptorSet,
-        object_set: vk::DescriptorSet,
     }
 
 
@@ -809,7 +788,8 @@ pub mod render_backend {
 
             // descriptor pool ------------------------
             let global_descriptor_set_layout =
-                UniformBufferGlobalData::create_descriptor_set_layout(&device);
+                UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&device);
+                //UniformBufferGlobalData::create_descriptor_set_layout(&device);
 
             let descriptor_pool_size = [vk::DescriptorPoolSize::builder()
                 // reserve 1 handle

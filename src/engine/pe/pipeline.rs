@@ -1,16 +1,15 @@
 use crate::engine::{
-    pe::shaders::Shader, push_constants::PushConstants, resources::UniformBufferGlobalData,
+    pe::shaders::Shader, push_constants::PushConstants, 
 };
 use ash::vk;
 
-use crate::engine::resources::DescriptorSet;
 
 #[derive(Eq, PartialEq)]
 pub struct PPipeline {
     pub pipeline: vk::Pipeline,
     pub pipeline_layout: vk::PipelineLayout,
     pub pipeline_bindpoint: vk::PipelineBindPoint,
-    pub descriptor_set_layouts: Vec<vk::DescriptorSetLayout>,
+    //pub descriptor_set_layouts: Vec<vk::DescriptorSetLayout>,
 }
 impl PPipeline {
     pub fn destroy(&mut self, device: &ash::Device) {
@@ -19,9 +18,9 @@ impl PPipeline {
             device.destroy_pipeline(self.pipeline, None);
             device.destroy_pipeline_layout(self.pipeline_layout, None);
 
-            for &set_layout in self.descriptor_set_layouts.iter() {
-                device.destroy_descriptor_set_layout(set_layout, None);
-            }
+            // for &set_layout in self.descriptor_set_layouts.iter() {
+            //     device.destroy_descriptor_set_layout(set_layout, None);
+            // }
         }
     }
 }
@@ -443,7 +442,7 @@ impl<'a> PPipelineBuilder<'a> {
             pipeline: graphics_pipelines[0],
             pipeline_layout,
             pipeline_bindpoint: self.pipeline_bindpoint,
-            descriptor_set_layouts,
+            //descriptor_set_layouts,
         }
     }
 }

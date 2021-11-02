@@ -1,4 +1,4 @@
-use super::resources::{UniformBufferGlobalData, Vertex};
+use super::resources::{Vertex};
 use ash::util::Align;
 use ash::vk;
 use std::rc::Rc;
@@ -129,8 +129,7 @@ impl AllocatedImage {
             device.destroy_image(self.image, None);
             device.free_memory(self.memory, None);
         }
-    } 
-
+    }
 
     pub fn create(
         device: &ash::Device,
@@ -219,7 +218,6 @@ impl AllocatedBuffer {
     //         self.device.free_memory(self.memory, None);
     //     }
     // }
-
 
     pub fn update_memory<DataType: Copy>(&self, data: &[DataType]) {
         Self::update_memory_inner(
@@ -515,8 +513,6 @@ impl AllocatedBuffer {
         allocated_memory
     }
 
-
-
     fn create_index_buffer(device: &ash::Device, indices: &[u16]) -> vk::Buffer {
         let buffer_info = vk::BufferCreateInfo::builder()
             .size(std::mem::size_of_val(indices) as u64)
@@ -526,11 +522,7 @@ impl AllocatedBuffer {
         unsafe { device.create_buffer(&buffer_info, None) }.expect("Couldn't create index buffer")
     }
 
-
-    fn create_vertex_buffer(
-        device: &ash::Device,
-        vertices: &[Vertex],
-    ) -> vk::Buffer {
+    fn create_vertex_buffer(device: &ash::Device, vertices: &[Vertex]) -> vk::Buffer {
         let buffer_info = vk::BufferCreateInfo {
             size: std::mem::size_of_val(vertices) as u64, // NOTE: The 3 here
             usage: vk::BufferUsageFlags::VERTEX_BUFFER,
