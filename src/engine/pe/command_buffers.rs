@@ -1,3 +1,4 @@
+use crate::engine::render_backend::FrameData;
 use ash::vk;
 
 pub(crate) mod init {
@@ -30,8 +31,8 @@ pub(crate) mod init {
     }
 }
 
-pub fn record_submit_command_buffer<
-    RenderPassFn: FnOnce(&ash::Device, vk::CommandBuffer, vk::Framebuffer),
+pub(crate) fn record_submit_command_buffer<
+    RenderPassFn: FnOnce(&ash::Device, vk::CommandBuffer, vk::Framebuffer, &FrameData),
 >(
     device: &ash::Device,
     command_buffer: vk::CommandBuffer,
@@ -44,6 +45,7 @@ pub fn record_submit_command_buffer<
     // signals the gpu should send when finished with these commands
     signal_samaphores: &[vk::Semaphore],
     frame_buffer: vk::Framebuffer,
+    frame_data: &FrameData,
     render_pass_fn: RenderPassFn,
 ) {
     // wait for fence / previous command buffer (aka wait until the GPU finished rendering the last frame in this case)
@@ -77,7 +79,7 @@ pub fn record_submit_command_buffer<
 
     /////////////////////////////////////////// RENDER PASS BUFFER
 
-    render_pass_fn(device, command_buffer, frame_buffer); // todo Image index not really needed but yeah
+    render_pass_fn(device, command_buffer, frame_buffer, frame_data); // todo Image index not really needed but yeah
 
     ////////////////////////////////////////// END OF RENDER PASS
 

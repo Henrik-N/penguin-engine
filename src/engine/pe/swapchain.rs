@@ -1,4 +1,5 @@
 // // -------------------------- SWAPCHAIN --------------------------
+use crate::engine::buffers::prelude::*;
 use crate::engine::pe::device::SwapchainSupportDetails;
 use ash::vk;
 
@@ -67,10 +68,8 @@ pub(crate) mod init {
 
         let surface_format =
             select_swapchain_surface_format(&swapchain_support_details.surface_color_formats);
-
         let present_mode =
             select_swapchain_present_mode(&swapchain_support_details.surface_present_modes);
-
         let extent = select_swapchain_extent(&swapchain_support_details.surface_capabilities);
 
         let (image_sharing_mode, _queue_family_index_count, queue_family_indices) =

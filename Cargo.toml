@@ -31,8 +31,12 @@ shaderc = { version = "0.7" }  # shader compilation tools
 
 
 ### ------------------------------- Math ------------------------------- ###
-# glam = "0.19.0"
-macaw = "0.14.1"
+macaw = { version = "0.14.1" }
 
+### ---------------- Mesh file loader ---------------------------------- ### k
+# obj-rs = { version = "0.7" }
+# tobj = { version = "3.2.0" }
+# nom-obj = { version = "0.2.0" }
+wavefront = "0.2.2"
 
 #image  { version = "0.23.14" }  # image processing

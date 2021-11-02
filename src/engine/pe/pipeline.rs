@@ -1,19 +1,27 @@
-use crate::engine::{pe::shaders::Shader, push_constants::PushConstants};
+use crate::engine::{
+    pe::shaders::Shader, push_constants::PushConstants, resources::UniformBufferGlobalData,
+};
 use ash::vk;
+
+use crate::engine::resources::DescriptorSet;
 
 #[derive(Eq, PartialEq)]
 pub struct PPipeline {
     pub pipeline: vk::Pipeline,
     pub pipeline_layout: vk::PipelineLayout,
     pub pipeline_bindpoint: vk::PipelineBindPoint,
+    pub descriptor_set_layouts: Vec<vk::DescriptorSetLayout>,
 }
 impl PPipeline {
     pub fn destroy(&mut self, device: &ash::Device) {
-
         log::debug!("Pipeline gets destroyed!");
         unsafe {
             device.destroy_pipeline(self.pipeline, None);
             device.destroy_pipeline_layout(self.pipeline_layout, None);
+
+            for &set_layout in self.descriptor_set_layouts.iter() {
+                device.destroy_descriptor_set_layout(set_layout, None);
+            }
         }
     }
 }
@@ -22,6 +30,7 @@ pub struct PPipelineBuilder<'a> {
     device: &'a ash::Device,
     render_pass: vk::RenderPass,
     pipeline_bindpoint: vk::PipelineBindPoint,
+    descriptor_set_layouts: Vec<vk::DescriptorSetLayout>, // global uniform buffer
 
     shaders: Vec<Shader<'a>>,
     vertex_input: vk::PipelineVertexInputStateCreateInfoBuilder<'a>,
@@ -114,17 +123,29 @@ impl<'a> PPipelineBuilder<'a> {
             .write_mask(0_u32)
             .reference(0_u32);
 
+        // let depth_stencil = vk::PipelineDepthStencilStateCreateInfo::builder()
+        //     .depth_test_enable(false)
+        //     .depth_write_enable(false)
+        //     .depth_compare_op(vk::CompareOp::LESS_OR_EQUAL)
+        //     .depth_bounds_test_enable(false)
+        //     //
+        //     .stencil_test_enable(false)
+        //     //.front(stencil_state.clone())
+        //     //.back(stencil_state)
+        //     .max_depth_bounds(1.0_f32)
+        //     .min_depth_bounds(1.0_f32);
+
         let depth_stencil = vk::PipelineDepthStencilStateCreateInfo::builder()
-            .depth_test_enable(false)
-            .depth_write_enable(false)
-            .depth_compare_op(vk::CompareOp::LESS_OR_EQUAL)
+            .depth_test_enable(true)
+            .depth_write_enable(true)
+            .depth_compare_op(vk::CompareOp::LESS_OR_EQUAL) //LESS_OR_EQUAL)
             .depth_bounds_test_enable(false)
             //
             .stencil_test_enable(false)
             //.front(stencil_state.clone())
             //.back(stencil_state)
-            .max_depth_bounds(1.0_f32)
-            .min_depth_bounds(1.0_f32);
+            .min_depth_bounds(0.0_f32)
+            .max_depth_bounds(1.0_f32);
 
         let color_blend_attachments = vec![
             vk::PipelineColorBlendAttachmentState::builder()
@@ -171,7 +192,17 @@ impl<'a> PPipelineBuilder<'a> {
             pipeline_layout,
             vertex_shader_push_constants_byte_offset: None,
             fragment_shader_push_constants_byte_offset: None,
+            descriptor_set_layouts: vec![],
         }
+    }
+
+    /// bool true == writable
+    pub fn descriptor_set_layouts(
+        mut self,
+        descriptor_set_layouts: Vec<vk::DescriptorSetLayout>,
+    ) -> Self {
+        self.descriptor_set_layouts = descriptor_set_layouts;
+        self
     }
 
     pub fn vertex_input(
@@ -308,61 +339,65 @@ impl<'a> PPipelineBuilder<'a> {
         // Pipeline layout
         //
 
-        let byte_offsets: &[Option<u32>] = &[
-            self.vertex_shader_push_constants_byte_offset,
-            self.fragment_shader_push_constants_byte_offset,
-        ];
+        // let byte_offsets: &[Option<u32>] = &[
+        //     self.vertex_shader_push_constants_byte_offset,
+        //     self.fragment_shader_push_constants_byte_offset,
+        // ];
 
         // FIXME: Using push constants results in a validation error that
         // says that vk::PushConstantRange doesn't contain vk::ShaderStageFlags::VERTEX,
         // even though I am providing it.
         // I'm guessing some memory is getting cleaned up somewhere it shouldn't.
 
-        let mut current_offset = 0;
-        let push_constant_ranges: Vec<vk::PushConstantRange> = byte_offsets
-            .iter()
-            .enumerate()
-            .filter_map(|(i, &size)| {
-                if let Some(size) = size {
-                    log::debug!(
-                        "Push constant index {} has size {} and offset {}.",
-                        i,
-                        size,
-                        current_offset
-                    );
+        //let mut current_offset = 0;
+        //let push_constant_ranges: Vec<vk::PushConstantRange> = byte_offsets
+        //    .iter()
+        //    .enumerate()
+        //    .filter_map(|(i, &size)| {
+        //        if let Some(size) = size {
+        //            log::debug!(
+        //                "Push constant index {} has size {} and offset {}.",
+        //                i,
+        //                size,
+        //                current_offset
+        //            );
 
-                    let stage_flag = match i {
-                        0 => vk::ShaderStageFlags::VERTEX,
-                        _ => vk::ShaderStageFlags::FRAGMENT,
-                    };
-                    log::debug!("Shader stage: {:?}", stage_flag);
+        //            let stage_flag = match i {
+        //                0 => vk::ShaderStageFlags::VERTEX,
+        //                _ => vk::ShaderStageFlags::FRAGMENT,
+        //            };
+        //            log::debug!("Shader stage: {:?}", stage_flag);
 
-                    let range = vk::PushConstantRange::builder()
-                        .offset(current_offset)
-                        .size(size)
-                        .stage_flags(stage_flag)
-                        .build();
-                    current_offset += size;
-                    Some(range)
-                } else {
-                    None
-                }
-            })
-            .collect();
+        //            let range = vk::PushConstantRange::builder()
+        //                .offset(current_offset)
+        //                .size(size)
+        //                .stage_flags(stage_flag)
+        //                .build();
+        //            current_offset += size;
+        //            Some(range)
+        //        } else {
+        //            None
+        //        }
+        //    })
+        //    .collect();
 
-        push_constant_ranges.iter().for_each(|pc| {
-            log::debug!(
-                "Push constant with flag: {:#?} has range offset: {}",
-                pc.stage_flags,
-                pc.offset
-            );
-        });
+        //push_constant_ranges.iter().for_each(|pc| {
+        //    log::debug!(
+        //        "Push constant with flag: {:#?} has range offset: {}",
+        //        pc.stage_flags,
+        //        pc.offset
+        //    );
+        //});
 
         log::debug!("Reached here 0!");
 
+        let descriptor_set_layouts = self.descriptor_set_layouts;
+
         let pipeline_layout_create_info = self
             .pipeline_layout
-            .push_constant_ranges(&push_constant_ranges);
+            .set_layouts(&descriptor_set_layouts)
+            //.push_constant_ranges(&push_constant_ranges)
+            ;
 
         let pipeline_layout = unsafe {
             self.device
@@ -408,6 +443,7 @@ impl<'a> PPipelineBuilder<'a> {
             pipeline: graphics_pipelines[0],
             pipeline_layout,
             pipeline_bindpoint: self.pipeline_bindpoint,
+            descriptor_set_layouts,
         }
     }
 }
