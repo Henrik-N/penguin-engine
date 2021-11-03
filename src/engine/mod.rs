@@ -29,8 +29,6 @@ use crate::engine::descriptor_sets::*;
 struct _Texture;
 struct _RenderGraph;
 
-// 2 == double buffering
-pub const MAX_FRAMES_COUNT: usize = 2;
 
 // Drop order: https://github.com/rust-lang/rfcs/blob/246ff86b320a72f98ed2df92805e8e3d48b402d6/text/1857-stabilize-drop-order.md
 pub struct Renderer {
@@ -74,21 +72,22 @@ impl Renderer {
     pub(crate) fn create(window: &winit::window::Window) -> Result<Self> {
         let core = Core::create(&window)?;
 
-        let context = RenderContext::create(&core, MAX_FRAMES_COUNT)?;
+        let context = RenderContext::create(&core, config::MAX_FRAMES_COUNT)?;
 
         let mut meshes =
             MeshResource::new(context.device_rc(), core.physical_device_memory_properties);
 
-        meshes.insert_from_file("monkey", "monkey.obj");
+        meshes.insert_from_file("monkey", "bunny.obj");
 
         let vertex_input_bindings = Vertex::get_binding_descriptions();
         let vertex_attribute_descriptions = Vertex::get_attribute_descriptions();
 
 
         let global_layout = UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&context.device);
+        let frames_layout = UniformBuffer::create_descriptor_set_layout::<UniformBufferFrameData>(&context.device);
         //let global_layout = UniformBufferGlobalData::create_descriptor_set_layout(&context.device);
 
-        let descriptor_set_layouts = vec![global_layout];
+        let descriptor_set_layouts = vec![global_layout, frames_layout];
 
         // ***
         // Pipelines creation
@@ -106,10 +105,11 @@ impl Renderer {
         //.add_push_constants::<MeshPushConstants>()
         .build();
 
-
         unsafe {
             context.device.destroy_descriptor_set_layout(global_layout, None);
+            context.device.destroy_descriptor_set_layout(frames_layout, None);
         }
+
 
 
 
@@ -167,8 +167,8 @@ impl Renderer {
 
 
         // create mvp matrix
-        let camera_loc = Vec3::new(0.0, 0.0, 3.0);
-        let camera_forward = Vec3::new(0.0, 0.0, -1.0);
+        let camera_loc = Vec3::new(0.0, 0.0, -3.0);
+        let camera_forward = Vec3::new(0.0, 0.0, 1.0);
         let camera_up = Vec3::new(0.0, 1.0, 0.0);
 
         let view = Mat4::look_at_rh(camera_loc, camera_loc + camera_forward, camera_up);
@@ -194,21 +194,46 @@ impl Renderer {
             data: Vec4::default(),
             render_matrix: mesh_matrix,
         };
-        frame_data.update_global_uniform_buffer(uniform_buffer_data);
 
+        frame_data.write_global_uniform_memory(uniform_buffer_data);
+
+
+        // let uniform_buffer_frame_data = UniformBufferFrameData {
+        //     fog_color: Vec4::default(),
+        //     fog_distances: Vec4::default(),
+        //     ambient_color: Vec4::default(),
+        //     ..Default::default()
+        // };
+
+        //frame_data.write_frame_memory(uniform_buffer_frame_data);
+
+
+        frame_data.bind_descriptor_sets(command_buffer, mat.pipeline.pipeline_layout);
+
+        // bind global descriptor sets
+        // frame_data.bind_global_descriptor_set(
+        //     command_buffer,
+        //     mat.pipeline.pipeline_layout,
+        // );
+
+
+
+
+        // frame_data.bind_frame_descriptor_set(
+        //     command_buffer,
+        //     mat.pipeline.pipeline_layout,
+        // );
+
+        // FIXME: It's when I am binding the dynamic frame descriptor set it gets messed up
+
+
+
+        // TODO: bind descriptor sets corresponding to pipeline
+        //
 
 
         // bind pipeline
         mat.bind(command_buffer);
-
-        // bind global descriptor sets
-        frame_data.bind_global_descriptor_set(
-            command_buffer,
-            mat.pipeline.pipeline_layout,
-        );
-
-        // TODO: bind descriptor sets corresponding to pipeline
-        //
 
         unsafe {
             // bind vertex buffers
@@ -316,7 +341,7 @@ impl Renderer {
         let _ = delta_time;
 
         self.frame_num += 1;
-        let frame_index = self.frame_num % MAX_FRAMES_COUNT;
+        let frame_index = self.frame_num % config::MAX_FRAMES_COUNT;
 
         self.context.submit_render_commands(
             &[vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT],
@@ -380,6 +405,7 @@ pub mod render_backend {
         pub surface: vk::SurfaceKHR,
         pub surface_loader: ash::extensions::khr::Surface,
         pub physical_device: vk::PhysicalDevice,
+        pub physical_device_properties: vk::PhysicalDeviceProperties,
         pub physical_device_memory_properties: vk::PhysicalDeviceMemoryProperties,
         pub queue_index: u32,
     }
@@ -423,6 +449,7 @@ pub mod render_backend {
                 surface,
                 surface_loader,
                 physical_device,
+                physical_device_properties,
                 physical_device_memory_properties,
                 queue_index,
             })
@@ -454,7 +481,7 @@ pub mod render_backend {
 
 
 
-    use super::descriptor_sets::{UniformBuffer, UniformBufferGlobalData};
+    use super::descriptor_sets::*;
 
     pub(crate) struct FrameData {
         pub(super) command_pool: vk::CommandPool,
@@ -464,31 +491,33 @@ pub mod render_backend {
         pub(super) rendering_complete_semaphore: vk::Semaphore,
         pub(super) presenting_complete_semaphore: vk::Semaphore,
 
-        pub(super) uniform_buffer: UniformBuffer,
+        pub(super) uniform_buffer: Rc<UniformBuffer>,
 
+        pub(super) frame_index: usize,
         //global_uniform_buffer: AllocatedBuffer,
         //global_descriptor_pool: vk::DescriptorPool,
         //global_descriptor_set: vk::DescriptorSet,
     }
     impl FrameData {
-        pub fn update_global_uniform_buffer(&self, buffer_data: UniformBufferGlobalData) {
-            self.uniform_buffer.update_global_memory(buffer_data);
+        pub fn write_global_uniform_memory(&self, buffer_data: UniformBufferGlobalData) {
+            self.uniform_buffer.write_global_memory(buffer_data);
         }
 
-        pub fn bind_global_descriptor_set(
-            &self,
-            command_buffer: vk::CommandBuffer,
-            pipeline_layout: vk::PipelineLayout,
-        ) { 
-            self.uniform_buffer.bind_global_set(command_buffer, pipeline_layout);
+
+
+        pub fn bind_descriptor_sets(&self, command_buffer: vk::CommandBuffer, pipeline_layout: vk::PipelineLayout) {
+            self.uniform_buffer.bind_descriptor_sets(command_buffer, pipeline_layout, self.frame_index);
         }
+        
 
         pub fn new(
             device: Rc<ash::Device>,
             queue_index: u32,
+            pd_properties: vk::PhysicalDeviceProperties,
             pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
             descriptor_pool: vk::DescriptorPool,
-            global_descriptor_set_layout: vk::DescriptorSetLayout,
+            frame_index: usize,
+            uniform_buffer: Rc<UniformBuffer>,
         ) -> Self {
             // command pool and command buffer ---------
             let (command_pool, command_buffer) =
@@ -513,10 +542,11 @@ pub mod render_backend {
 
 
             //Decscriptor buffer
-            let uniform_buffer = UniformBuffer::new(
-                Rc::clone(&device),
-                pd_memory_properties,
-                descriptor_pool);
+            // let uniform_buffer = UniformBuffer::new(
+            //     Rc::clone(&device),
+            //     pd_properties,
+            //     pd_memory_properties,
+            //     descriptor_pool);
 
             //Decscriptor buffer
             // let initial_data = [UniformBufferGlobalData::default()];
@@ -573,6 +603,7 @@ pub mod render_backend {
                 rendering_complete_semaphore,
                 presenting_complete_semaphore,
                 uniform_buffer,
+                frame_index,
                 //global_uniform_buffer,
                 //global_descriptor_set: allocated_descriptor_sets[0],
             }
@@ -605,13 +636,15 @@ pub mod render_backend {
         pub(super) depth_image: AllocatedImage,
         pub(super) depth_image_view: vk::ImageView,
 
-        pub(super) global_descriptor_set_layout: vk::DescriptorSetLayout,
+        //pub(super) global_descriptor_set_layout: vk::DescriptorSetLayout,
         pub(super) global_descriptor_pool: vk::DescriptorPool,
         // contains frame data
         pub(super) frame_data: Vec<FrameData>,
 
         pub(super) render_pass: vk::RenderPass,
         pub(super) frame_buffers: Vec<vk::Framebuffer>,
+
+        pub(super) uniform_buffer: Rc<UniformBuffer>,
     }
 
     impl RenderContext {
@@ -787,15 +820,21 @@ pub mod render_backend {
                 .collect();
 
             // descriptor pool ------------------------
-            let global_descriptor_set_layout =
-                UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&device);
+            //let global_descriptor_set_layout =
+                //UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&device);
                 //UniformBufferGlobalData::create_descriptor_set_layout(&device);
 
-            let descriptor_pool_size = [vk::DescriptorPoolSize::builder()
+            let descriptor_pool_size = [
+                vk::DescriptorPoolSize::builder()
                 // reserve 1 handle
-                .descriptor_count(10) // 10 uniform buffers
-                .ty(vk::DescriptorType::UNIFORM_BUFFER)
-                .build()];
+                    .descriptor_count(10) // 10 uniform buffers
+                    .ty(vk::DescriptorType::UNIFORM_BUFFER)
+                    .build(),
+                vk::DescriptorPoolSize::builder()
+                    .descriptor_count(10) // 10 dynamic uniform buffers
+                    .ty(vk::DescriptorType::UNIFORM_BUFFER_DYNAMIC)
+                    .build(),
+            ];
 
             let descriptor_pool_create_info = vk::DescriptorPoolCreateInfo::builder()
                 .max_sets(10 as u32)
@@ -807,14 +846,25 @@ pub mod render_backend {
 
             unsafe { device.device_wait_idle() }.unwrap();
 
+
+            let uniform_buffer = Rc::new(UniformBuffer::new(
+                Rc::clone(&device),
+                core.physical_device_properties,
+                core.physical_device_memory_properties,
+                global_descriptor_pool));
+
+
             let frame_data: Vec<FrameData> = (0..max_frames_count)
-                .map(|_| {
+                .map(|frame_index| {
                     FrameData::new(
                         Rc::clone(&device),
                         core.queue_index,
+                        core.physical_device_properties,
                         core.physical_device_memory_properties,
                         global_descriptor_pool,
-                        global_descriptor_set_layout,
+                        //global_descriptor_set_layout,
+                        frame_index,
+                        Rc::clone(&uniform_buffer),
                     )
                 })
                 .collect();
@@ -828,13 +878,15 @@ pub mod render_backend {
                 swapchain_extent,
                 swapchain_images,
                 swapchain_image_views,
-                global_descriptor_set_layout,
+                //global_descriptor_set_layout,
                 global_descriptor_pool,
                 frame_data,
                 render_pass,
                 frame_buffers,
                 depth_image,
                 depth_image_view,
+
+                uniform_buffer,
             })
         }
     }

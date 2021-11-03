@@ -186,23 +186,40 @@ impl MemoryUsage {
     }
 }
 
-/// Information required to update a specific buffer,
-/// cached
-#[derive(Clone, Copy)]
-struct CachedUpdateMemoryInfo {
-    memory_requirements: vk::MemoryRequirements,
-    memory_map_flags: vk::MemoryMapFlags,
-}
+
+
+
 
 pub struct AllocatedBuffer {
     device: Rc<ash::Device>,
     pub handle: vk::Buffer, // handle to gpu-side buffer
     memory: vk::DeviceMemory,
-    memory_size: vk::DeviceSize,
-
-    // information required to update the buffer
-    update_memory_info: Option<CachedUpdateMemoryInfo>,
+    pub info: MemoryInfo, // info for the base allocation, dynamic allocations will need their own memoryinfo when binding
 }
+/// The data required to map and write to some allocated memory
+pub struct MemoryInfo {
+    pub size: vk::DeviceSize,
+    pub map_flags: vk::MemoryMapFlags,
+    pub alignment: u64,
+}
+
+pub struct AllocatedBufferCreateInfo<'a, T> {
+    pub device: Rc<ash::Device>,
+    pub pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
+    pub initial_data: &'a [T],
+    pub buffer_usage: vk::BufferUsageFlags,
+    pub memory_usage: MemoryUsage,
+    //pub alignment: Alignment,
+
+    //pub buffer_size: u64, //Alignment, // if auto, same as size_of_val(T)
+    //pub base_alignment: Alignment, // alignment / Range for the const-size part of the buffer, not for the dynamic bindings. The dynamic bindings alignments are specified when binding the buffer
+    pub sharing_mode: vk::SharingMode,
+    pub memory_map_flags: vk::MemoryMapFlags,
+}
+
+
+
+
 impl Drop for AllocatedBuffer {
     fn drop(&mut self) {
         unsafe {
@@ -211,6 +228,9 @@ impl Drop for AllocatedBuffer {
         }
     }
 }
+
+
+
 impl AllocatedBuffer {
     // pub fn destroy(&self) {
     //     unsafe {
@@ -218,411 +238,142 @@ impl AllocatedBuffer {
     //         self.device.free_memory(self.memory, None);
     //     }
     // }
+   
 
-    pub fn update_memory<DataType: Copy>(&self, data: &[DataType]) {
-        Self::update_memory_inner(
+    pub fn write_memory<T: Copy>(&self, data: &[T], offset: u64) {
+        Self::write_memory_inner(
             &self.device,
-            self.handle,
             self.memory,
-            &self
-                .update_memory_info
-                .expect("Tried to update allocated memory that is not defined as updateable"),
             data,
-        );
+            &self.info,
+            offset);
     }
 
-    fn update_memory_inner<DataType: Copy>(
-        device: &ash::Device,
-        buffer: vk::Buffer,
-        memory: vk::DeviceMemory,
-        memory_info: &CachedUpdateMemoryInfo,
-        data: &[DataType],
-    ) {
+    pub fn create_buffer<'a, T: Copy>(create_info: &'a AllocatedBufferCreateInfo<T>) -> Self {
+        let device = Rc::clone(&create_info.device);
+
+        println!("BUFFER SIZE {}", std::mem::size_of_val(create_info.initial_data) as u64);
+
+        // let alignment = match create_info.alignment {
+        //     Alignment::Auto => std::size_of_val(create_info.initial_data as u64),
+        //         //std::mem::size_of::<T>() as u64,
+        //     Alignment::Bytes(bytes) => bytes,
+        // };
+
+        let buffer_info = vk::BufferCreateInfo::builder()
+            .size(std::mem::size_of_val(create_info.initial_data) as u64) // NOTE: Ensure it's not the size of the address
+            .usage(create_info.buffer_usage)
+            .sharing_mode(create_info.sharing_mode);
+
+        let buffer = unsafe { device.create_buffer(&buffer_info, None) }
+            .expect("Couldn't create index buffer");
+
+
+        let memory_requirements: vk::MemoryRequirements =
+            unsafe { device.get_buffer_memory_requirements(buffer) };
+        
+
+        log::info!("MEMORY SIZE: {}", memory_requirements.size);
+
+        let mem_info = MemoryInfo {
+            size: memory_requirements.size, // NOTE: How this is vk::DeviceSize, not u64
+            map_flags: create_info.memory_map_flags,
+            alignment: std::mem::size_of::<T>() as u64,
+        };
+       
+
+        // allocate device memory
+        //
+        let memory_type_index = find_memory_type_index(
+            &memory_requirements,
+            &create_info.pd_memory_properties,
+            create_info.memory_usage.memory_property_flags(),
+        )
+        .expect("Index buffer creation: Couldn't find a suitable memory type.");
+
+        let allocate_info = vk::MemoryAllocateInfo::builder()
+            .allocation_size(mem_info.size)
+            .memory_type_index(memory_type_index)
+            .build();
+       
+        let memory = device.allocate_memory_p(&allocate_info);
+
+        // memcpy
+        Self::write_memory_inner(&device, memory, create_info.initial_data, &mem_info, 0);
+
+        // associate buffer with memory
+        device.bind_buffer_memory_p(buffer, memory);
+
+        Self {
+            device: Rc::clone(&device),
+            handle: buffer,
+            memory,
+            info: mem_info,
+        }
+    }
+
+
+    fn write_memory_inner<T: Copy>(device: &ash::Device,
+                       //buffer: vk::Buffer,
+                       memory: vk::DeviceMemory,
+                       data: &[T],
+                       mem_info: &MemoryInfo,
+                       offset: u64) {
         // map memory
-        let offset = 0;
         let ptr_to_memory = unsafe {
             device.map_memory(
                 memory,
                 offset,
-                memory_info.memory_requirements.size,
-                memory_info.memory_map_flags,
+                mem_info.size,
+                mem_info.map_flags,
             )
         }
         .expect("Couldn't get pointer to memory");
 
-        // align makes it so we can copy a correctly aligned slice of &[DataType]
+        let size = std::mem::size_of_val(data) as u64;
+        let alignment = std::mem::align_of::<T>() as u64;
+
+        // align makes it so we can copy a correctly aligned slice of &[T]
         // directly into memory without an extra allocation
-        let mut memory_slice: Align<DataType> = unsafe {
+        let mut memory_slice: Align<T> = unsafe {
             Align::new(
                 ptr_to_memory,
-                std::mem::align_of::<DataType>() as u64,
-                memory_info.memory_requirements.size,
+                alignment,
+                size,
+                // info.alignment,
+                // std::mem::size_of_val(data) as u64
+                //info.size
             )
         };
 
-        memory_slice.copy_from_slice(&data);
+        memory_slice.copy_from_slice(data);
 
         unsafe {
             // unmap memory
             device.unmap_memory(memory);
         };
+
     }
 
-    pub fn create_empty_unbound_buffer(
-        device: Rc<ash::Device>,
-        alloc_size: u64,
+    pub fn create_vertex_buffer(
+        device: Rc<ash::Device>, 
+        vertices: &[Vertex],
         pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
-        buffer_usage: vk::BufferUsageFlags,
-        memory_usage: MemoryUsage,
-    ) -> AllocatedBuffer {
-        let buffer_info = vk::BufferCreateInfo::builder()
-            .size(alloc_size)
-            .usage(buffer_usage)
-            .sharing_mode(vk::SharingMode::EXCLUSIVE); // TODO: is this the best?
+        ) -> AllocatedBuffer {
 
-        let buffer =
-            unsafe { device.create_buffer(&buffer_info, None) }.expect("Couldn't create buffer");
-
-        let memory_requirements: vk::MemoryRequirements =
-            unsafe { device.get_buffer_memory_requirements(buffer) };
-
-        let memory_type_index = find_memory_type_index(
-            &memory_requirements,
-            &pd_memory_properties,
-            memory_usage.memory_property_flags(),
-        )
-        .expect("Index buffer creation: Couldn't find a suitable memory type.");
-
-        let allocate_info = vk::MemoryAllocateInfo::builder()
-            .allocation_size(memory_requirements.size)
-            .memory_type_index(memory_type_index)
-            .build();
-
-        let memory = device.allocate_memory_p(&allocate_info);
-
-        Self {
+        let create_info = AllocatedBufferCreateInfo {
             device: Rc::clone(&device),
-            handle: buffer,
-            memory,
-            update_memory_info: None,
-            memory_size: memory_requirements.size,
-        }
-    }
-
-    pub fn create_buffer<T: Copy>(
-        device: Rc<ash::Device>,
-        alloc_size: u64,
-        data: &[T],
-        pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
-        buffer_usage: vk::BufferUsageFlags,
-        memory_usage: MemoryUsage,
-    ) -> Self {
-        let buffer_info = vk::BufferCreateInfo::builder()
-            .size(alloc_size)
-            .usage(buffer_usage)
-            .sharing_mode(vk::SharingMode::EXCLUSIVE); // TODO: is this the best?
-
-        let buffer =
-            unsafe { device.create_buffer(&buffer_info, None) }.expect("Couldn't create buffer");
-
-        let memory_requirements: vk::MemoryRequirements =
-            unsafe { device.get_buffer_memory_requirements(buffer) };
-
-        let memory_type_index = find_memory_type_index(
-            &memory_requirements,
-            &pd_memory_properties,
-            memory_usage.memory_property_flags(),
-        )
-        .expect("Index buffer creation: Couldn't find a suitable memory type.");
-
-        let allocate_info = vk::MemoryAllocateInfo::builder()
-            .allocation_size(memory_requirements.size)
-            .memory_type_index(memory_type_index)
-            .build();
-
-        let memory = device.allocate_memory_p(&allocate_info);
-
-        let memory_map_flags = None;
-        let ptr_to_memory = device.map_memory_p(memory, memory_requirements.size, memory_map_flags);
-
-        device.copy_to_mapped(ptr_to_memory, memory_requirements.size, data);
-
-        device.unmap_memory_p(memory);
-
-        device.bind_buffer_memory_p(buffer, memory);
-
-        Self {
-            device: Rc::clone(&device),
-            handle: buffer,
-            memory,
-            update_memory_info: None,
-            memory_size: memory_requirements.size,
-        }
-    }
-
-    pub fn create_buffer_updateable<DataType: Copy>(
-        device: Rc<ash::Device>,
-        pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
-        initial_data: &[DataType],
-        buffer_usage: vk::BufferUsageFlags,
-        memory_usage: MemoryUsage,
-    ) -> Self {
-        let buffer_info = vk::BufferCreateInfo::builder()
-            .size(std::mem::size_of_val(initial_data) as u64)
-            .usage(buffer_usage); //.sharing_mode(vk::SharingMode::EXCLUSIVE);
-
-        let buffer = unsafe { device.create_buffer(&buffer_info, None) }
-            .expect("Couldn't create index buffer");
-
-        let memory_requirements: vk::MemoryRequirements =
-            unsafe { device.get_buffer_memory_requirements(buffer) };
-
-        let memory_type_index = find_memory_type_index(
-            &memory_requirements,
-            &pd_memory_properties,
-            memory_usage.memory_property_flags(),
-        )
-        .expect("Index buffer creation: Couldn't find a suitable memory type.");
-
-        let allocate_info = vk::MemoryAllocateInfo::builder()
-            .allocation_size(memory_requirements.size)
-            .memory_type_index(memory_type_index)
-            .build();
-
-        let memory_map_flags = vk::MemoryMapFlags::empty();
-
-        let memory = device.allocate_memory_p(&allocate_info);
-
-        let update_memory_info = CachedUpdateMemoryInfo {
-            memory_requirements,
-            memory_map_flags,
-        };
-
-        Self::update_memory_inner(&device, buffer, memory, &update_memory_info, &initial_data);
-
-        device.bind_buffer_memory_p(buffer, memory);
-
-        Self {
-            device: Rc::clone(&device),
-            handle: buffer,
-            memory,
-            update_memory_info: Some(update_memory_info),
-            memory_size: memory_requirements.size,
-        }
-    }
-
-    fn bind_memory(device: &ash::Device, buffer: vk::Buffer, memory: vk::DeviceMemory) {
-        unsafe {
-            // associate memory with buffer
-            device.bind_buffer_memory(buffer, memory, 0)
-        }
-        .expect("Couldn't bind memory buffer");
-    }
-
-    pub fn new_vertex_buffer(
-        device: Rc<ash::Device>,
-        physical_device_memory_properties: vk::PhysicalDeviceMemoryProperties,
-        vertices: &Vec<Vertex>,
-    ) -> Self {
-        let buffer = Self::create_vertex_buffer(&device, &vertices);
-
-        let memory_requirements: vk::MemoryRequirements =
-            unsafe { device.get_buffer_memory_requirements(buffer) };
-
-        let allocated_memory = Self::allocate_vertex_buffer_memory(
-            &device,
-            buffer,
-            &vertices,
-            memory_requirements,
-            physical_device_memory_properties,
-        );
-
-        Self {
-            device: Rc::clone(&device),
-            handle: buffer,
-            memory: allocated_memory,
-            update_memory_info: None,
-            memory_size: memory_requirements.size,
-        }
-    }
-
-    fn allocate_index_buffer_memory(
-        device: &ash::Device,
-        index_buffer: vk::Buffer,
-        indices: &[u16],
-        memory_requirements: vk::MemoryRequirements,
-        physical_device_memory_properties: vk::PhysicalDeviceMemoryProperties,
-    ) -> vk::DeviceMemory {
-        let memory_property_flags = 
-              // writable from CPU
-              vk::MemoryPropertyFlags::HOST_VISIBLE | 
-              // ensure mapped memory always match contents of allocated memory (no need for explicit flushing)
-              vk::MemoryPropertyFlags::HOST_COHERENT;
-
-        let memory_type_index = find_memory_type_index(
-            &memory_requirements,
-            &physical_device_memory_properties,
-            memory_property_flags,
-        )
-        .expect("Index buffer creation: Couldn't find a suitable memory type.");
-
-        let allocate_info = vk::MemoryAllocateInfo {
-            allocation_size: memory_requirements.size,
-            memory_type_index,
-            ..Default::default()
-        };
-
-        // allocate device memory
-        let allocated_memory = unsafe { device.allocate_memory(&allocate_info, None) }
-            .expect("Couldn't allocate memory");
-
-        // map memory
-        let offset = 0;
-        let ptr_to_memory = unsafe {
-            device.map_memory(
-                allocated_memory,
-                offset,
-                memory_requirements.size,
-                vk::MemoryMapFlags::empty(),
-            )
-        }
-        .expect("Couldn't get pointer to memory");
-
-        // align makes it so we can copy a correctly aligned slice of &[u32]
-        //    directly into memory without an extra allocation
-        let mut memory_slice: Align<u16> = unsafe {
-            Align::new(
-                ptr_to_memory,
-                std::mem::align_of::<u16>() as u64,
-                memory_requirements.size,
-            )
-        };
-
-        memory_slice.copy_from_slice(indices);
-
-        unsafe {
-            // unmap memory
-            device.unmap_memory(allocated_memory);
-
-            // associate memory with buffer
-            device
-                .bind_buffer_memory(index_buffer, allocated_memory, 0)
-                .expect("Couldn't bind memory buffer")
-        };
-
-        allocated_memory
-    }
-
-    fn create_index_buffer(device: &ash::Device, indices: &[u16]) -> vk::Buffer {
-        let buffer_info = vk::BufferCreateInfo::builder()
-            .size(std::mem::size_of_val(indices) as u64)
-            .usage(vk::BufferUsageFlags::INDEX_BUFFER)
-            .sharing_mode(vk::SharingMode::EXCLUSIVE);
-
-        unsafe { device.create_buffer(&buffer_info, None) }.expect("Couldn't create index buffer")
-    }
-
-    fn create_vertex_buffer(device: &ash::Device, vertices: &[Vertex]) -> vk::Buffer {
-        let buffer_info = vk::BufferCreateInfo {
-            size: std::mem::size_of_val(vertices) as u64, // NOTE: The 3 here
-            usage: vk::BufferUsageFlags::VERTEX_BUFFER,
+            pd_memory_properties,
+            initial_data: vertices,
+            buffer_usage: vk::BufferUsageFlags::VERTEX_BUFFER,
+            memory_usage: MemoryUsage::CpuToGpu,
+            memory_map_flags: vk::MemoryMapFlags::empty(),
+            //size: Alignment::Auto,
             sharing_mode: vk::SharingMode::EXCLUSIVE, // will only be used from one queue, the graphics queue
-            ..Default::default()
         };
-
-        unsafe { device.create_buffer(&buffer_info, None) }.expect("Couldn't create vertex buffer")
+        Self::create_buffer(&create_info)
     }
 
-    fn allocate_vertex_buffer_memory(
-        device: &ash::Device,
-        buffer: vk::Buffer,
-        vertices: &Vec<Vertex>,
-        memory_requirements: vk::MemoryRequirements,
-        physical_device_memory_properties: vk::PhysicalDeviceMemoryProperties,
-    ) -> vk::DeviceMemory {
-        let memory_property_flags = 
-                // writable from CPU
-                vk::MemoryPropertyFlags::HOST_VISIBLE | 
-                // ensure mapped memory always match contents of allocated memory (no need for explicit flushing)
-                vk::MemoryPropertyFlags::HOST_COHERENT;
-
-        let memory_type_index = find_memory_type_index(
-            &memory_requirements,
-            &physical_device_memory_properties,
-            memory_property_flags,
-        )
-        .expect("Vertex buffer creation: Couldn't find a suitable memory type.");
-
-        let allocate_info = vk::MemoryAllocateInfo {
-            allocation_size: memory_requirements.size,
-            memory_type_index,
-            ..Default::default()
-        };
-
-        // allocate device memory
-        let allocated_memory = unsafe { device.allocate_memory(&allocate_info, None) }
-            .expect("Couldn't allocate memory");
-
-        // map memory
-        let offset = 0;
-        let ptr_to_memory = unsafe {
-            device.map_memory(
-                allocated_memory,
-                offset,
-                memory_requirements.size,
-                vk::MemoryMapFlags::empty(),
-            )
-        }
-        .expect("Couldn't get pointer to memory");
-
-        // align makes it so we can copy a correctly aligned slice of &[Vertex]
-        // directly into memory without an extra allocation
-        let mut memory_slice: Align<Vertex> = unsafe {
-            Align::new(
-                ptr_to_memory,
-                std::mem::align_of::<Vertex>() as u64,
-                memory_requirements.size,
-            )
-        };
-
-        memory_slice.copy_from_slice(&vertices);
-
-        unsafe {
-            // unmap memory
-            device.unmap_memory(allocated_memory);
-
-            // associate memory with buffer
-            device
-                .bind_buffer_memory(buffer, allocated_memory, 0)
-                .expect("Couldn't bind memory buffer")
-        };
-
-        allocated_memory
-    }
-
-    // pub fn new_vertex_buffer_old(
-    //     device: Rc<ash::Device>,
-    //     physical_device_memory_properties: vk::PhysicalDeviceMemoryProperties,
-    //     vertices: &[Vertex],
-    // ) -> Self {
-    //     // create buffer and get buffer handle
-    //     let buffer = Self::create_vertex_buffer(&device, &vertices);
-
-    //     // prerequisites
-    //     let memory_requirements = unsafe { device.get_buffer_memory_requirements(buffer) };
-
-    //     let allocated_memory = Self::allocate_vertex_buffer_memory(
-    //         &device,
-    //         &vertices,
-    //         memory_requirements,
-    //         physical_device_memory_properties);
-
-    //     Self {
-    //         device: Rc::clone(&device),
-    //         handle: buffer,
-    //         memory: allocated_memory,
-    //     }
-    // }
 }
 
 //pub

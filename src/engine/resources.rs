@@ -225,7 +225,12 @@ impl Mesh {
         vertices: Vec<Vertex>,
     ) -> Self {
         let vertex_buffer =
-            AllocatedBuffer::new_vertex_buffer(Rc::clone(&device), pd_memory_properties, &vertices);
+            AllocatedBuffer::create_vertex_buffer(
+                Rc::clone(&device),
+                &vertices,
+                pd_memory_properties);
+
+            //AllocatedBuffer::new_vertex_buffer(Rc::clone(&device), pd_memory_properties, &vertices);
 
         Self {
             vertex_count: vertices.len(),
@@ -243,7 +248,11 @@ impl Mesh {
         let (vertices, vertex_count) = Self::load_verts_indices_from_obj(&file_path);
 
         let vertex_buffer =
-            AllocatedBuffer::new_vertex_buffer(Rc::clone(&device), pd_memory_properties, &vertices);
+            AllocatedBuffer::create_vertex_buffer(
+                Rc::clone(&device),
+                &vertices,
+                pd_memory_properties);
+            //AllocatedBuffer::new_vertex_buffer(Rc::clone(&device), pd_memory_properties, &vertices);
 
         Self {
             vertex_count,
