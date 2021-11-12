@@ -6,10 +6,7 @@ use std::collections::hash_map::HashMap;
 use std::rc::{Rc, Weak};
 
 pub mod prelude {
-    pub use super::{
-        HashResource, Material, Mesh, MeshResource, RenderObject,
-        Vertex,
-    };
+    pub use super::{HashResource, Material, Mesh, MeshResource, RenderObject, Vertex};
 }
 
 // **
@@ -199,7 +196,6 @@ impl Vertex {
     }
 }
 
-
 const MESHES_FOLDER_PATH: &'static str = "assets/meshes/";
 
 pub struct Mesh {
@@ -224,13 +220,13 @@ impl Mesh {
         pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
         vertices: Vec<Vertex>,
     ) -> Self {
-        let vertex_buffer =
-            AllocatedBuffer::create_vertex_buffer(
-                Rc::clone(&device),
-                &vertices,
-                pd_memory_properties);
+        let vertex_buffer = AllocatedBuffer::create_vertex_buffer(
+            Rc::clone(&device),
+            &vertices,
+            pd_memory_properties,
+        );
 
-            //AllocatedBuffer::new_vertex_buffer(Rc::clone(&device), pd_memory_properties, &vertices);
+        //AllocatedBuffer::new_vertex_buffer(Rc::clone(&device), pd_memory_properties, &vertices);
 
         Self {
             vertex_count: vertices.len(),
@@ -247,12 +243,12 @@ impl Mesh {
 
         let (vertices, vertex_count) = Self::load_verts_indices_from_obj(&file_path);
 
-        let vertex_buffer =
-            AllocatedBuffer::create_vertex_buffer(
-                Rc::clone(&device),
-                &vertices,
-                pd_memory_properties);
-            //AllocatedBuffer::new_vertex_buffer(Rc::clone(&device), pd_memory_properties, &vertices);
+        let vertex_buffer = AllocatedBuffer::create_vertex_buffer(
+            Rc::clone(&device),
+            &vertices,
+            pd_memory_properties,
+        );
+        //AllocatedBuffer::new_vertex_buffer(Rc::clone(&device), pd_memory_properties, &vertices);
 
         Self {
             vertex_count,

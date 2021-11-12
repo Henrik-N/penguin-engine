@@ -1,17 +1,15 @@
 pub mod buffers;
+pub mod descriptor_sets;
 pub mod math;
 mod pe;
 pub mod push_constants;
 pub mod resources;
-pub mod descriptor_sets;
-
 
 use math::prelude::*;
 use resources::prelude::*;
 
 #[allow(unused_imports)]
 use push_constants::prelude::*;
-
 
 use crate::core::config;
 use crate::engine::render_backend::Core;
@@ -28,7 +26,6 @@ use crate::engine::descriptor_sets::*;
 // TODO
 struct _Texture;
 struct _RenderGraph;
-
 
 // Drop order: https://github.com/rust-lang/rfcs/blob/246ff86b320a72f98ed2df92805e8e3d48b402d6/text/1857-stabilize-drop-order.md
 pub struct Renderer {
@@ -82,9 +79,10 @@ impl Renderer {
         let vertex_input_bindings = Vertex::get_binding_descriptions();
         let vertex_attribute_descriptions = Vertex::get_attribute_descriptions();
 
-
-        let global_layout = UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&context.device);
-        let frames_layout = UniformBuffer::create_descriptor_set_layout::<UniformBufferFrameData>(&context.device);
+        let global_layout =
+            UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&context.device);
+        let frames_layout =
+            UniformBuffer::create_descriptor_set_layout::<UniformBufferFrameData>(&context.device);
         //let global_layout = UniformBufferGlobalData::create_descriptor_set_layout(&context.device);
 
         let descriptor_set_layouts = vec![global_layout, frames_layout];
@@ -106,12 +104,13 @@ impl Renderer {
         .build();
 
         unsafe {
-            context.device.destroy_descriptor_set_layout(global_layout, None);
-            context.device.destroy_descriptor_set_layout(frames_layout, None);
+            context
+                .device
+                .destroy_descriptor_set_layout(global_layout, None);
+            context
+                .device
+                .destroy_descriptor_set_layout(frames_layout, None);
         }
-
-
-
 
         let mut materials = HashResource::new();
         materials.insert(
@@ -149,7 +148,6 @@ impl Renderer {
         frame_data: &FrameData,
         frame_num: usize,
     ) {
-
         let fov_y_radians = 70.0_f32.to_radians();
         let aspect_ratio = config::WIDTH as f32 / config::HEIGHT as f32;
         let (z_near, z_far) = (0.1_f32, 200.0_f32);
@@ -157,14 +155,11 @@ impl Renderer {
 
         //projection[1][1] *= -1;
 
-
         let mat = self.materials.get_rc("default");
         let mesh = self.meshes.get_rc("monkey");
 
-
         //let cam_pos = Vec3::new(0., 0., -3.);
         //let view = Mat4::from_translation(cam_pos);
-
 
         // create mvp matrix
         let camera_loc = Vec3::new(0.0, 0.0, -3.0);
@@ -173,21 +168,15 @@ impl Renderer {
 
         let view = Mat4::look_at_rh(camera_loc, camera_loc + camera_forward, camera_up);
 
-        
         let fov_y = 70.0_f32.to_radians();
-       
 
         let aspect_ratio = config::WIDTH as f32 / config::HEIGHT as f32;
         let (z_near, z_far) = (0.1_f32, 200.0_f32);
-        let projection = Mat4::perspective_rh(
-            fov_y,
-            aspect_ratio,
-            z_near,
-            z_far);
+        let projection = Mat4::perspective_rh(fov_y, aspect_ratio, z_near, z_far);
         //let model = Mat4::from_translation(Vec3::new(0., 0.5, 0.));
         let spin = (frame_num as f32 * 0.4).to_radians();
         let model = Mat4::from_rotation_x(spin);
-        
+
         let mesh_matrix = projection * view * model;
 
         let uniform_buffer_data = UniformBufferGlobalData {
@@ -196,7 +185,6 @@ impl Renderer {
         };
 
         frame_data.write_global_uniform_memory(uniform_buffer_data);
-
 
         // let uniform_buffer_frame_data = UniformBufferFrameData {
         //     fog_color: Vec4::default(),
@@ -207,7 +195,6 @@ impl Renderer {
 
         //frame_data.write_frame_memory(uniform_buffer_frame_data);
 
-
         frame_data.bind_descriptor_sets(command_buffer, mat.pipeline.pipeline_layout);
 
         // bind global descriptor sets
@@ -216,9 +203,6 @@ impl Renderer {
         //     mat.pipeline.pipeline_layout,
         // );
 
-
-
-
         // frame_data.bind_frame_descriptor_set(
         //     command_buffer,
         //     mat.pipeline.pipeline_layout,
@@ -226,11 +210,8 @@ impl Renderer {
 
         // FIXME: It's when I am binding the dynamic frame descriptor set it gets messed up
 
-
-
         // TODO: bind descriptor sets corresponding to pipeline
         //
-
 
         // bind pipeline
         mat.bind(command_buffer);
@@ -378,7 +359,12 @@ impl Renderer {
                         vk::SubpassContents::INLINE,
                     );
 
-                    self.draw_render_objects(&self.context.device, command_buffer, frame_data, self.frame_num);
+                    self.draw_render_objects(
+                        &self.context.device,
+                        command_buffer,
+                        frame_data,
+                        self.frame_num,
+                    );
 
                     device.cmd_end_render_pass(command_buffer);
                 }
@@ -432,14 +418,17 @@ pub mod render_backend {
             let physical_device_memory_properties =
                 unsafe { instance.get_physical_device_memory_properties(physical_device) };
 
-            let physical_device_properties = 
-                unsafe { instance.get_physical_device_properties(physical_device)};
-            let min_ubuffer_offset_alignment = 
-                physical_device_properties.limits.min_uniform_buffer_offset_alignment;
-           
-            log::info!("GPU min uniform buffer offset alignment is {}", min_ubuffer_offset_alignment);
-            // 256
+            let physical_device_properties =
+                unsafe { instance.get_physical_device_properties(physical_device) };
+            let min_ubuffer_offset_alignment = physical_device_properties
+                .limits
+                .min_uniform_buffer_offset_alignment;
 
+            log::info!(
+                "GPU min uniform buffer offset alignment is {}",
+                min_ubuffer_offset_alignment
+            );
+            // 256
 
             Ok(Self {
                 debug_utils_loader,
@@ -478,9 +467,6 @@ pub mod render_backend {
         }
     }
 
-
-
-
     use super::descriptor_sets::*;
 
     pub(crate) struct FrameData {
@@ -503,12 +489,17 @@ pub mod render_backend {
             self.uniform_buffer.write_global_memory(buffer_data);
         }
 
-
-
-        pub fn bind_descriptor_sets(&self, command_buffer: vk::CommandBuffer, pipeline_layout: vk::PipelineLayout) {
-            self.uniform_buffer.bind_descriptor_sets(command_buffer, pipeline_layout, self.frame_index);
+        pub fn bind_descriptor_sets(
+            &self,
+            command_buffer: vk::CommandBuffer,
+            pipeline_layout: vk::PipelineLayout,
+        ) {
+            self.uniform_buffer.bind_descriptor_sets(
+                command_buffer,
+                pipeline_layout,
+                self.frame_index,
+            );
         }
-        
 
         pub fn new(
             device: Rc<ash::Device>,
@@ -540,62 +531,6 @@ pub mod render_backend {
                 unsafe { device.create_semaphore(&semaphore_create_info, None) }
                     .expect("Failed to create semaphore");
 
-
-            //Decscriptor buffer
-            // let uniform_buffer = UniformBuffer::new(
-            //     Rc::clone(&device),
-            //     pd_properties,
-            //     pd_memory_properties,
-            //     descriptor_pool);
-
-            //Decscriptor buffer
-            // let initial_data = [UniformBufferGlobalData::default()];
-
-            // let global_uniform_buffer = AllocatedBuffer::create_buffer_updateable(
-            //     Rc::clone(&device),
-            //     pd_memory_properties,
-            //     &initial_data,
-            //     vk::BufferUsageFlags::UNIFORM_BUFFER,
-            //     MemoryUsage::CpuToGpu,
-            // );
-
-            // // descriptor sets
-            // //
-            // let descriptor_set_layouts = [global_descriptor_set_layout];
-
-            // assert_eq!(descriptor_set_layouts.len(), 1);
-
-            // let descriptor_set_allocate_info = vk::DescriptorSetAllocateInfo::builder()
-            //     .descriptor_pool(descriptor_pool)
-            //     //.descriptor_set_count(1)
-            //     .set_layouts(&descriptor_set_layouts);
-
-            // log::debug!("Allocating a descriptor set.");
-            // let allocated_descriptor_sets =
-            //     unsafe { device.allocate_descriptor_sets(&descriptor_set_allocate_info) }
-            //         .expect("Couldn't allocate global descriptor set");
-
-            // log::debug!("Descriptor set count {}", allocated_descriptor_sets.len());
-
-            // // point descriptor set to buffer
-            // let buffer_info = [vk::DescriptorBufferInfo::builder()
-            //     .buffer(global_uniform_buffer.handle)
-            //     .offset(0)
-            //     .range(std::mem::size_of::<UniformBufferGlobalData>() as u64)
-            //     .build()];
-
-            // let set_write = [vk::WriteDescriptorSet::builder()
-            //     // writing to binding 0
-            //     .dst_binding(UniformBufferGlobalData::binding_index())
-            //     .dst_set(allocated_descriptor_sets[0])
-            //     .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER)
-            //     .buffer_info(&buffer_info)
-            //     .build()];
-
-            // unsafe {
-            //     device.update_descriptor_sets(&set_write, &[]);
-            // }
-
             Self {
                 command_pool,
                 command_buffer,
@@ -616,8 +551,6 @@ pub mod render_backend {
             device.destroy_command_pool(self.command_pool, None);
         }
     }
-
-
 
     /// Struct containing most Vulkan object handles and global states.
     #[allow(dead_code)]
@@ -821,12 +754,12 @@ pub mod render_backend {
 
             // descriptor pool ------------------------
             //let global_descriptor_set_layout =
-                //UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&device);
-                //UniformBufferGlobalData::create_descriptor_set_layout(&device);
+            //UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&device);
+            //UniformBufferGlobalData::create_descriptor_set_layout(&device);
 
             let descriptor_pool_size = [
                 vk::DescriptorPoolSize::builder()
-                // reserve 1 handle
+                    // reserve 1 handle
                     .descriptor_count(10) // 10 uniform buffers
                     .ty(vk::DescriptorType::UNIFORM_BUFFER)
                     .build(),
@@ -846,13 +779,12 @@ pub mod render_backend {
 
             unsafe { device.device_wait_idle() }.unwrap();
 
-
             let uniform_buffer = Rc::new(UniformBuffer::new(
                 Rc::clone(&device),
                 core.physical_device_properties,
                 core.physical_device_memory_properties,
-                global_descriptor_pool));
-
+                global_descriptor_pool,
+            ));
 
             let frame_data: Vec<FrameData> = (0..max_frames_count)
                 .map(|frame_index| {
@@ -907,29 +839,22 @@ pub mod render_backend {
                 log::debug!("Render context: dropping render pass");
                 self.device.destroy_render_pass(self.render_pass, None);
 
-
-
                 self.device
                     .destroy_descriptor_pool(self.global_descriptor_pool, None);
-
-
 
                 log::debug!("Render context: dropping frame data");
                 self.frame_data.iter_mut().for_each(|frame| {
                     frame.destroy(&self.device);
                 });
 
-
                 log::debug!("Destroying swapchain image views");
                 self.swapchain_image_views.iter().for_each(|&image_view| {
                     self.device.destroy_image_view(image_view, None);
                 });
 
-
                 // depth image
                 self.device.destroy_image_view(self.depth_image_view, None);
                 self.depth_image.destroy(&self.device);
-
 
                 log::debug!("Destroying swapchain loader");
                 self.swapchain_loader

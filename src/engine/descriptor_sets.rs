@@ -1,9 +1,240 @@
+#![allow(dead_code)]
+
 use ash::vk;
 use crate::core::config;
-
 use super::buffers::*;
 use super::math::prelude::*;
 use std::rc::Rc;
+
+
+/// Memory
+mod mem {
+    #[derive(PartialEq, Eq)]
+    pub enum MemType {
+        Persistent,
+        Dynamic,
+    }
+
+    pub fn packed_range_from_min_align<T>(min_align: u64) -> u64 {
+        let mem_range = std::mem::size_of::<T>() as u64;
+        let mut packed_range = 0;
+        while packed_range < mem_range && packed_range < min_align {
+            packed_range += min_align;
+        }
+        packed_range
+    }
+}
+
+
+
+/// Descriptor set layouts cache
+///
+///
+pub struct DescriptorSetLayoutsCache(Vec<vk::DescriptorSetLayout>);
+impl DescriptorSetLayoutsCache {
+    pub fn destroy(self, device: &ash::Device) {
+        self.0.into_iter().for_each(|layout| {
+            unsafe {device.destroy_descriptor_set_layout(layout, None); }
+        });
+    }
+
+    pub fn get_layout(&self, binding_index: usize) -> vk::DescriptorSetLayout {
+        self.0.get(binding_index).expect("Binding index out of scope").clone()
+    }
+
+    pub fn create(device: &ash::Device) -> Self {
+        let layout_bindings = [
+            (// binding 0, vertex uniform buffer
+                [vk::DescriptorSetLayoutBinding::builder()
+                    .binding(0)
+                    .descriptor_count(1)
+                    .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER_DYNAMIC)
+                    .stage_flags(vk::ShaderStageFlags::VERTEX)
+                    .build()
+                ],
+                vk::DescriptorSetLayoutCreateFlags::empty()
+            ),
+            (// binding 1, fragment uniform buffer
+                [vk::DescriptorSetLayoutBinding::builder()
+                    .binding(1)
+                    .descriptor_count(1)
+                    .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER_DYNAMIC)
+                    .stage_flags(vk::ShaderStageFlags::FRAGMENT)
+                    .build()
+                ],
+            vk::DescriptorSetLayoutCreateFlags::empty()
+            )
+        ];
+
+        let descriptor_layouts = layout_bindings.into_iter().map(|(layouts, create_flags)| {
+            Self::create_set_layout(device, &layouts, create_flags)
+        }).collect::<Vec<vk::DescriptorSetLayout>>();
+
+        Self(descriptor_layouts)
+    }
+
+    fn create_set_layout(device: &ash::Device, layout_bindings: &[vk::DescriptorSetLayoutBinding], create_flags: vk::DescriptorSetLayoutCreateFlags) -> vk::DescriptorSetLayout {
+        let create_info = vk::DescriptorSetLayoutCreateInfo::builder()
+            .bindings(&layout_bindings)
+            .flags(create_flags);
+
+        unsafe { device.create_descriptor_set_layout(&create_info, None) }
+            .expect("Couldn't create descriptor set layout")
+    }
+}
+
+
+
+
+mod descriptor_set_builder {
+    use ash::vk;
+    //use super::descriptor_set_layout;
+    use super::mem;
+    use super::DescriptorSetLayoutsCache;
+    use super::DescriptorSetAllocator;
+    use super::MemoryUsage;
+    use std::rc::Rc;
+
+    pub struct BufferCreationData {
+       pub pd_properties: vk::PhysicalDeviceProperties,
+       pub pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
+    }
+
+    pub struct DescriptorSetBuilder<'a> {
+        device: Rc<ash::Device>,
+        layouts_cache: &'a DescriptorSetLayoutsCache,
+        allocator: &'a DescriptorSetAllocator,
+        buffer_creation_data: &'a BufferCreationData,
+        //
+        descriptors: Vec<DescriptorData>,
+    }
+
+    struct DescriptorData {
+        binding: usize,
+        //set_layout: vk::DescriptorSetLayout,
+        mem_type: mem::MemType,
+
+        packed_align: u64,
+        mem_range: u64,
+        mem_size: u64, // mem_range * instances
+    }
+
+    impl<'a> DescriptorSetBuilder<'a> {
+        pub fn builder(device: Rc<ash::Device>, layouts_cache: &'a DescriptorSetLayoutsCache, allocator: &'a DescriptorSetAllocator,
+                       buffer_creation_data: &'a BufferCreationData) -> Self {
+            Self { device: Rc::clone(&device), layouts_cache, allocator, buffer_creation_data, descriptors: Vec::new() }
+        }
+
+        pub fn descriptor_set<DescriptorDataType: Sized>(self, binding: usize, instances: usize, mem_type: mem::MemType) {
+            let min_ubuffer_offset_align = self.buffer_creation_data.pd_properties.limits.min_uniform_buffer_offset_alignment;
+
+            // several instances means allocating at different times, memory needs to be packed for
+            // it's buffer region
+            let packed_align = mem::packed_range_from_min_align::<DescriptorDataType>(min_ubuffer_offset_align); 
+            let mem_size = packed_align * instances as u64;
+
+            let mem_range = std::mem::size_of::<DescriptorDataType>() as u64;
+
+            let mem_data = DescriptorData {
+                binding,
+                mem_type,
+                packed_align,
+                mem_range,
+                mem_size,
+            };
+
+            todo!()
+
+            //let fb_packed_align = mem::packed_range_from_min_align::<UniformBufferFrameData>(min_ubuffer_offset_align);
+            //let packed_size = packed_align * instances
+        }
+
+        pub fn build(self) {
+            // persistent and dynamic memory should be exclusively aligned
+            // (if min align is 256 bytes and persistent is <256, dynamic starts at offset 256)
+
+            let set_layouts = self.descriptors.iter().map(|desc| {
+                self.layouts_cache.get_layout(desc.binding)
+            }).collect::<Vec<vk::DescriptorSetLayout>>();
+
+
+
+
+            //let both_mem_types = self.descriptors.iter().any(|desc| desc.mem_type == mem::MemType::Persistent)
+                && self.descriptors.iter().any(|desc| desc.mem_type == mem::MemType::Dynamic);
+
+            //let set_layout = self.layouts_cache.get_layout(binding);
+
+            let persistent_bytes_count = {
+                let mut counter = 0;
+                for desc in self.descriptors.iter().filter(|desc| desc.mem_type == mem::MemType::Persistent) {
+                    counter += desc.packed_align;
+                }
+                counter
+            };
+
+
+
+            // TODO ......................
+
+            // The function create_buffer automatically the memory upon creation 
+            // based on the given struct's size, unless Manual is specified TODO.
+            //
+            //let packed_size_bytes: u64 = gb_packed_align + fb_packed_align * config::MAX_FRAMES_COUNT as u64;
+            // let initial_data: Vec<u8> = (0..packed_size_bytes).map(|_| 0_u8).collect();
+
+            // 
+            // let gb_create_info = super::AllocatedBufferCreateInfo {
+            //     device: Rc::clone(&self.device),
+            //     pd_memory_properties: self.pd_memory_properties,
+            //     initial_data: &initial_data, // size of allocated memory will be size of initial_data, the rest of the size is for dynamic mem
+            //     buffer_usage: vk::BufferUsageFlags::UNIFORM_BUFFER,
+            //     memory_usage: MemoryUsage::CpuToGpu,
+            //     memory_map_flags: vk::MemoryMapFlags::empty(),
+            //     sharing_mode: vk::SharingMode::EXCLUSIVE,
+            // };
+
+            // let global_buffer = AllocatedBuffer::create_buffer(&gb_create_info);
+
+
+        }
+
+    }
+}
+
+
+const POOL_SIZE_MULTIPLIERS: [(vk::DescriptorType, u32); 2] = [
+    (vk::DescriptorType::UNIFORM_BUFFER, 10),
+    (vk::DescriptorType::UNIFORM_BUFFER_DYNAMIC, 10),
+];
+
+
+pub struct DescriptorSetAllocator {
+    device: Rc<ash::Device>,
+
+    pool: vk::DescriptorPool,
+
+
+
+    descriptor_layouts: vk::DescriptorSetLayout,
+
+}
+
+
+// Only as an example
+struct DescriptorSets {
+    global_per_frame: vk::DescriptorSet,
+}
+//
+
+
+struct DescriptorBuilder {
+    
+}
+
+
+
+
 
 /// Trait with useful functions for vk::DescriptorSet
 pub trait DescriptorSet {
@@ -69,7 +300,7 @@ pub struct UniformBuffer {
 /// Cpu-side buffer to allocate data for UniformBuffer
 #[derive(Default, Clone, Copy)]
 #[repr(C)] // ensure compiler doesn't reorder properties
-//#[repr(align(256))]
+#[repr(align(256))]
 struct UniformBufferData {
     _global_data: UniformBufferGlobalData,
     _frame_data: [UniformBufferFrameData; config::MAX_FRAMES_COUNT],

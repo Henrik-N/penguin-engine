@@ -3,7 +3,6 @@ use ash::vk;
 // 2 == double buffering
 pub const MAX_FRAMES_COUNT: usize = 2;
 
-
 pub const WIDTH: u32 = 640;
 pub const HEIGHT: u32 = 400;
 

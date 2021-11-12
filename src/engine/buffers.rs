@@ -1,7 +1,19 @@
-use super::resources::{Vertex};
+use super::resources::Vertex;
 use ash::util::Align;
 use ash::vk;
 use std::rc::Rc;
+
+struct MemoryMapping {
+    bytes: u64,
+    align: u64,
+}
+
+struct MemoryMappings {
+    aligns: Vec<u64>, // one entry of byte count / mapping
+}
+impl MemoryMappings {
+}
+
 
 trait DeviceMemoryOperations {
     // allocation
@@ -49,15 +61,11 @@ impl DeviceMemoryOperations for ash::Device {
 
     /// Associates an image handle with gpu memory
     fn bind_image_memory_p(&self, image: vk::Image, memory: vk::DeviceMemory) {
-        unsafe {
-            self.bind_image_memory(image, memory, 0);
-        }
+        unsafe { self.bind_image_memory(image, memory, 0); }
     }
 
     fn unmap_memory_p(&self, memory: vk::DeviceMemory) {
-        unsafe {
-            self.unmap_memory(memory);
-        }
+        unsafe { self.unmap_memory(memory); }
     }
 
     fn copy_to_mapped<T: Copy>(
@@ -186,10 +194,6 @@ impl MemoryUsage {
     }
 }
 
-
-
-
-
 pub struct AllocatedBuffer {
     device: Rc<ash::Device>,
     pub handle: vk::Buffer, // handle to gpu-side buffer
@@ -218,8 +222,6 @@ pub struct AllocatedBufferCreateInfo<'a, T> {
 }
 
 
-
-
 impl Drop for AllocatedBuffer {
     fn drop(&mut self) {
         unsafe {
@@ -229,8 +231,6 @@ impl Drop for AllocatedBuffer {
     }
 }
 
-
-
 impl AllocatedBuffer {
     // pub fn destroy(&self) {
     //     unsafe {
@@ -238,21 +238,18 @@ impl AllocatedBuffer {
     //         self.device.free_memory(self.memory, None);
     //     }
     // }
-   
 
     pub fn write_memory<T: Copy>(&self, data: &[T], offset: u64) {
-        Self::write_memory_inner(
-            &self.device,
-            self.memory,
-            data,
-            &self.info,
-            offset);
+        Self::write_memory_inner(&self.device, self.memory, data, &self.info, offset);
     }
 
     pub fn create_buffer<'a, T: Copy>(create_info: &'a AllocatedBufferCreateInfo<T>) -> Self {
         let device = Rc::clone(&create_info.device);
 
-        println!("BUFFER SIZE {}", std::mem::size_of_val(create_info.initial_data) as u64);
+        println!(
+            "BUFFER SIZE {}",
+            std::mem::size_of_val(create_info.initial_data) as u64
+        );
 
         // let alignment = match create_info.alignment {
         //     Alignment::Auto => std::size_of_val(create_info.initial_data as u64),
@@ -268,10 +265,8 @@ impl AllocatedBuffer {
         let buffer = unsafe { device.create_buffer(&buffer_info, None) }
             .expect("Couldn't create index buffer");
 
-
         let memory_requirements: vk::MemoryRequirements =
             unsafe { device.get_buffer_memory_requirements(buffer) };
-        
 
         log::info!("MEMORY SIZE: {}", memory_requirements.size);
 
@@ -280,7 +275,6 @@ impl AllocatedBuffer {
             map_flags: create_info.memory_map_flags,
             alignment: std::mem::size_of::<T>() as u64,
         };
-       
 
         // allocate device memory
         //
@@ -295,7 +289,7 @@ impl AllocatedBuffer {
             .allocation_size(mem_info.size)
             .memory_type_index(memory_type_index)
             .build();
-       
+
         let memory = device.allocate_memory_p(&allocate_info);
 
         // memcpy
@@ -312,23 +306,18 @@ impl AllocatedBuffer {
         }
     }
 
-
-    fn write_memory_inner<T: Copy>(device: &ash::Device,
-                       //buffer: vk::Buffer,
-                       memory: vk::DeviceMemory,
-                       data: &[T],
-                       mem_info: &MemoryInfo,
-                       offset: u64) {
+    fn write_memory_inner<T: Copy>(
+        device: &ash::Device,
+        //buffer: vk::Buffer,
+        memory: vk::DeviceMemory,
+        data: &[T],
+        mem_info: &MemoryInfo,
+        offset: u64,
+    ) {
         // map memory
-        let ptr_to_memory = unsafe {
-            device.map_memory(
-                memory,
-                offset,
-                mem_info.size,
-                mem_info.map_flags,
-            )
-        }
-        .expect("Couldn't get pointer to memory");
+        let ptr_to_memory =
+            unsafe { device.map_memory(memory, offset, mem_info.size, mem_info.map_flags) }
+                .expect("Couldn't get pointer to memory");
 
         let size = std::mem::size_of_val(data) as u64;
         let alignment = std::mem::align_of::<T>() as u64;
@@ -352,15 +341,13 @@ impl AllocatedBuffer {
             // unmap memory
             device.unmap_memory(memory);
         };
-
     }
 
     pub fn create_vertex_buffer(
-        device: Rc<ash::Device>, 
+        device: Rc<ash::Device>,
         vertices: &[Vertex],
         pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
-        ) -> AllocatedBuffer {
-
+    ) -> AllocatedBuffer {
         let create_info = AllocatedBufferCreateInfo {
             device: Rc::clone(&device),
             pd_memory_properties,
@@ -373,7 +360,6 @@ impl AllocatedBuffer {
         };
         Self::create_buffer(&create_info)
     }
-
 }
 
 //pub

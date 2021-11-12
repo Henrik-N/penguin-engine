@@ -13,8 +13,8 @@ pub fn init_logger() -> Result<(), fern::InitError> {
         .trace(Color::Cyan)
         .debug(Color::Magenta)
         .info(Color::Green)
-        .warn(Color::Yellow) 
-        .error(Color::Red); 
+        .warn(Color::Yellow)
+        .error(Color::Red);
 
     let time = chrono::Local::now().format("%H:%M:%S").to_string();
 
@@ -24,10 +24,9 @@ pub fn init_logger() -> Result<(), fern::InitError> {
             out.finish(format_args!(
                 "{color_arg} {time} | {level} | {color_arg}[{module}] \x1B[0m{message}",
                 color_arg = {
-
                     format_args!(
-                    "\x1B[{}m",
-                    line_colors.get_color(&record.level()).to_fg_str()
+                        "\x1B[{}m",
+                        line_colors.get_color(&record.level()).to_fg_str()
                     )
                 },
                 time = time,
@@ -126,7 +125,6 @@ pub(crate) mod init {
             _ => "[VULKAN UNKNOWN]",
         };
 
-
         let message = CStr::from_ptr((*p_callback_data).p_message);
 
         // TODO: no need to init a static if no debug messenger (in non-debug mode)
@@ -137,7 +135,6 @@ pub(crate) mod init {
             vk::DebugUtilsMessageSeverityFlagsEXT::ERROR => {
                 let msg = message.to_str().expect("Failed to convert &CStr to &str.");
                 let val_err = parser::parse_vk_validation_error_message(msg);
-
 
                 let mut context_objs: String = String::new();
                 val_err.context_objects.iter().for_each(|obj| {
@@ -151,7 +148,7 @@ pub(crate) mod init {
                 let err_string = if same_msg {
                     // same message
                     IDENTICAL_MSG_COUNT += 1;
-                        format!("\n{vk_message_type} ({count})\n\t{vulkan_id}\n{context_objects}\n_______________\n",
+                    format!("\n{vk_message_type} ({count})\n\t{vulkan_id}\n{context_objects}\n_______________\n",
                                 vk_message_type = "[IDENTICAL]",
                                 count = IDENTICAL_MSG_COUNT,
                                 vulkan_id = val_err.vulkan_id,
@@ -170,11 +167,9 @@ pub(crate) mod init {
                             spec_info = val_err.spec_info,
                             spec_link = val_err.spec_link,
                             )
-
                 };
-                
-                log::error!("{}", err_string);
 
+                log::error!("{}", err_string);
             }
             vk::DebugUtilsMessageSeverityFlagsEXT::WARNING => {
                 log::warn!("{} [{:?}]", vk_message_type, message)
@@ -244,11 +239,9 @@ pub(crate) mod init {
                 }
             });
 
-
             if let Some(context) = context_section {
                 // find vulkan id (name of vk object/function that failed)
                 let (vuid, end_index) = find_vuid(&context);
-
 
                 let context_objs: Vec<ContextObj> = context[end_index..]
                     .split("Object")
@@ -307,15 +300,19 @@ pub(crate) mod init {
                         msg = msg.replace(&obj.handle, &index);
                     }
 
-                    let (msg, spec_info) = msg.split_once("The Vulkan spec states: ").unwrap_or((&msg, ""));
+                    let (msg, spec_info) = msg
+                        .split_once("The Vulkan spec states: ")
+                        .unwrap_or((&msg, ""));
 
                     // get link part
                     let link_pattern = "(https://".to_owned();
-                    let (spec_info, spec_link) = spec_info.split_once(&link_pattern).unwrap_or((spec_info, ""));
-                   
+                    let (spec_info, spec_link) = spec_info
+                        .split_once(&link_pattern)
+                        .unwrap_or((spec_info, ""));
+
                     // trim trailing whitespace and add .
                     let mut spec_info = spec_info.to_owned().trim_end().to_string();
-                    spec_info += "."; 
+                    spec_info += ".";
 
                     // add back split off link pattern
                     let mut spec_link = spec_link.to_owned();
@@ -340,8 +337,6 @@ pub(crate) mod init {
             }
         }
 
-
-
         // Helper functions --------------------------
 
         /// Finds the VUID section of the given context section of a vulkan validation error
@@ -355,7 +350,5 @@ pub(crate) mod init {
             };
             (vuid, end_index)
         }
-
     }
 }
-
