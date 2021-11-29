@@ -1,19 +1,83 @@
-// todo Data structures
-// https://ourmachinery.com/post/data-structures-part-1-bulk-data/
-// https://ourmachinery.com/post/data-structures-part-2-indices/
-// https://ourmachinery.com/post/data-structures-part-3-arrays-of-arrays/
+pub use legion::systems::Resources;
+pub use legion::systems::Step;
+pub use legion::*;
 
-// ----------------------------------------------------------------------------------
+/// Group of behaviour
+pub trait Plugin {
+    /// resources.insert(ResourceType::default());
+    fn init_resources(resources: &mut Resources);
 
-// type ComponentId = u32;
-//
-// struct Entity {
-//     id: u32,
-//     components: Vec<ComponentId>,
-// }
-//
-// impl Entity {
-//     fn has_component(&self, component: ComponentId) -> bool {
-//         self.components.contains(&component)
-//     }
-// }
+    /// Schedule::builder().add_system(some_system_system()).build().into_vec()
+    fn startup_steps() -> Vec<Step>;
+
+    /// Schedule::builder().add_system(some_system_system()).build().into_vec()
+    fn run_steps() -> Vec<Step>;
+
+    /// Schedule::builder().add_system(some_system_system()).build().into_vec()
+    fn shutdown_steps() -> Vec<Step>;
+}
+
+pub struct AppBuilder {
+    world: World,
+    resources: Resources,
+    startup_steps: Vec<Step>,
+    run_steps: Vec<Step>,
+    shutdown_steps: Vec<Step>,
+}
+
+impl AppBuilder {
+    pub fn builder() -> Self {
+        Self {
+            world: World::default(),
+            resources: Resources::default(),
+            startup_steps: Vec::new(),
+            run_steps: Vec::new(),
+            shutdown_steps: Vec::new(),
+        }
+    }
+
+    pub fn add_startup_steps(mut self, steps: Vec<Step>) -> Self {
+        self.startup_steps.extend(steps.into_iter());
+        self
+    }
+
+    pub fn add_run_steps(mut self, steps: Vec<Step>) -> Self {
+        self.run_steps.extend(steps.into_iter());
+        self
+    }
+
+    pub fn add_shutdown_steps(mut self, steps: Vec<Step>) -> Self {
+        self.shutdown_steps.extend(steps.into_iter());
+        self
+    }
+
+    pub fn insert_resource<T>(mut self, resource: T) -> Self where T: 'static {
+        self.resources.insert(resource);
+        self
+    }
+
+    pub fn add_plugin<T: Plugin>(mut self) -> Self {
+        T::init_resources(&mut self.resources);
+        self = self.add_startup_steps(T::startup_steps());
+        self = self.add_run_steps(T::run_steps());
+        self = self.add_shutdown_steps(T::shutdown_steps());
+        self
+    }
+
+    pub fn build(self) -> crate::App {
+        let startup_schedule = Schedule::from(self.startup_steps);
+        let run_schedule = Schedule::from(self.run_steps);
+        let shutdown_schedule = Schedule::from(self.shutdown_steps);
+
+
+        crate::App {
+            world: self.world,
+            resources: self.resources,
+
+            startup_schedule,
+            run_schedule,
+            shutdown_schedule,
+        }
+    }
+
+}

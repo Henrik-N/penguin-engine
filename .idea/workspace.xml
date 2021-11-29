@@ -10,11 +10,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89cec392-e333-432d-95a1-72c929ae631c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.cargo/.config.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rust-toolchain.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/core/input.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/logger.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/logger.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/application.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/application.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/events.rs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/mod.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/time.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/time.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/pe/device.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/pe/device.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ecs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +49,9 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/.cargo/registry/src/github.com-1ecc6299db9ec823/hecs-0.6.5/src/world.rs" root0="SKIP_INSPECTION" />
+  </component>
   <component name="KotlinMultiplatform">
     <allAvailableExecutables />
   </component>
@@ -67,7 +77,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
-    <property name="settings.editor.selected.configurable" value="inlay.hints.Rust" />
+    <property name="settings.editor.selected.configurable" value="com.maddyhome.idea.vim.ui.VimEmulationConfigurable" />
     <property name="settings.editor.splitter.proportion" value="0.3058104" />
   </component>
   <component name="RecentsManager">
@@ -79,9 +89,9 @@
       <recent name="C:\Dev\Rust\penguin-engine\src\events" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration name="Run" type="CargoCommandRunConfiguration" factoryName="Cargo Command" nameIsGenerated="true">
-      <option name="command" value="run" />
+  <component name="RunManager" selected="Cargo.Run">
+    <configuration name="--help" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="--help" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <option name="channel" value="DEFAULT" />
       <option name="requiredFeatures" value="true" />
@@ -96,6 +106,51 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Run" type="CargoCommandRunConfiguration" factoryName="Cargo Command" nameIsGenerated="true">
+      <option name="command" value="run" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="emulateTerminal" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="backtrace" value="SHORT" />
+      <envs>
+        <env name="RUST_BACKTRACE" value="1" />
+      </envs>
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="r" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="r" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="emulateTerminal" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="backtrace" value="SHORT" />
+      <envs />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Cargo.Run" />
+      <item itemvalue="Cargo.--help" />
+      <item itemvalue="Cargo.r" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Cargo.r" />
+        <item itemvalue="Cargo.--help" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -131,6 +186,15 @@
       <workItem from="1633467877958" duration="57182000" />
       <workItem from="1633690139448" duration="27285000" />
       <workItem from="1634030079426" duration="10499000" />
+      <workItem from="1636748707125" duration="431000" />
+      <workItem from="1636749147577" duration="323000" />
+      <workItem from="1636749484957" duration="24000" />
+      <workItem from="1636749519438" duration="27404000" />
+      <workItem from="1636799881726" duration="3146000" />
+      <workItem from="1637105541353" duration="5387000" />
+      <workItem from="1637111852219" duration="2701000" />
+      <workItem from="1637935870931" duration="26000" />
+      <workItem from="1638192707006" duration="19954000" />
     </task>
     <servers />
   </component>
@@ -139,5 +203,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

@@ -1,11 +1,50 @@
+use crate::ecs::Plugin;
 use std::time::{Duration, Instant};
+use legion::systems::Step;
+use legion::*;
 
-// Resource
-pub struct PTimeResource {
-    delta_time: Duration,
+pub struct TimePlugin;
+impl Plugin for TimePlugin {
+    fn init_resources(resources: &mut Resources) {
+        resources.insert(PTime::default());
+    }
+
+    fn startup_steps() -> Vec<Step> {
+        vec![]
+    }
+
+    fn run_steps() -> Vec<Step> {
+        Schedule::builder()
+            .add_system(tick_system())
+            .build()
+            .into_vec()
+    }
+
+    fn shutdown_steps() -> Vec<Step> {
+        vec![]
+    }
 }
 
-impl PTimeResource {
+#[system]
+fn tick(#[resource] time: &mut PTime) {
+    time.tick();
+}
+
+
+#[derive(Debug)]
+pub struct PTime {
+    previous_frame_time: Instant,
+    delta_time: Duration,
+}
+impl Default for PTime {
+    fn default() -> Self {
+        Self {
+            previous_frame_time: Instant::now(),
+            delta_time: Duration::new(0, 0),
+        }
+    }
+}
+impl PTime {
     pub fn delta(&self) -> f32 {
         self.delta_time.as_secs_f32()
     }
@@ -13,31 +52,11 @@ impl PTimeResource {
     pub fn _delta_f64(&self) -> f64 {
         self.delta_time.as_secs_f64()
     }
-}
 
-// System
-pub struct PTime {
-    previous_frame_time: Instant,
-    resource: PTimeResource,
-}
-
-impl PTime {
-    pub fn create_system() -> Self {
-        Self {
-            previous_frame_time: Instant::now(),
-            resource: PTimeResource {
-                delta_time: Duration::new(0, 0),
-            },
-        }
-    }
-
-    pub fn resource(&self) -> &PTimeResource {
-        &self.resource
-    }
-
-    pub fn tick(&mut self) {
+    fn tick(&mut self) {
         let delta_time = self.previous_frame_time.elapsed();
         self.previous_frame_time = Instant::now();
-        self.resource.delta_time = delta_time;
+        self.delta_time = delta_time;
     }
 }
+
