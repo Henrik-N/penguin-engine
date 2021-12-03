@@ -10,20 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89cec392-e333-432d-95a1-72c929ae631c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/engine/renderer/mod.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/engine/renderer/vk_components.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/engine/renderer/vk_context.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/config.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/config.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/input.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/input.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/time.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/time.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ecs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/buffers.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/buffers.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/descriptor_sets.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/descriptor_sets.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/pe/instance.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/pe/instance.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/pe/pipeline.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/pe/pipeline.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/pe/shaders.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/pe/shaders.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/pe/swapchain.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/pe/swapchain.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/renderer/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/renderer/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/renderer/vk_components.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/renderer/vk_components.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/renderer/vk_context.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/renderer/vk_context.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/resources.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/resources.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -200,7 +199,8 @@
       <workItem from="1638192707006" duration="42551000" />
       <workItem from="1638238838603" duration="1366000" />
       <workItem from="1638269868471" duration="6014000" />
-      <workItem from="1638500583249" duration="10267000" />
+      <workItem from="1638500583249" duration="11846000" />
+      <workItem from="1638512445674" duration="6381000" />
     </task>
     <servers />
   </component>

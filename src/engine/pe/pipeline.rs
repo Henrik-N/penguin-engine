@@ -1,23 +1,22 @@
 use crate::engine::{pe::shaders::Shader, push_constants::PushConstants};
 use ash::vk;
 
+use crate::engine::renderer::vk_types::*;
+
+
 #[derive(Eq, PartialEq)]
 pub struct PPipeline {
     pub pipeline: vk::Pipeline,
     pub pipeline_layout: vk::PipelineLayout,
-    pub pipeline_bindpoint: vk::PipelineBindPoint,
+    pub pipeline_bind_point: vk::PipelineBindPoint,
     //pub descriptor_set_layouts: Vec<vk::DescriptorSetLayout>,
 }
 impl PPipeline {
-    pub fn destroy(&mut self, device: &ash::Device) {
+    pub fn destroy(&mut self, context: &VkContext) {
         log::debug!("Pipeline gets destroyed!");
         unsafe {
-            device.destroy_pipeline(self.pipeline, None);
-            device.destroy_pipeline_layout(self.pipeline_layout, None);
-
-            // for &set_layout in self.descriptor_set_layouts.iter() {
-            //     device.destroy_descriptor_set_layout(set_layout, None);
-            // }
+            context.device.handle.destroy_pipeline(self.pipeline, None);
+            context.device.handle.destroy_pipeline_layout(self.pipeline_layout, None);
         }
     }
 }
@@ -438,7 +437,7 @@ impl<'a> PPipelineBuilder<'a> {
         PPipeline {
             pipeline: graphics_pipelines[0],
             pipeline_layout,
-            pipeline_bindpoint: self.pipeline_bindpoint,
+            pipeline_bind_point: self.pipeline_bindpoint,
             //descriptor_set_layouts,
         }
     }

@@ -49,6 +49,7 @@ impl AppBuilder {
         self
     }
 
+    #[allow(unused)]
     pub fn insert_resource<T>(mut self, resource: T) -> Self
     where
         T: 'static,

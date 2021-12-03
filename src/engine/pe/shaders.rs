@@ -30,7 +30,7 @@ impl<'a> Shader<'a> {
         options.set_optimization_level(shaderc::OptimizationLevel::Zero); // OptimizationLevel::Performance
         options.set_generate_debug_info();
 
-        let file_path = String::from(SHADERS_FOLDER_PATH.clone().to_string() + file_name);
+        let file_path = String::from(SHADERS_FOLDER_PATH.to_string() + file_name);
 
         // read file content into source variable
         let mut source = String::new();

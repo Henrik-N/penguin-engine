@@ -1,7 +1,6 @@
 /// ------------------------- VK CONTEXT ----------------------------------
 use ash::vk;
 
-
 pub struct VkContext {
     pub instance: Instance,
     pub debug_messenger: DebugMessenger,
@@ -18,6 +17,7 @@ impl VkContext {
         }
     }
 
+    #[allow(unused)]
     pub fn pd_device_properties(&self) -> vk::PhysicalDeviceProperties {
         unsafe {
             self.instance
@@ -26,12 +26,14 @@ impl VkContext {
         }
     }
 
+    #[allow(unused)]
     pub fn min_uniform_buffer_offset_alignment(&self) -> vk::DeviceSize {
         self.pd_device_properties()
             .limits
             .min_uniform_buffer_offset_alignment
     }
 
+    #[allow(unused)]
     pub fn find_supported_format(
         &self,
         possible_formats: &[vk::Format],
@@ -62,8 +64,7 @@ impl VkContext {
     pub fn wait_for_device_idle(&self) {
         log::debug!("Renderer: waiting for device idle..");
         unsafe {
-            self
-                .device
+            self.device
                 .handle
                 .device_wait_idle()
                 .expect("Device: couldn't wait for idle");
@@ -71,7 +72,6 @@ impl VkContext {
         log::debug!("Renderer: device now idle");
     }
 }
-
 
 pub struct Instance {
     entry: ash::Entry,
@@ -94,9 +94,6 @@ pub struct Device {
     // graphics queue only for now
     pub queue_handle: vk::Queue,
 }
-
-
-
 
 impl VkContext {
     pub fn destroy(&mut self) {
@@ -129,7 +126,6 @@ impl VkContext {
     pub fn init(window: &winit::window::Window) -> Self {
         log::trace!("Constructing VkContext...");
 
-        use init_context::*;
         log::trace!("Creating instance.");
         let instance = Instance::init(window).expect("couldn't init vk instance");
         log::trace!("Creating vk debug messenger.");
@@ -153,10 +149,6 @@ impl VkContext {
         }
     }
 }
-
-
-
-
 
 mod init_context {
     use super::{DebugMessenger, Instance, PhysicalDevice, Surface};

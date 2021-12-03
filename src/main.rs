@@ -1,23 +1,19 @@
 #![allow(unused)]
-//use std::task::ready;
 use anyhow::*;
 
 mod core;
 mod ecs;
 mod engine;
 
-use ash::vk;
-
-use legion::world::SubWorld;
 use legion::*;
 use winit::event::WindowEvent;
-use winit::event::{ElementState, Event, KeyboardInput, VirtualKeyCode};
+use winit::event::{ElementState, Event, VirtualKeyCode};
 use winit::event_loop::{ControlFlow, EventLoop};
 
+
 use crate::core::config;
-use crate::engine::Renderer;
-use std::time::{Duration, Instant};
-use std::vec::from_elem;
+
+
 
 pub struct App {
     pub world: World,
@@ -81,9 +77,9 @@ impl App {
     }
 }
 
-use crate::core::time::PTime;
+
+
 use crate::ecs::AppBuilder;
-use std::collections::HashSet;
 
 pub fn create_window(
     event_loop: &winit::event_loop::EventLoop<()>,
@@ -113,7 +109,7 @@ fn main() -> Result<()> {
     let app = AppBuilder::builder()
         .add_plugin(crate::core::time::TimePlugin)
         .add_plugin(crate::core::input::InputPlugin)
-        .add_plugin(crate::engine::plugin::RendererPlugin {
+        .add_plugin(crate::engine::renderer::RendererPlugin {
             window: Some(window),
         })
         //.insert_resource(RendResource::new(&window))

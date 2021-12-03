@@ -3,7 +3,7 @@ pub mod descriptor_sets;
 pub mod math;
 mod pe;
 pub mod push_constants;
-mod renderer;
+pub(crate) mod renderer;
 pub mod resources;
 
 use math::prelude::*;
@@ -27,196 +27,6 @@ use crate::engine::descriptor_sets::*;
 // TODO
 struct _Texture;
 struct _RenderGraph;
-
-pub mod plugin {
-    use crate::ecs::*;
-    use crate::engine::buffers::AllocatedImage;
-    use crate::engine::pe;
-    use crate::engine::pe::device::SwapchainSupportDetails;
-    use crate::PTime;
-    use anyhow::*;
-    use ash::vk;
-    use ash::vk::DeviceSize;
-    use ash_window::create_surface;
-    use legion::systems::ResourceSet;
-    use legion::world::SubWorld;
-    use std::fmt::Debug;
-    use std::mem::swap;
-    use std::ops::Deref;
-    use std::rc::Rc;
-    use winit::dpi::Size::Physical;
-    use crate::engine::renderer::vk_context::*;
-
-    struct Window {
-        window: winit::window::Window,
-    }
-    impl Deref for Window {
-        type Target = winit::window::Window;
-
-        fn deref(&self) -> &Self::Target {
-            &self.window
-        }
-    }
-
-    pub struct RendererPlugin {
-        pub window: Option<winit::window::Window>,
-    }
-    impl Plugin for RendererPlugin {
-        fn startup(&mut self, resources: &mut Resources) -> Vec<Step> {
-            // move ownership of window to the resource
-            let window =
-                std::mem::replace(&mut self.window, None).expect("couldn't move winit window");
-
-            resources.insert(Window { window });
-
-            Schedule::builder()
-                .add_thread_local(renderer_startup_system())
-                .build()
-                .into_vec()
-        }
-
-        fn run() -> Vec<Step> {
-            Schedule::builder().build().into_vec()
-        }
-
-        fn shutdown() -> Vec<Step> {
-            Schedule::builder()
-                .add_thread_local(renderer_shutdown_system())
-                .build()
-                .into_vec()
-        }
-    }
-
-
-    use crate::engine::renderer::{vk_context::*, vk_components::*};
-
-    #[system]
-    fn renderer_shutdown(
-        world: &mut SubWorld,
-        mut query: &mut Query<(
-            &mut VkContext,
-            &mut Swapchain,
-            &mut FrameBuffers,
-            &mut RenderPass,
-            &mut DepthImage,
-            &mut DescriptorPool,
-        )>,
-    ) {
-        log::info!("RENDERER SHUTDOWN STARTED!");
-
-        query.iter_mut(world).for_each(
-            |(context, swapchain, frame_buffers, render_pass, depth_image, descriptor_pool): (
-                &mut VkContext,
-                &mut Swapchain,
-                &mut FrameBuffers,
-                &mut RenderPass,
-                &mut DepthImage,
-                &mut DescriptorPool,
-            )| {
-                // wait for device idle..
-                context.wait_for_device_idle();
-
-                frame_buffers.destroy(&context);
-
-                render_pass.destroy(&context);
-
-                descriptor_pool.destroy(&context);
-
-                swapchain.destroy(&context);
-
-                depth_image.destroy(&context);
-
-                context.destroy();
-
-
-                //log::debug!("Render context: dropping frame data");
-                //self.frame_data.iter_mut().for_each(|frame| {
-                //    frame.destroy(&self.device);
-                //});
-            },
-        );
-    }
-
-    #[system]
-    fn renderer_startup(cmd: &mut legion::systems::CommandBuffer, #[resource] window: &Window) {
-        log::info!("RENDERER STARTUP STARTED!");
-        /// ------------------ CONTEXT  -----------------------------------------------------
-        let context = VkContext::init(window);
-        /////////////////////////////////////////
-
-        /// ------------------ OTHER RENDERER STRUCTS----------------------------------------
-
-        log::trace!("Creating swapchain.");
-        let swapchain = Swapchain::init(&context);
-        /////////////////////////////////////////
-
-        log::trace!("Creating depth image.");
-        let depth_image = DepthImage::init(&context, &swapchain);
-        /////////////////////////////////////////
-
-        log::trace!("Creating render pass.");
-        let render_pass = RenderPass::init(&context, &swapchain);
-        /////////////////////////////////////////
-
-        log::trace!("Creating frame buffers.");
-        let frame_buffers =
-            FrameBuffers::init(&context, &swapchain, &depth_image, &render_pass);
-
-
-
-
-        log::trace!("Creating descriptor pool.");
-        let descriptor_pool = DescriptorPool::init(&context);
-
-        ////////////////////////////---- OLD --------------------------------------------------------------------------------
-
-        //let uniform_buffer = Rc::new(UniformBuffer::new(
-        //    Rc::clone(&context.device),
-        //    core.physical_device_properties,
-        //    core.physical_device_memory_properties,
-        //    global_descriptor_pool,
-        //));
-
-        //let frame_data: Vec<FrameData> = (0..max_frames_count)
-        //    .map(|frame_index| {
-        //        FrameData::new(
-        //            Rc::clone(&device),
-        //            core.queue_index,
-        //            core.physical_device_properties,
-        //            core.physical_device_memory_properties,
-        //            global_descriptor_pool,
-        //            //global_descriptor_set_layout,
-        //            frame_index,
-        //            Rc::clone(&uniform_buffer),
-        //        )
-        //    })
-        //    .collect();
-
-        ////////////////////////////---- OLD --------------------------------------------------------------------------------
-
-        let _renderer_entity: Entity =
-            cmd.push((
-                context,
-                swapchain,
-                depth_image,
-                render_pass,
-                frame_buffers,
-                descriptor_pool));
-    }
-
-
-    mod todo_init_destroy {
-        struct FrameDataContainer {
-            frame_data: Vec<crate::engine::render_backend::FrameData>,
-        }
-        struct UniformBuffer {
-            uniform_buffer: crate::engine::descriptor_sets::UniformBuffer,
-            //uniform_buffer: Rc<UniformBuffer>,
-        }
-    }
-
-
-}
 
 // Drop order: https://github.com/rust-lang/rfcs/blob/246ff86b320a72f98ed2df92805e8e3d48b402d6/text/1857-stabilize-drop-order.md
 pub struct Renderer {
@@ -256,76 +66,76 @@ impl Renderer {
         log::debug!("Shutting down.");
     }
 
-    pub(crate) fn create(window: &winit::window::Window) -> Result<Self> {
-        let core = Core::create(&window)?;
+    //pub(crate) fn create(window: &winit::window::Window) -> Result<Self> {
+    //    let core = Core::create(&window)?;
 
-        let context = RenderContext::create(&core, config::MAX_FRAMES_COUNT)?;
+    //    let context = RenderContext::create(&core, config::MAX_FRAMES_COUNT)?;
 
-        let mut meshes =
-            MeshResource::new(context.device_rc(), core.physical_device_memory_properties);
+    //    let mut meshes =
+    //        MeshResource::new(context.device_rc(), core.physical_device_memory_properties);
 
-        meshes.insert_from_file("monkey", "bunny.obj");
+    //    meshes.insert_from_file("monkey", "bunny.obj");
 
-        let vertex_input_bindings = Vertex::get_binding_descriptions();
-        let vertex_attribute_descriptions = Vertex::get_attribute_descriptions();
+    //    let vertex_input_bindings = Vertex::get_binding_descriptions();
+    //    let vertex_attribute_descriptions = Vertex::get_attribute_descriptions();
 
-        let global_layout =
-            UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&context.device);
-        let frames_layout =
-            UniformBuffer::create_descriptor_set_layout::<UniformBufferFrameData>(&context.device);
-        //let global_layout = UniformBufferGlobalData::create_descriptor_set_layout(&context.device);
+    //    let global_layout =
+    //        UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&context.device);
+    //    let frames_layout =
+    //        UniformBuffer::create_descriptor_set_layout::<UniformBufferFrameData>(&context.device);
+    //    //let global_layout = UniformBufferGlobalData::create_descriptor_set_layout(&context.device);
 
-        let descriptor_set_layouts = vec![global_layout, frames_layout];
+    //    let descriptor_set_layouts = vec![global_layout, frames_layout];
 
-        // ***
-        // Pipelines creation
-        // ***
-        let pipeline = PPipelineBuilder::default(
-            &context.device,
-            context.swapchain_extent,
-            context.render_pass,
-            vk::PipelineBindPoint::GRAPHICS,
-        )
-        .shaders(&["simple.vert", "simple.frag"])
-        .vertex_input(&vertex_input_bindings, &vertex_attribute_descriptions)
-        //.wireframe_mode()
-        .descriptor_set_layouts(descriptor_set_layouts)
-        //.add_push_constants::<MeshPushConstants>()
-        .build();
+    //    // ***
+    //    // Pipelines creation
+    //    // ***
+    //    let pipeline = PPipelineBuilder::default(
+    //        &context.device,
+    //        context.swapchain_extent,
+    //        context.render_pass,
+    //        vk::PipelineBindPoint::GRAPHICS,
+    //    )
+    //    .shaders(&["simple.vert", "simple.frag"])
+    //    .vertex_input(&vertex_input_bindings, &vertex_attribute_descriptions)
+    //    //.wireframe_mode()
+    //    .descriptor_set_layouts(descriptor_set_layouts)
+    //    //.add_push_constants::<MeshPushConstants>()
+    //    .build();
 
-        unsafe {
-            context
-                .device
-                .destroy_descriptor_set_layout(global_layout, None);
-            context
-                .device
-                .destroy_descriptor_set_layout(frames_layout, None);
-        }
+    //    unsafe {
+    //        context
+    //            .device
+    //            .destroy_descriptor_set_layout(global_layout, None);
+    //        context
+    //            .device
+    //            .destroy_descriptor_set_layout(frames_layout, None);
+    //    }
 
-        let mut materials = HashResource::new();
-        materials.insert(
-            "default",
-            Material::from_pipeline(context.device_rc(), pipeline),
-        );
+    //    let mut materials = HashResource::new();
+    //    materials.insert(
+    //        "default",
+    //        Material::from_pipeline(context.device_rc(), pipeline),
+    //    );
 
-        // let render_objects = vec![RenderObject::new(
-        //     meshes.get_rc("monkey"),
-        //     materials.get_rc("default"),
-        //     Mat4::IDENTITY,
-        // )];
+    //    // let render_objects = vec![RenderObject::new(
+    //    //     meshes.get_rc("monkey"),
+    //    //     materials.get_rc("default"),
+    //    //     Mat4::IDENTITY,
+    //    // )];
 
-        Ok(Self {
-            _core: core,
-            context,
-            frame_num: 0,
-            wireframe_mode: false,
-            materials,
-            meshes,
-            //frame_data: outer_frame_data,
-            //descriptor_pool,
-            //render_objects,
-        })
-    }
+    //    Ok(Self {
+    //        _core: core,
+    //        context,
+    //        frame_num: 0,
+    //        wireframe_mode: false,
+    //        materials,
+    //        meshes,
+    //        //frame_data: outer_frame_data,
+    //        //descriptor_pool,
+    //        //render_objects,
+    //    })
+    //}
 
     pub fn toggle_wireframe_mode(&mut self) {
         self.wireframe_mode = !self.wireframe_mode;
@@ -369,12 +179,16 @@ impl Renderer {
 
         let mesh_matrix = projection * view * model;
 
-        let uniform_buffer_data = UniformBufferGlobalData {
-            data: Vec4::default(),
-            render_matrix: mesh_matrix,
-        };
+        ///////////////////
+        //let uniform_buffer_data = UniformBufferGlobalData {
+        //    data: Vec4::default(),
+        //    render_matrix: mesh_matrix,
+        //};
 
-        frame_data.write_global_uniform_memory(uniform_buffer_data);
+        //frame_data.write_global_uniform_memory(uniform_buffer_data);
+
+        /////////////////////
+
 
         // let uniform_buffer_frame_data = UniformBufferFrameData {
         //     fog_color: Vec4::default(),
@@ -385,7 +199,7 @@ impl Renderer {
 
         //frame_data.write_frame_memory(uniform_buffer_frame_data);
 
-        frame_data.bind_descriptor_sets(command_buffer, mat.pipeline.pipeline_layout);
+        //frame_data.bind_descriptor_sets(command_buffer, mat.pipeline.pipeline_layout);
 
         // bind global descriptor sets
         // frame_data.bind_global_descriptor_set(
@@ -583,21 +397,21 @@ pub mod render_backend {
         //global_descriptor_set: vk::DescriptorSet,
     }
     impl FrameData {
-        pub fn write_global_uniform_memory(&self, buffer_data: UniformBufferGlobalData) {
-            self.uniform_buffer.write_global_memory(buffer_data);
-        }
+        //pub fn write_global_uniform_memory(&self, buffer_data: UniformBufferGlobalData) {
+        //    self.uniform_buffer.write_global_memory(buffer_data);
+        //}
 
-        pub fn bind_descriptor_sets(
-            &self,
-            command_buffer: vk::CommandBuffer,
-            pipeline_layout: vk::PipelineLayout,
-        ) {
-            self.uniform_buffer.bind_descriptor_sets(
-                command_buffer,
-                pipeline_layout,
-                self.frame_index,
-            );
-        }
+        //pub fn bind_descriptor_sets(
+        //    &self,
+        //    command_buffer: vk::CommandBuffer,
+        //    pipeline_layout: vk::PipelineLayout,
+        //) {
+        //    self.uniform_buffer.bind_descriptor_sets(
+        //        command_buffer,
+        //        pipeline_layout,
+        //        self.frame_index,
+        //    );
+        //}
 
         pub fn new(
             device: Rc<ash::Device>,
@@ -744,191 +558,191 @@ pub mod render_backend {
             }
         }
 
-        pub fn create(core: &Core, max_frames_count: usize) -> Result<Self> {
-            log::trace!("Queue index: {}", core.queue_index);
+        //pub fn create(core: &Core, max_frames_count: usize) -> Result<Self> {
+        //    log::trace!("Queue index: {}", core.queue_index);
 
-            log::trace!("Creating logical device");
-            let device = Rc::new(pe::device::create_logical_device(
-                &core.instance,
-                core.physical_device,
-                core.queue_index,
-            ));
+        //    log::trace!("Creating logical device");
+        //    let device = Rc::new(pe::device::create_logical_device(
+        //        &core.instance,
+        //        core.physical_device,
+        //        core.queue_index,
+        //    ));
 
-            log::trace!("Getting graphics queue handle");
-            let queue_handle: vk::Queue =
-                pe::device::get_graphics_queue_handle(&device, core.queue_index);
+        //    log::trace!("Getting graphics queue handle");
+        //    let queue_handle: vk::Queue =
+        //        pe::device::get_graphics_queue_handle(&device, core.queue_index);
 
-            log::trace!("Quering device for swapchain support");
-            let swapchain_support_details = pe::device::query_swapchain_support(
-                core.physical_device,
-                core.surface,
-                &core.surface_loader,
-            );
+        //    log::trace!("Quering device for swapchain support");
+        //    let swapchain_support_details = pe::device::query_swapchain_support(
+        //        core.physical_device,
+        //        core.surface,
+        //        &core.surface_loader,
+        //    );
 
-            log::trace!("Creating swapchain");
-            let swapchain = pe::swapchain::PSwapchain::create(
-                &core.instance,
-                &device,
-                core.surface,
-                swapchain_support_details,
-                core.queue_index,
-            );
+        //    log::trace!("Creating swapchain");
+        //    let swapchain = pe::swapchain::PSwapchain::create(
+        //        &core.instance,
+        //        &device,
+        //        core.surface,
+        //        swapchain_support_details,
+        //        core.queue_index,
+        //    );
 
-            let pe::swapchain::PSwapchain {
-                swapchain_loader,
-                swapchain,
-                swapchain_format,
-                swapchain_extent,
-                swapchain_images,
-                swapchain_image_views,
-            } = swapchain;
+        //    let pe::swapchain::PSwapchain {
+        //        swapchain_loader,
+        //        swapchain,
+        //        swapchain_format,
+        //        swapchain_extent,
+        //        swapchain_images,
+        //        swapchain_image_views,
+        //    } = swapchain;
 
-            // depth images
+        //    // depth images
 
-            // NOTE: Hardcoded for now, also hardcoded in the render pass
-            //let depth_format = vk::Format::D32_SFLOAT;
-            let depth_format = vk::Format::D16_UNORM;
+        //    // NOTE: Hardcoded for now, also hardcoded in the render pass
+        //    //let depth_format = vk::Format::D32_SFLOAT;
+        //    let depth_format = vk::Format::D16_UNORM;
 
-            println!(
-                "extent: {}, {}",
-                swapchain_extent.width, swapchain_extent.height
-            );
+        //    println!(
+        //        "extent: {}, {}",
+        //        swapchain_extent.width, swapchain_extent.height
+        //    );
 
-            let depth_image_create_info = vk::ImageCreateInfo::builder()
-                .image_type(vk::ImageType::TYPE_2D)
-                .format(depth_format)
-                .extent(vk::Extent3D {
-                    width: swapchain_extent.width,
-                    height: swapchain_extent.height,
-                    depth: 1,
-                })
-                .mip_levels(1)
-                .array_layers(1)
-                .samples(vk::SampleCountFlags::TYPE_1)
-                .tiling(vk::ImageTiling::OPTIMAL)
-                .usage(vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT)
-                .sharing_mode(vk::SharingMode::EXCLUSIVE);
+        //    let depth_image_create_info = vk::ImageCreateInfo::builder()
+        //        .image_type(vk::ImageType::TYPE_2D)
+        //        .format(depth_format)
+        //        .extent(vk::Extent3D {
+        //            width: swapchain_extent.width,
+        //            height: swapchain_extent.height,
+        //            depth: 1,
+        //        })
+        //        .mip_levels(1)
+        //        .array_layers(1)
+        //        .samples(vk::SampleCountFlags::TYPE_1)
+        //        .tiling(vk::ImageTiling::OPTIMAL)
+        //        .usage(vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT)
+        //        .sharing_mode(vk::SharingMode::EXCLUSIVE);
 
-            log::debug!(
-                "mem properties: {:?}",
-                core.physical_device_memory_properties
-            );
+        //    log::debug!(
+        //        "mem properties: {:?}",
+        //        core.physical_device_memory_properties
+        //    );
 
-            let depth_image = AllocatedImage::create(
-                &device,
-                core.physical_device_memory_properties,
-                &depth_image_create_info,
-            );
+        //    let depth_image = AllocatedImage::create(
+        //        &device,
+        //        core.physical_device_memory_properties,
+        //        &depth_image_create_info,
+        //    );
 
-            let image_view_create_info = vk::ImageViewCreateInfo::builder()
-                .format(depth_format)
-                .image(depth_image.image)
-                .view_type(vk::ImageViewType::TYPE_2D)
-                .subresource_range(
-                    vk::ImageSubresourceRange::builder()
-                        .base_mip_level(0)
-                        .level_count(1)
-                        .base_array_layer(0)
-                        .layer_count(1)
-                        .aspect_mask(vk::ImageAspectFlags::DEPTH)
-                        .build(),
-                );
+        //    let image_view_create_info = vk::ImageViewCreateInfo::builder()
+        //        .format(depth_format)
+        //        .image(depth_image.image)
+        //        .view_type(vk::ImageViewType::TYPE_2D)
+        //        .subresource_range(
+        //            vk::ImageSubresourceRange::builder()
+        //                .base_mip_level(0)
+        //                .level_count(1)
+        //                .base_array_layer(0)
+        //                .layer_count(1)
+        //                .aspect_mask(vk::ImageAspectFlags::DEPTH)
+        //                .build(),
+        //        );
 
-            let depth_image_view =
-                unsafe { device.create_image_view(&image_view_create_info, None) }
-                    .expect("Couldn't create depth image view");
+        //    let depth_image_view =
+        //        unsafe { device.create_image_view(&image_view_create_info, None) }
+        //            .expect("Couldn't create depth image view");
 
-            // render pass --------------
+        //    // render pass --------------
 
-            let (render_pass, _attachment_count) =
-                PRenderPass::create_default_render_pass(&device, &swapchain_format);
+        //    let (render_pass, _attachment_count) =
+        //        PRenderPass::create_default_render_pass(&device, &swapchain_format);
 
-            // frame buffers --------------
-            let frame_buffers: Vec<vk::Framebuffer> = swapchain_image_views
-                .iter()
-                .map(|&image_view| {
-                    let attachments = [image_view, depth_image_view];
-                    let create_info = vk::FramebufferCreateInfo::builder()
-                        .render_pass(render_pass)
-                        .attachments(&attachments)
-                        .width(swapchain_extent.width)
-                        .height(swapchain_extent.height)
-                        .layers(1);
+        //    // frame buffers --------------
+        //    let frame_buffers: Vec<vk::Framebuffer> = swapchain_image_views
+        //        .iter()
+        //        .map(|&image_view| {
+        //            let attachments = [image_view, depth_image_view];
+        //            let create_info = vk::FramebufferCreateInfo::builder()
+        //                .render_pass(render_pass)
+        //                .attachments(&attachments)
+        //                .width(swapchain_extent.width)
+        //                .height(swapchain_extent.height)
+        //                .layers(1);
 
-                    unsafe { device.create_framebuffer(&create_info, None) }
-                        .expect("Couldn't create framebuffer")
-                })
-                .collect();
+        //            unsafe { device.create_framebuffer(&create_info, None) }
+        //                .expect("Couldn't create framebuffer")
+        //        })
+        //        .collect();
 
-            // descriptor pool ------------------------
-            //let global_descriptor_set_layout =
-            //UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&device);
-            //UniformBufferGlobalData::create_descriptor_set_layout(&device);
+        //    // descriptor pool ------------------------
+        //    //let global_descriptor_set_layout =
+        //    //UniformBuffer::create_descriptor_set_layout::<UniformBufferGlobalData>(&device);
+        //    //UniformBufferGlobalData::create_descriptor_set_layout(&device);
 
-            let descriptor_pool_size = [
-                vk::DescriptorPoolSize::builder()
-                    // reserve 1 handle
-                    .descriptor_count(10) // 10 uniform buffers
-                    .ty(vk::DescriptorType::UNIFORM_BUFFER)
-                    .build(),
-                vk::DescriptorPoolSize::builder()
-                    .descriptor_count(10) // 10 dynamic uniform buffers
-                    .ty(vk::DescriptorType::UNIFORM_BUFFER_DYNAMIC)
-                    .build(),
-            ];
+        //    let descriptor_pool_size = [
+        //        vk::DescriptorPoolSize::builder()
+        //            // reserve 1 handle
+        //            .descriptor_count(10) // 10 uniform buffers
+        //            .ty(vk::DescriptorType::UNIFORM_BUFFER)
+        //            .build(),
+        //        vk::DescriptorPoolSize::builder()
+        //            .descriptor_count(10) // 10 dynamic uniform buffers
+        //            .ty(vk::DescriptorType::UNIFORM_BUFFER_DYNAMIC)
+        //            .build(),
+        //    ];
 
-            let descriptor_pool_create_info = vk::DescriptorPoolCreateInfo::builder()
-                .max_sets(10 as u32)
-                .pool_sizes(&descriptor_pool_size);
+        //    let descriptor_pool_create_info = vk::DescriptorPoolCreateInfo::builder()
+        //        .max_sets(10 as u32)
+        //        .pool_sizes(&descriptor_pool_size);
 
-            let global_descriptor_pool =
-                unsafe { device.create_descriptor_pool(&descriptor_pool_create_info, None) }
-                    .expect("Couldn't create descriptor pool");
+        //    let global_descriptor_pool =
+        //        unsafe { device.create_descriptor_pool(&descriptor_pool_create_info, None) }
+        //            .expect("Couldn't create descriptor pool");
 
-            unsafe { device.device_wait_idle() }.unwrap();
+        //    unsafe { device.device_wait_idle() }.unwrap();
 
-            let uniform_buffer = Rc::new(UniformBuffer::new(
-                Rc::clone(&device),
-                core.physical_device_properties,
-                core.physical_device_memory_properties,
-                global_descriptor_pool,
-            ));
+        //    let uniform_buffer = Rc::new(UniformBuffer::new(
+        //        Rc::clone(&device),
+        //        core.physical_device_properties,
+        //        core.physical_device_memory_properties,
+        //        global_descriptor_pool,
+        //    ));
 
-            let frame_data: Vec<FrameData> = (0..max_frames_count)
-                .map(|frame_index| {
-                    FrameData::new(
-                        Rc::clone(&device),
-                        core.queue_index,
-                        core.physical_device_properties,
-                        core.physical_device_memory_properties,
-                        global_descriptor_pool,
-                        //global_descriptor_set_layout,
-                        frame_index,
-                        Rc::clone(&uniform_buffer),
-                    )
-                })
-                .collect();
+        //    let frame_data: Vec<FrameData> = (0..max_frames_count)
+        //        .map(|frame_index| {
+        //            FrameData::new(
+        //                Rc::clone(&device),
+        //                core.queue_index,
+        //                core.physical_device_properties,
+        //                core.physical_device_memory_properties,
+        //                global_descriptor_pool,
+        //                //global_descriptor_set_layout,
+        //                frame_index,
+        //                Rc::clone(&uniform_buffer),
+        //            )
+        //        })
+        //        .collect();
 
-            Ok(Self {
-                device,
-                queue_handle,
-                swapchain,
-                swapchain_loader,
-                swapchain_format,
-                swapchain_extent,
-                swapchain_images,
-                swapchain_image_views,
-                //global_descriptor_set_layout,
-                global_descriptor_pool,
-                frame_data,
-                render_pass,
-                frame_buffers,
-                depth_image,
-                depth_image_view,
+        //    Ok(Self {
+        //        device,
+        //        queue_handle,
+        //        swapchain,
+        //        swapchain_loader,
+        //        swapchain_format,
+        //        swapchain_extent,
+        //        swapchain_images,
+        //        swapchain_image_views,
+        //        //global_descriptor_set_layout,
+        //        global_descriptor_pool,
+        //        frame_data,
+        //        render_pass,
+        //        frame_buffers,
+        //        depth_image,
+        //        depth_image_view,
 
-                uniform_buffer,
-            })
-        }
+        //        uniform_buffer,
+        //    })
+        //}
     }
     impl Drop for RenderContext {
         fn drop(&mut self) {

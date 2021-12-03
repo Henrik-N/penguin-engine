@@ -59,7 +59,6 @@ fn update_input(#[resource] input: &mut InputEvents) {
                     }
                 }
             }
-            _ => {}
         }
     }
 }
@@ -90,23 +89,6 @@ impl InputEvents {
     // called from event loop
     pub fn update(&mut self, new_event: winit::event::KeyboardInput) {
         self.new_event = Some(new_event);
-    }
-
-    fn check_key_state(&self, in_key: VirtualKeyCode, in_state: ElementState) -> bool {
-        match self.previous_event {
-            None => false,
-            Some(kb_input) => match kb_input {
-                KeyboardInput {
-                    virtual_keycode,
-                    state,
-                    ..
-                } => match (virtual_keycode, state) {
-                    (Some(in_key), in_state) => true,
-                    _ => false,
-                },
-                _ => false,
-            },
-        }
     }
 
     pub fn is_key_down(&self, key: VirtualKeyCode) -> bool {

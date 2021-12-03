@@ -78,7 +78,7 @@ impl MeshResource {
             name,
             Mesh::from_obj(
                 file_name,
-                Rc::clone(&self.device),
+                &self.device,
                 self.pd_memory_properties,
             ),
         );
@@ -129,11 +129,11 @@ impl PartialEq for Material {
     }
 }
 impl Eq for Material {}
-impl Drop for Material {
-    fn drop(&mut self) {
-        self.pipeline.destroy(&self.device);
-    }
-}
+//impl Drop for Material {
+//    fn drop(&mut self) {
+//        self.pipeline.destroy(&self.device);
+//    }
+//}
 impl Material {
     pub fn from_pipeline(device: Rc<ash::Device>, pipeline: PPipeline) -> Self {
         Self { device, pipeline }
@@ -143,7 +143,7 @@ impl Material {
         unsafe {
             self.device.cmd_bind_pipeline(
                 command_buffer,
-                self.pipeline.pipeline_bindpoint,
+                self.pipeline.pipeline_bind_point,
                 self.pipeline.pipeline,
             );
         }
@@ -221,7 +221,7 @@ impl Mesh {
         vertices: Vec<Vertex>,
     ) -> Self {
         let vertex_buffer = AllocatedBuffer::create_vertex_buffer(
-            Rc::clone(&device),
+            &device,
             &vertices,
             pd_memory_properties,
         );
@@ -236,7 +236,7 @@ impl Mesh {
 
     pub fn from_obj(
         file_name: &str,
-        device: Rc<ash::Device>,
+        device: &ash::Device,
         pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
     ) -> Self {
         let file_path = String::from(MESHES_FOLDER_PATH.clone().to_string() + file_name);
@@ -244,7 +244,7 @@ impl Mesh {
         let (vertices, vertex_count) = Self::load_verts_indices_from_obj(&file_path);
 
         let vertex_buffer = AllocatedBuffer::create_vertex_buffer(
-            Rc::clone(&device),
+            device,
             &vertices,
             pd_memory_properties,
         );

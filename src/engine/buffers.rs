@@ -2,6 +2,7 @@ use super::resources::Vertex;
 use ash::util::Align;
 use ash::vk;
 use std::rc::Rc;
+use crate::engine::renderer::vk_context::VkContext;
 
 struct MemoryMapping {
     bytes: u64,
@@ -188,22 +189,24 @@ impl MemoryUsage {
         match self {
             MemoryUsage::CpuToGpu => {
                 // writable from CPU
-                vk::MemoryPropertyFlags::HOST_VISIBLE | 
-              // ensure mapped memory always match contents of allocated memory (no need for explicit flushing)
-              vk::MemoryPropertyFlags::HOST_COHERENT
-            },
+                vk::MemoryPropertyFlags::HOST_VISIBLE |
+                    vk::MemoryPropertyFlags::HOST_COHERENT  // ensure mapped memory always match contents of allocated memory (no need for explicit flushing)
+            }
             MemoryUsage::GpuOnly => vk::MemoryPropertyFlags::DEVICE_LOCAL,
             // ..
         }
     }
 }
 
+#[derive(Debug)]
 pub struct AllocatedBuffer {
-    device: Rc<ash::Device>,
     pub handle: vk::Buffer, // handle to gpu-side buffer
     memory: vk::DeviceMemory,
     pub info: MemoryInfo, // info for the base allocation, dynamic allocations will need their own memoryinfo when binding
 }
+
+
+#[derive(Debug)]
 /// The data required to map and write to some allocated memory
 pub struct MemoryInfo {
     pub size: vk::DeviceSize,
@@ -212,7 +215,7 @@ pub struct MemoryInfo {
 }
 
 pub struct AllocatedBufferCreateInfo<'a, T> {
-    pub device: Rc<ash::Device>,
+    pub device: &'a ash::Device,
     pub pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
     pub initial_data: &'a [T],
     pub buffer_usage: vk::BufferUsageFlags,
@@ -224,17 +227,23 @@ pub struct AllocatedBufferCreateInfo<'a, T> {
     pub sharing_mode: vk::SharingMode,
     pub memory_map_flags: vk::MemoryMapFlags,
 }
-
-impl Drop for AllocatedBuffer {
-    fn drop(&mut self) {
-        unsafe {
-            self.device.destroy_buffer(self.handle, None);
-            self.device.free_memory(self.memory, None);
-        }
-    }
-}
+//impl Drop for AllocatedBuffer {
+//    fn drop(&mut self, context: &VkContext) {
+//        unsafe {
+//            context.device.destroy_buffer(self.handle, None);
+//            context.device.free_memory(self.memory, None);
+//        }
+//    }
+//}
 
 impl AllocatedBuffer {
+    pub fn destroy(&mut self, context: &VkContext) {
+        unsafe {
+            context.device.handle.destroy_buffer(self.handle, None);
+            context.device.handle.free_memory(self.memory, None);
+        }
+    }
+
     // pub fn destroy(&self) {
     //     unsafe {
     //         self.device.destroy_buffer(self.handle, None);
@@ -242,12 +251,12 @@ impl AllocatedBuffer {
     //     }
     // }
 
-    pub fn write_memory<T: Copy>(&self, data: &[T], offset: u64) {
-        Self::write_memory_inner(&self.device, self.memory, data, &self.info, offset);
+    pub fn write_memory<T: Copy>(&self, device: &ash::Device, data: &[T], offset: u64) {
+        Self::write_memory_inner(device, self.memory, data, &self.info, offset);
     }
 
     pub fn create_buffer<'a, T: Copy>(create_info: &'a AllocatedBufferCreateInfo<T>) -> Self {
-        let device = Rc::clone(&create_info.device);
+        let device = create_info.device;
 
         println!(
             "BUFFER SIZE {}",
@@ -302,7 +311,6 @@ impl AllocatedBuffer {
         device.bind_buffer_memory_p(buffer, memory);
 
         Self {
-            device: Rc::clone(&device),
             handle: buffer,
             memory,
             info: mem_info,
@@ -347,12 +355,12 @@ impl AllocatedBuffer {
     }
 
     pub fn create_vertex_buffer(
-        device: Rc<ash::Device>,
+        device: &ash::Device,
         vertices: &[Vertex],
         pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
     ) -> AllocatedBuffer {
         let create_info = AllocatedBufferCreateInfo {
-            device: Rc::clone(&device),
+            device,
             pd_memory_properties,
             initial_data: vertices,
             buffer_usage: vk::BufferUsageFlags::VERTEX_BUFFER,
