@@ -8,12 +8,12 @@ pub fn create_ash_instance(
     entry: &ash::Entry,
     surface_extensions: &Vec<&CStr>,
 ) -> Result<ash::Instance, ash::InstanceError> {
-    log::info!("Using Vulkan version 1.0.0");
+    log::info!("Using Vulkan version 1.2.186");
     let app_info = vk::ApplicationInfo::builder()
         .application_name(CString::new("penguin application").unwrap().as_c_str())
         // .application_version(vk::make_version(0, 1, 0))
         .engine_name(CString::new("penguin engine").unwrap().as_c_str())
-        .api_version(vk::make_api_version(0, 1, 0, 0))
+        .api_version(vk::make_api_version(0, 1, 2, 186))
         .build();
     // let x = 5;
     // p_bail!("test {}", x);

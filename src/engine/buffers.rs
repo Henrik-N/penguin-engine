@@ -11,9 +11,7 @@ struct MemoryMapping {
 struct MemoryMappings {
     aligns: Vec<u64>, // one entry of byte count / mapping
 }
-impl MemoryMappings {
-}
-
+impl MemoryMappings {}
 
 trait DeviceMemoryOperations {
     // allocation
@@ -61,11 +59,15 @@ impl DeviceMemoryOperations for ash::Device {
 
     /// Associates an image handle with gpu memory
     fn bind_image_memory_p(&self, image: vk::Image, memory: vk::DeviceMemory) {
-        unsafe { self.bind_image_memory(image, memory, 0); }
+        unsafe {
+            self.bind_image_memory(image, memory, 0);
+        }
     }
 
     fn unmap_memory_p(&self, memory: vk::DeviceMemory) {
-        unsafe { self.unmap_memory(memory); }
+        unsafe {
+            self.unmap_memory(memory);
+        }
     }
 
     fn copy_to_mapped<T: Copy>(
@@ -144,11 +146,13 @@ impl AllocatedImage {
         pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
         image_create_info: &vk::ImageCreateInfoBuilder,
     ) -> Self {
-        let depth_image = unsafe { device.create_image(&image_create_info, None) }
-            .expect("Couldn't create image");
+        let depth_image =
+            unsafe { device.create_image(image_create_info, None) }.expect("Couldn't create image");
 
         let image_memory_requirements =
             unsafe { device.get_image_memory_requirements(depth_image) };
+
+        println!("mem type requirements: {:?}", image_memory_requirements);
 
         let image_memory_index = find_memory_type_index(
             &image_memory_requirements,
@@ -180,14 +184,14 @@ pub enum MemoryUsage {
 }
 impl MemoryUsage {
     /// Finds the best memory flags for the intended usage
-    fn memory_property_flags(&self) -> vk::MemoryPropertyFlags {
+    pub(crate) fn memory_property_flags(&self) -> vk::MemoryPropertyFlags {
         match self {
             MemoryUsage::CpuToGpu => {
                 // writable from CPU
                 vk::MemoryPropertyFlags::HOST_VISIBLE | 
               // ensure mapped memory always match contents of allocated memory (no need for explicit flushing)
               vk::MemoryPropertyFlags::HOST_COHERENT
-            }
+            },
             MemoryUsage::GpuOnly => vk::MemoryPropertyFlags::DEVICE_LOCAL,
             // ..
         }
@@ -220,7 +224,6 @@ pub struct AllocatedBufferCreateInfo<'a, T> {
     pub sharing_mode: vk::SharingMode,
     pub memory_map_flags: vk::MemoryMapFlags,
 }
-
 
 impl Drop for AllocatedBuffer {
     fn drop(&mut self) {
@@ -367,7 +370,7 @@ impl AllocatedBuffer {
 /// This function finds the right type of memory to use based on the provided
 /// parameters.
 /// https://github.com/MaikKlein/ash/blob/e10bbf3063d9b84b9d8c04e6e2baae7d4881cce4/examples/src/lib.rs#L120-L133
-fn find_memory_type_index(
+pub fn find_memory_type_index(
     memory_requirements: &vk::MemoryRequirements,
     memory_properties: &vk::PhysicalDeviceMemoryProperties,
     flags: vk::MemoryPropertyFlags,

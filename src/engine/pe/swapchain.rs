@@ -68,6 +68,7 @@ pub(crate) mod init {
 
         let surface_format =
             select_swapchain_surface_format(&swapchain_support_details.surface_color_formats);
+
         let present_mode =
             select_swapchain_present_mode(&swapchain_support_details.surface_present_modes);
         let extent = select_swapchain_extent(&swapchain_support_details.surface_capabilities);

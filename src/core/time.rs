@@ -1,26 +1,26 @@
 use crate::ecs::Plugin;
-use std::time::{Duration, Instant};
 use legion::systems::Step;
 use legion::*;
+use std::time::{Duration, Instant};
 
+#[derive(Default)]
 pub struct TimePlugin;
-impl Plugin for TimePlugin {
-    fn init_resources(resources: &mut Resources) {
-        resources.insert(PTime::default());
-    }
 
-    fn startup_steps() -> Vec<Step> {
+impl Plugin for TimePlugin {
+    fn startup(&mut self, resources: &mut Resources) -> Vec<Step> {
+        resources.insert(PTime::default());
+
         vec![]
     }
 
-    fn run_steps() -> Vec<Step> {
+    fn run() -> Vec<Step> {
         Schedule::builder()
             .add_system(tick_system())
             .build()
             .into_vec()
     }
 
-    fn shutdown_steps() -> Vec<Step> {
+    fn shutdown() -> Vec<Step> {
         vec![]
     }
 }
@@ -29,7 +29,6 @@ impl Plugin for TimePlugin {
 fn tick(#[resource] time: &mut PTime) {
     time.tick();
 }
-
 
 #[derive(Debug)]
 pub struct PTime {
@@ -59,4 +58,3 @@ impl PTime {
         self.delta_time = delta_time;
     }
 }
-

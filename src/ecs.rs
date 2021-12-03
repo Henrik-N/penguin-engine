@@ -5,16 +5,14 @@ pub use legion::*;
 /// Group of behaviour
 pub trait Plugin {
     /// resources.insert(ResourceType::default());
-    fn init_resources(resources: &mut Resources);
+    /// Schedule::builder().add_system(some_system_system()).build().into_vec();
+    fn startup(&mut self, resources: &mut Resources) -> Vec<Step>;
 
     /// Schedule::builder().add_system(some_system_system()).build().into_vec()
-    fn startup_steps() -> Vec<Step>;
+    fn run() -> Vec<Step>;
 
     /// Schedule::builder().add_system(some_system_system()).build().into_vec()
-    fn run_steps() -> Vec<Step>;
-
-    /// Schedule::builder().add_system(some_system_system()).build().into_vec()
-    fn shutdown_steps() -> Vec<Step>;
+    fn shutdown() -> Vec<Step>;
 }
 
 pub struct AppBuilder {
@@ -51,16 +49,19 @@ impl AppBuilder {
         self
     }
 
-    pub fn insert_resource<T>(mut self, resource: T) -> Self where T: 'static {
+    pub fn insert_resource<T>(mut self, resource: T) -> Self
+    where
+        T: 'static,
+    {
         self.resources.insert(resource);
         self
     }
 
-    pub fn add_plugin<T: Plugin>(mut self) -> Self {
-        T::init_resources(&mut self.resources);
-        self = self.add_startup_steps(T::startup_steps());
-        self = self.add_run_steps(T::run_steps());
-        self = self.add_shutdown_steps(T::shutdown_steps());
+    pub fn add_plugin<T: Plugin>(mut self, mut plugin: T) -> Self {
+        let startup_steps = plugin.startup(&mut self.resources);
+        self = self.add_startup_steps(startup_steps);
+        self = self.add_run_steps(T::run());
+        self = self.add_shutdown_steps(T::shutdown());
         self
     }
 
@@ -68,7 +69,6 @@ impl AppBuilder {
         let startup_schedule = Schedule::from(self.startup_steps);
         let run_schedule = Schedule::from(self.run_steps);
         let shutdown_schedule = Schedule::from(self.shutdown_steps);
-
 
         crate::App {
             world: self.world,
@@ -79,5 +79,4 @@ impl AppBuilder {
             shutdown_schedule,
         }
     }
-
 }
