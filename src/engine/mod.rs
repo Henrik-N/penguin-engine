@@ -218,7 +218,7 @@ impl Renderer {
         //
 
         // bind pipeline
-        mat.bind(command_buffer);
+        //mat.bind(command_buffer);
 
         unsafe {
             // bind vertex buffers
@@ -512,7 +512,7 @@ pub mod render_backend {
 
             // request new image from swapchain
             let (image_index, _is_suboptimal) = unsafe {
-                log::trace!("Aquiring next swapchain image");
+                log::trace!("Acquiring next swapchain image");
                 // timeout 1 sec, specified in nanoseconds
                 self.swapchain_loader.acquire_next_image(
                     self.swapchain,

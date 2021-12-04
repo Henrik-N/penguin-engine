@@ -71,7 +71,72 @@ impl VkContext {
         }
         log::debug!("Renderer: device now idle");
     }
+
+
+
+
+    /// waits for a fence and then resets it
+    pub fn wait_for_fence(&self, fence: vk::Fence, timeout: std::time::Duration) {
+        self.wait_for_fences(&[fence], timeout)
+    }
+
+
+    /// waits for fences and then resets them
+    pub fn wait_for_fences(&self, fences: &[vk::Fence], timeout: std::time::Duration) {
+        unsafe {
+            log::trace!("Waiting for fences...");
+            self.device.handle
+                .wait_for_fences(fences, true, timeout.as_nanos() as _).expect("Couldn't wait for fences. Timed out?");
+
+            log::trace!("Resetting fence.");
+            self.device.handle
+                .reset_fences(fences).expect("Couldn't reset fences.");
+        }
+    }
+
+    // command buffers -------------
+
+    pub fn reset_command_buffer(&self, command_buffer: vk::CommandBuffer, reset_flags: vk::CommandBufferResetFlags) {
+        unsafe {
+            self.device.handle
+                .reset_command_buffer(command_buffer, reset_flags) //  vk::CommandBufferResetFlags::RELEASE_RESOURCES
+                .expect("Failed to reset command buffer");
+        }
+    }
+
+    pub fn begin_command_buffer(&self, command_buffer: vk::CommandBuffer, usage_flags: vk::CommandBufferUsageFlags) {
+        let cmd_buffer_begin_info =
+            vk::CommandBufferBeginInfo::builder().flags(usage_flags);
+
+        unsafe {
+            log::trace!("Beginning command buffer");
+            self.device.handle
+                .begin_command_buffer(command_buffer, &cmd_buffer_begin_info)
+                .expect("Couldn't begin command buffer");
+        }
+    }
+
+    pub fn end_command_buffer(&self, command_buffer: vk::CommandBuffer) {
+        unsafe {
+            log::trace!("Ending command buffer");
+            self.device.handle
+                .end_command_buffer(command_buffer)
+                .expect("Couldn't end command buffer");
+        }
+    }
+
+    pub fn submit_to_graphics_queue(&self, submit_info: vk::SubmitInfoBuilder, fence: vk::Fence) {
+        unsafe {
+            // the render fence will block until the graphics commands finish execution
+            self.device.handle
+                .queue_submit(self.device.graphics_queue_handle, &[submit_info.build()], fence)
+                .expect("Couldn't submit command queue");
+        }
+    }
 }
+
+
+
 
 pub struct Instance {
     entry: ash::Entry,
@@ -92,7 +157,7 @@ pub struct PhysicalDevice {
 pub struct Device {
     pub handle: ash::Device,
     // graphics queue only for now
-    pub queue_handle: vk::Queue,
+    pub graphics_queue_handle: vk::Queue,
 }
 
 impl VkContext {
@@ -225,7 +290,7 @@ mod init_context {
 
             Self {
                 handle: device,
-                queue_handle,
+                graphics_queue_handle: queue_handle,
             }
         }
     }

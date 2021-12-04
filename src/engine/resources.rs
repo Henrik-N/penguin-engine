@@ -4,6 +4,7 @@ use crate::engine::pe::pipeline::PPipeline;
 use ash::vk;
 use std::collections::hash_map::HashMap;
 use std::rc::{Rc, Weak};
+use crate::engine::renderer::vk_types::VkContext;
 
 pub mod prelude {
     pub use super::{HashResource, Material, Mesh, MeshResource, RenderObject, Vertex};
@@ -73,16 +74,16 @@ impl MeshResource {
         }
     }
 
-    pub fn insert_from_file(&mut self, name: &str, file_name: &str) {
-        self.resource.insert(
-            name,
-            Mesh::from_obj(
-                file_name,
-                &self.device,
-                self.pd_memory_properties,
-            ),
-        );
-    }
+    //pub fn insert_from_file(&mut self, name: &str, file_name: &str) {
+    //    self.resource.insert(
+    //        name,
+    //        Mesh::from_obj(
+    //            file_name,
+    //            &self.device,
+    //            self.pd_memory_properties,
+    //        ),
+    //    );
+    //}
 
     #[allow(dead_code)]
     pub fn insert(&mut self, name: &str, mesh: Mesh) {
@@ -120,7 +121,6 @@ impl RenderObject {
 // Material
 // **
 pub struct Material {
-    device: Rc<ash::Device>,
     pub pipeline: PPipeline,
 }
 impl PartialEq for Material {
@@ -129,19 +129,19 @@ impl PartialEq for Material {
     }
 }
 impl Eq for Material {}
-//impl Drop for Material {
-//    fn drop(&mut self) {
-//        self.pipeline.destroy(&self.device);
-//    }
-//}
+
 impl Material {
-    pub fn from_pipeline(device: Rc<ash::Device>, pipeline: PPipeline) -> Self {
-        Self { device, pipeline }
+    pub fn destroy(&mut self, context: &VkContext) {
+        self.pipeline.destroy(&context);
     }
 
-    pub fn bind(&self, command_buffer: vk::CommandBuffer) {
+    pub fn from_pipeline(pipeline: PPipeline) -> Self {
+        Self { pipeline }
+    }
+
+    pub fn bind(&self, context: &VkContext, command_buffer: vk::CommandBuffer) {
         unsafe {
-            self.device.cmd_bind_pipeline(
+            context.device.handle.cmd_bind_pipeline(
                 command_buffer,
                 self.pipeline.pipeline_bind_point,
                 self.pipeline.pipeline,
@@ -197,7 +197,6 @@ impl Vertex {
 }
 
 const MESHES_FOLDER_PATH: &'static str = "assets/meshes/";
-
 pub struct Mesh {
     pub vertex_count: usize,
     pub vertex_buffer: AllocatedBuffer,
@@ -210,9 +209,9 @@ impl PartialEq for Mesh {
 impl Eq for Mesh {}
 
 impl Mesh {
-    // pub fn destroy(&self) {
-    //     self.vertex_buffer.destroy();
-    // }
+    pub fn destroy(&mut self, context: &VkContext) {
+        self.vertex_buffer.destroy(&context);
+    }
 
     #[allow(dead_code)]
     pub fn from_vertices(
@@ -235,18 +234,19 @@ impl Mesh {
     }
 
     pub fn from_obj(
+        context: &VkContext,
         file_name: &str,
-        device: &ash::Device,
-        pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
+        //device: &ash::Device,
+        //pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
     ) -> Self {
         let file_path = String::from(MESHES_FOLDER_PATH.clone().to_string() + file_name);
 
         let (vertices, vertex_count) = Self::load_verts_indices_from_obj(&file_path);
 
         let vertex_buffer = AllocatedBuffer::create_vertex_buffer(
-            device,
+            &context.device.handle,
             &vertices,
-            pd_memory_properties,
+            context.pd_mem_properties(),
         );
         //AllocatedBuffer::new_vertex_buffer(Rc::clone(&device), pd_memory_properties, &vertices);
 

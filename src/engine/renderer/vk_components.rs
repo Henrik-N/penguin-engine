@@ -44,6 +44,8 @@ pub fn init(context: &VkContext) -> VkComponents {
 
 
 
+
+
 pub struct Swapchain {
     pub loader: ash::extensions::khr::Swapchain,
     pub handle: vk::SwapchainKHR,
@@ -52,6 +54,29 @@ pub struct Swapchain {
     pub images: Vec<vk::Image>,
     pub image_views: Vec<vk::ImageView>,
 }
+impl Swapchain {
+
+    pub fn acquire_next_swapchain_image(&self, semaphore: vk::Semaphore, fence: vk::Fence, timeout: std::time::Duration) -> u32 {
+        log::trace!("Acquiring next swapchain image");
+
+        // todo: Handle suboptimal case?
+        let (image_index, _is_suboptimal) = unsafe {
+            self.loader.acquire_next_image(
+                self.handle,
+                // timeout 1 sec, specified in nanoseconds
+                timeout.as_nanos() as _,
+                semaphore,
+                fence,
+            )
+        }.expect("Couldn't acquire next swapchain image");
+        log::trace!("Swapchain image {} aquired!", image_index);
+
+        image_index
+    }
+
+}
+
+
 
 pub struct DepthImage {
     pub image: crate::engine::buffers::AllocatedImage,
@@ -120,6 +145,11 @@ impl DescriptorPool {
 
 pub struct FrameBuffers {
     pub frame_buffers: Vec<vk::Framebuffer>,
+}
+impl FrameBuffers {
+    pub fn get(&self, image_index: usize) -> vk::Framebuffer {
+        self.frame_buffers.get(image_index).expect(&format!("no frame buffer for the given index {}", image_index)).clone()
+    }
 }
 
 impl DepthImage {
