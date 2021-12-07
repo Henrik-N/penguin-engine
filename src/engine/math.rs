@@ -1,7 +1,5 @@
-pub mod prelude {
-    pub use super::macaw_types::*;
-    pub use super::vk_formats::VkFormat;
-}
+pub use macaw_types::*;
+pub use vk_formats::VkFormat;
 
 pub mod macaw_types {
     pub use macaw::prelude::*;

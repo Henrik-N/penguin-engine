@@ -1,6 +1,7 @@
 pub mod vk_components;
 pub mod vk_context;
 mod render_commands;
+mod frame_data;
 
 use std::collections::HashMap;
 use std::mem::swap;
@@ -10,6 +11,7 @@ use ash_window::create_surface;
 use legion::world::SubWorld;
 use std::ops::Deref;
 use ash::vk;
+use crate::config;
 use crate::core::time::PTime;
 use crate::engine::pe;
 use crate::engine::pe::pipeline::{PPipeline, PPipelineBuilder};
@@ -38,13 +40,19 @@ struct MeshesResource {
     meshes: HashMap<String, Mesh>,
 }
 impl MeshesResource {
+    pub fn destroy(&mut self, context: &VkContext) {
+        self.meshes.iter_mut().for_each(|(_name, mesh)| mesh.destroy(&context));
+    }
+
     pub fn insert_from_file(&mut self, context: &VkContext, (name, file_name): (&str, &str)) {
         self.meshes.insert(name.to_owned(), Mesh::from_obj(context, file_name));
     }
 
-    pub fn destroy(&mut self, context: &VkContext) {
-        self.meshes.iter_mut().for_each(|(_name, mesh)| mesh.destroy(&context));
+    pub fn get(&self, name: &str) -> &Mesh {
+        let name = name.to_owned();
+        self.meshes.get(&name).expect(&format!("no mesh called {}", name))
     }
+
 }
 
 #[derive(Default)]
@@ -58,6 +66,11 @@ impl MaterialsResource {
 
     pub fn insert(&mut self, (name, pipeline): (&str, PPipeline)) {
         self.materials.insert(name.to_owned(), Material::from_pipeline(pipeline));
+    }
+
+    pub fn get(&self, name: &str) -> &Material {
+        let name = name.to_owned();
+        self.materials.get(&name).expect(&format!("no material called {}", name))
     }
 }
 
@@ -85,7 +98,7 @@ impl Plugin for RendererPlugin {
 
     fn run() -> Vec<Step> {
         Schedule::builder()
-            .add_thread_local(draw_system(0))
+            .add_thread_local(render_system(0, 0))
             .build().into_vec()
     }
 
@@ -98,22 +111,27 @@ impl Plugin for RendererPlugin {
 }
 
 use crate::engine::renderer::{vk_components::*, vk_context::*};
+use crate::engine::renderer::frame_data::{FrameData, FrameDataContainer};
 use crate::engine::renderer::render_commands::{RenderPassParams, SubmitRenderCommandsParams};
 use crate::engine::renderer::uniform_buffer::GpuUniformBuffer;
 use crate::engine::resources::{HashResource, Material, Vertex};
 
 
 #[system(for_each)]
-fn draw(
+fn render(
     #[state] frame_index: &mut usize,
+    #[state] frame_counter: &mut usize,
     #[resource] time: &PTime,
+    #[resource] materials: &MaterialsResource,
+    #[resource] meshes: &MeshesResource,
     context: &VkContext,
     swapchain: &Swapchain,
     frame_buffers: &FrameBuffers,
     frame_datas: &FrameDataContainer,
     render_pass: &RenderPass,
 ) {
-    //log::info!("frame: {}, delta: {}", frame_index, time.delta());
+    *frame_counter += 1;
+
 
     *frame_index = (*frame_index + 1) % crate::config::MAX_FRAMES_COUNT;
 
@@ -127,29 +145,39 @@ fn draw(
             pipeline_wait_stage_flags: &[vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT],
             frame_data,
         },
-        |render_pass_per_frame_params| { render_pass_func(
-            context,
-            swapchain,
-            render_pass,
-            render_pass_per_frame_params); }
+        |render_pass_per_frame_params| {
+            render_pass_func(
+                *frame_counter,
+                context,
+                swapchain,
+                render_pass,
+                render_pass_per_frame_params,
+                materials,
+                meshes,
+            );
+        }
     )
 }
 
+// once per frame
 fn render_pass_func(
+    frame_counter: usize,
     context: &VkContext,
     swapchain: &Swapchain,
     render_pass: &RenderPass,
-    render_pass_per_frame_params: RenderPassParams) {
-
+    render_pass_per_frame_params: RenderPassParams,
+    materials: &MaterialsResource,
+    meshes: &MeshesResource,
+) {
     let render_commands::RenderPassParams {
         frame_buffer,
         frame_data
     } = render_pass_per_frame_params;
 
 
-    //let flash = f32::abs(f32::sin(self.frame_num as f32 / 120_f32));
-    //let color = [0.0_f32, 0.0_f32, flash, 1.0_f32];
-    let color = [0.0_f32, 0., 0., 1.];
+    let flash = f32::abs(f32::sin(frame_counter as f32 / 120_f32));
+    let color = [0.0_f32, 0.0_f32, flash, 1.0_f32];
+    //let color = [0.0_f32, 0., 0., 1.];
 
     let color_clear = vk::ClearColorValue { float32: color };
 
@@ -178,18 +206,63 @@ fn render_pass_func(
             vk::SubpassContents::INLINE,
         );
 
-        //self.draw_render_objects(
-        //    &context.device.handle,
-        //    command_buffer,
-        //    frame_data,
-        //    self.frame_num,
-        //);
+        draw(context, frame_data, materials, meshes, frame_counter);
 
         context.device.handle.cmd_end_render_pass(frame_data.command_buffer);
     }
 }
 
+use crate::engine::math::*;
 
+fn draw(context: &VkContext,
+        frame_data: &FrameData,
+        materials: &MaterialsResource,
+        meshes: &MeshesResource,
+        frame_count: usize) {
+
+    let command_buffer: vk::CommandBuffer = frame_data.command_buffer;
+
+
+    let fov_y_radians = 70.0_f32.to_radians();
+    let aspect_ratio = config::WIDTH as f32 / config::HEIGHT as f32;
+    let (z_near, z_far) = (0.1_f32, 200.0_f32);
+    let projection = Mat4::perspective_rh(fov_y_radians, aspect_ratio, z_near, z_far);
+
+    let material = materials.get("default");
+    let mesh = meshes.get("monkey");
+
+    // create mvp matrix
+    let camera_loc = Vec3::new(0.0, 0.0, -3.0);
+    let camera_forward = Vec3::new(0.0, 0.0, 1.0);
+    let camera_up = Vec3::new(0.0, 1.0, 0.0);
+
+    let view = Mat4::look_at_rh(camera_loc, camera_loc + camera_forward, camera_up);
+
+    let fov_y = 70.0_f32.to_radians();
+
+    let aspect_ratio = config::WIDTH as f32 / config::HEIGHT as f32;
+    let (z_near, z_far) = (0.1_f32, 200.0_f32);
+    let projection = Mat4::perspective_rh(fov_y, aspect_ratio, z_near, z_far);
+    //let model = Mat4::from_translation(Vec3::new(0., 0.5, 0.));
+    let spin = (frame_count as f32 * 0.4).to_radians();
+    let model = Mat4::from_rotation_x(spin);
+
+    let mesh_matrix = projection * view * model;
+
+    //let uniform_buffer_frame_data = UniformBufferFrameData {
+    //    fog_color: Vec4::default(),
+    //    fog_distances: Vec4::default(),
+    //    ambient_color: Vec4::default(),
+    //    ..Default::default()
+    //};
+
+
+    // bind pipeline
+    material.bind(&context, command_buffer);
+
+
+
+}
 
 
 
@@ -255,82 +328,6 @@ fn renderer_shutdown(
 }
 
 
-
-
-pub struct FrameData {
-    pub(super) command_pool: vk::CommandPool,
-    pub(super) command_buffer: vk::CommandBuffer,
-
-    pub(super) render_fence: vk::Fence,
-    pub(super) rendering_complete_semaphore: vk::Semaphore,
-    pub(super) presenting_complete_semaphore: vk::Semaphore,
-
-    //pub(super) uniform_buffer: Rc<UniformBuffer>,
-
-    pub(super) frame_index: usize,
-}
-impl FrameData {
-    pub fn new(
-        context: &VkContext,
-        //descriptor_pool: vk::DescriptorPool,
-        frame_index: usize,
-        //uniform_buffer: Rc<UniformBuffer>,
-    ) -> Self {
-        // command pool and command buffer ---------
-        let (command_pool, command_buffer) =
-            pe::command_buffers::init::create_command_pool_and_buffer(&context.device.handle, context.physical_device.queue_index);
-
-        // fences ---------
-        let render_fence_create_info =
-            vk::FenceCreateInfo::builder().flags(vk::FenceCreateFlags::SIGNALED); // start signaled, to wait for it before the first gpu command
-
-        let render_fence = unsafe { context.device.handle.create_fence(&render_fence_create_info, None) }
-            .expect("Failed to create render fence.");
-
-        // semaphores --------------
-        let semaphore_create_info = vk::SemaphoreCreateInfo::default();
-
-        let rendering_complete_semaphore =
-            unsafe { context.device.handle.create_semaphore(&semaphore_create_info, None) }
-                .expect("Failed to create semaphore");
-        let presenting_complete_semaphore =
-            unsafe { context.device.handle.create_semaphore(&semaphore_create_info, None) }
-                .expect("Failed to create semaphore");
-
-        Self {
-            command_pool,
-            command_buffer,
-            render_fence,
-            rendering_complete_semaphore,
-            presenting_complete_semaphore,
-            //uniform_buffer,
-            frame_index,
-        }
-    }
-    pub fn destroy(&mut self, context: &VkContext) {
-        unsafe {
-            context.device.handle.destroy_semaphore(self.presenting_complete_semaphore, None);
-            context.device.handle.destroy_semaphore(self.rendering_complete_semaphore, None);
-            context.device.handle.destroy_fence(self.render_fence, None);
-            context.device.handle.destroy_command_pool(self.command_pool, None);
-        }
-    }
-}
-
-
-pub struct FrameDataContainer {
-    pub frame_datas: Vec<FrameData>,
-}
-impl FrameDataContainer {
-    pub fn destroy(&mut self, context: &VkContext) {
-        self.frame_datas.iter_mut().for_each(|frame_data| frame_data.destroy(context));
-    }
-
-    pub fn get(&self, index: usize) -> &FrameData {
-        self.frame_datas.get(index).expect("yeet")
-    }
-
-}
 
 
 

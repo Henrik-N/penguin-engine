@@ -6,7 +6,7 @@ pub mod push_constants;
 pub(crate) mod renderer;
 pub mod resources;
 
-use math::prelude::*;
+use math::*;
 use resources::prelude::*;
 
 #[allow(unused_imports)]

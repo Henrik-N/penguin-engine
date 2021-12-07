@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use super::buffers::*;
-use super::math::prelude::*;
+use super::math::*;
 use crate::core::config;
 use ash::vk;
 use std::rc::Rc;

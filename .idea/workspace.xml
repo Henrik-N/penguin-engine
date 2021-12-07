@@ -10,10 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89cec392-e333-432d-95a1-72c929ae631c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/engine/renderer/frame_data.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/config.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/config.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/descriptor_sets.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/descriptor_sets.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/math.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/math.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/push_constants.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/push_constants.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/renderer/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/renderer/mod.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/renderer/vk_components.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/renderer/vk_components.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/renderer/vk_context.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/renderer/vk_context.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/resources.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/resources.rs" afterDir="false" />
     </list>
@@ -192,7 +196,8 @@
       <workItem from="1638238838603" duration="1366000" />
       <workItem from="1638269868471" duration="6014000" />
       <workItem from="1638500583249" duration="11846000" />
-      <workItem from="1638512445674" duration="27320000" />
+      <workItem from="1638512445674" duration="30517000" />
+      <workItem from="1638810652536" duration="3028000" />
     </task>
     <servers />
   </component>

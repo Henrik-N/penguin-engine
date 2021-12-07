@@ -159,7 +159,6 @@ pub struct Device {
     // graphics queue only for now
     pub graphics_queue_handle: vk::Queue,
 }
-
 impl VkContext {
     pub fn destroy(&mut self) {
         unsafe {
