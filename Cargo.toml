@@ -1,47 +1,59 @@
 [package]
-name = "penguin-engine"
+name = "penguin-renderer"
 version = "0.1.0"
 authors = ["Henrik Nilsson <github.com/Henrik-N> <n.henrik.g.nilsson@gmail.com>"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
-### ------------------------------- Debugging ------------------------------- ###
-# error handling
-anyhow = { version = "~1.0.44", features = ["backtrace"]}  # error handling, simplified Result enum (return anyhow::Result<T>)
-
-# logging
-log = "0.4"
-fern = { version = "0.5", features = ["colored"] }
-chrono = "0.4"
+[features]
+disabled = []
 
 
-### ------------------------------- Core ------------------------------- ###
-# vulkan
-ash = { version = "0.33" }  # lightweight Vulkan wrapper / API bindings with type safety
-ash-window = { version = "0.7.0" }  # interop library between ash and raw-window-handle (surface creation)
-
-# platform
-winit = { version = "0.22.2" }  # cross-platform window creation and management
+# ----- Workspace ----- #
+[dependencies.penguin-config]
+path = "../penguin-config"
+features = ["vk-config"]
 
 
-### ------------------------------- Shaders ------------------------------- ###
-shaderc = { version = "0.7" }  # shader compilation tools
+[dependencies.penguin-app]
+path = "../penguin-app"
+features = ["time-plugin"]
+
+[dependencies.legion]
+version = "0.4.0"
 
 
-### ------------------------------- Math ------------------------------- ###
-macaw = { version = "0.14.1" }
+# ----- Errors ----- #
+[dependencies.anyhow]
+version = "~1.0.51"
+features = ["backtrace"]
 
-### ---------------- Mesh file loader ---------------------------------- ### k
-# obj-rs = { version = "0.7" }
-# tobj = { version = "3.2.0" }
-# nom-obj = { version = "0.2.0" }
-wavefront = "0.2.2"
+# ----- Vulkan ----- #
+[dependencies.ash] # lightweight Vulkan wrapper / API bindings with type safety
+version = "0.33"
+[dependencies.ash-window] # interop library between ash and raw-window-handle (surface creation)
+version = "0.7.0"
 
-#image  { version = "0.23.14" }  # image processing
+# ----- Shaders ----- #
+[dependencies.shaderc]  # shader compilation tools
+version = "0.7"
 
 
-### -------------------- ECS -------------------------- ###
-# specs = { version = "0.17.0", features = ["specs-derive"] }
-legion = { version = "0.4.0" }
+# ----- Utility ----- #
+[dependencies.macaw] # math
+version = "0.15"
+
+[dependencies.wavefront] # mesh file loader
+version = "0.2.2"
+
+[dependencies.chrono] # time
+version = "0.4"
+
+
+# ----- Logging ----- #
+[dependencies.log]
+version = "0.4"
+[dependencies.fern]
+version = "0.5"
+features = ["colored"]
