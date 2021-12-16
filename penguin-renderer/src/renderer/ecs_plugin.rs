@@ -1,4 +1,5 @@
 use penguin_app::ecs::*;
+use penguin_app::time_plugin::Time;
 
 use crate::renderer::{
     resources::{MaterialsResource, MeshesResource, RenderObjectsResource},
@@ -34,5 +35,6 @@ impl Plugin for RendererPlugin {
             .add_thread_local(startup_shutdown::renderer_shutdown_system())
             .build()
             .into_vec()
+
     }
 }

@@ -1087,8 +1087,6 @@ dependencies = [
 name = "penguin-engine-inner"
 version = "0.1.0"
 dependencies = [
- "anyhow",
- "legion",
  "penguin-app",
  "penguin-config",
  "penguin-renderer",

@@ -86,3 +86,1938 @@ _______________
 [35m 19:19:53 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
 [32m 19:19:53 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
 [32m 19:19:53 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 19:32:44 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 19:32:44 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 19:32:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 19:32:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 19:32:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 19:32:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 4423680, alignment: 1024, memory_type_bits: 132 }
+[31m 19:32:44 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x556f0078e030
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 19:32:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 19:32:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 19:32:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 19:32:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 19:32:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 19:32:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 19:33:10 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 19:33:10 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 19:33:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 19:33:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 19:33:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 19:33:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 4423680, alignment: 1024, memory_type_bits: 132 }
+[31m 19:33:10 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x55c9dfe6f030
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 19:33:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 19:33:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 19:33:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 19:33:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 19:33:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 19:33:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 21:41:21 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 21:41:21 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 21:41:21 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 21:41:21 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 21:41:21 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 21:41:21 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 4423680, alignment: 1024, memory_type_bits: 132 }
+[31m 21:41:21 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x556e881920b0
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 21:41:21 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 21:41:21 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 21:41:21 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 21:41:21 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 21:41:21 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 21:41:21 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 21:42:51 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 21:42:51 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 21:42:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 21:42:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 21:42:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 21:42:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 4423680, alignment: 1024, memory_type_bits: 132 }
+[31m 21:42:51 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x55e78dd79030
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 21:42:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 21:42:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 21:42:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 21:42:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 21:42:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 21:42:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 21:43:41 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 21:43:41 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 21:43:41 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 21:43:41 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 21:43:41 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 21:43:41 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 4423680, alignment: 1024, memory_type_bits: 132 }
+[31m 21:43:41 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x5555ea618420
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 21:43:41 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 21:43:41 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 21:43:41 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 21:43:41 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 21:43:41 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 21:43:41 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 21:45:51 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 21:45:51 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 21:45:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 21:45:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 21:45:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 21:45:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 4423680, alignment: 1024, memory_type_bits: 132 }
+[31m 21:45:51 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x562fdc3970b0
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 21:45:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 21:45:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 21:45:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 21:45:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 21:45:51 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 21:45:51 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 21:46:45 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 21:46:45 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 21:46:45 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 21:46:45 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 21:46:45 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 21:46:45 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 4423680, alignment: 1024, memory_type_bits: 132 }
+[31m 21:46:45 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x558f8e270030
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 21:46:45 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 21:46:45 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 21:46:45 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 21:46:45 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 21:46:45 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 21:46:45 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 21:47:26 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 21:47:26 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 21:47:26 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 21:47:26 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 21:47:26 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 21:47:26 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 4423680, alignment: 1024, memory_type_bits: 132 }
+[31m 21:47:26 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x55da86e690b0
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 21:47:26 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 21:47:26 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 21:47:26 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 21:47:26 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 21:47:26 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 21:47:26 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 21:53:33 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 21:53:33 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 21:53:33 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 21:53:33 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 21:53:33 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 21:53:33 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 4423680, alignment: 1024, memory_type_bits: 132 }
+[31m 21:53:33 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x558601e48020
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.188701
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.1894649
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.1899463
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.1961888
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.1970909
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.1976115
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.20823
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2128798
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2196782
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2281125
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.23397
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2406192
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2481179
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2544118
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2617782
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2686168
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.275621
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2836453
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2895352
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2968377
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3044101
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3112556
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3181891
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3204814
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3326792
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3397156
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3469626
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3527064
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3599985
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3670402
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3739192
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3805726
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3883734
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3954529
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4015056
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4081945
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4150357
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4231194
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4294786
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4360411
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4429309
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4514503
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4565039
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.46335
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4704107
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4781387
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4848422
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4917504
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4986856
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5056316
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5139935
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5190382
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5263988
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5334283
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5412241
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5473367
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5543288
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5612397
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5683042
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5754561
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5823257
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5893298
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.596031
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6026047
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6046692
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.617237
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6235439
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6300057
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6371347
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6441526
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6514899
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6584085
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6651233
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6717085
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6788577
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6860557
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6931444
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7000474
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7068285
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7138586
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7206411
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7275783
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7344222
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7417082
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7482151
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7553413
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7620351
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7689273
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7755868
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7823927
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7902434
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7964512
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.803234
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8102343
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8177782
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8242419
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8312744
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8381835
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8452706
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8521433
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8594012
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8666699
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.873834
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8802501
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8873264
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8896536
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9023906
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9084711
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9159274
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9221709
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9286435
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9372121
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9437301
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9508132
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.957006
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9646211
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9708203
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9776962
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.985239
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9914067
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9990008
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0067399
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0123067
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0191429
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0259573
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0329537
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.040177
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0468123
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0537283
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0608594
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0678744
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0750554
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0816514
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0885668
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0952363
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.1021953
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.109269
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.116075
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.1257288
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.130646
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.1371658
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.1444364
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.151277
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.1582913
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.1652517
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.1722522
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.1743884
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.1860676
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.1929903
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2003
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2070727
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2140987
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2221897
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2280192
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2348182
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2415764
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2515903
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2552075
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.26316
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2693942
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2762754
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2834184
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2908413
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.2978978
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.3047116
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.3109407
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.3181574
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.3253422
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.332157
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.3388472
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.3454783
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.3531673
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.359567
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.366282
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.3730404
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.3800242
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.3869677
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.3942785
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4013317
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4084063
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4155002
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.422054
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4289439
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4360087
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4428327
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4501162
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4566839
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4587817
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4715092
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4777732
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4847283
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4917817
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.4984999
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5054016
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.512128
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5187273
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5259705
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5326269
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5403347
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5472155
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.553506
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5610483
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5677195
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5748384
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5821896
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5883152
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.5951467
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6025095
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6095886
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6170838
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6277616
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6301386
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.636837
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6457338
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6509318
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6579282
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6649745
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6717556
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6786096
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6855452
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.69247
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.6994061
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.706624
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.7133625
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.7202935
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.7275438
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.734702
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.7410579
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.7434127
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.7561998
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.7623384
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.768805
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.7762742
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.7833123
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.7896574
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.7970188
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.8036273
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.8110433
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.8186233
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.8250396
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.8318882
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.8384254
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.8451443
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.8520072
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.85914
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.8660388
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.872933
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.880271
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.8868625
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.8946543
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9012332
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9081407
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9148765
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9216325
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9287345
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9357653
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9424114
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9491918
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9561377
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.962958
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9704762
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.97799
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9845963
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9914227
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.9980848
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0086563
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0121953
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0193489
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0263677
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0289547
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0404944
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0470438
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0546947
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0615344
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0677266
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0746777
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0816448
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0884528
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.0951085
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.102327
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.109121
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.1158605
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.1230567
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.130366
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.1372116
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.143592
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.1512823
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.158339
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.165054
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.1718085
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.1786904
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.185361
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.1923282
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.199241
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.206155
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.2133105
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.220065
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.227926
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.2347877
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.2423253
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.24799
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.254993
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.2617633
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.2687051
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.2755437
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.282815
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.2898514
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.2967756
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.3038054
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.3102672
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.3123436
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.3254278
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.331828
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.3382595
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.3450305
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.352041
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.35903
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.3657985
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.3727984
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.3797226
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.3865945
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.3940377
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4008772
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4080875
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4148583
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4218116
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4287615
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4361768
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4467063
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4495275
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4576216
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.463865
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4706364
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4772456
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4843512
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4917126
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.4984481
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5049744
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5118394
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5186887
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.525585
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5325246
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5393615
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5462961
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5534184
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.560154
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5676253
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5746455
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5814366
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5884109
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5951598
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.5973115
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.6098607
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.6159985
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.6231737
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.629955
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.6370616
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.6440215
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.6509392
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.658151
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.6650705
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.672207
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.6787245
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.6856713
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.6925147
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.699898
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.7062223
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.7133286
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.7203658
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.7273722
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.7340093
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.7409158
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.7477894
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.7547598
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.761753
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.7696576
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.775731
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.782415
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.7897801
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.7960417
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.803671
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.8098521
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.8167162
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.8237135
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.83073
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.837406
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.8442652
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.8520956
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.859349
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.865477
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.8724706
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.8796437
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.881547
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.8950958
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9011722
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9078908
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9151266
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9220862
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9286225
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9355643
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9422264
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9489388
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9560318
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9643524
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.970185
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9772913
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9839945
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m3.9911256
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.005026
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.0073733
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.011579
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.0185184
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.0254073
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.032377
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.039943
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.0474796
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.052985
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.0598845
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.0670004
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.074104
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.081023
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.0879135
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.0947566
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.101467
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.1085086
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.115655
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.122601
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.1295667
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.1369877
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.1436934
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.151239
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.157632
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.1640897
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.1660247
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.1789584
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.185232
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.192134
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.199088
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.2059484
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.212983
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.2198224
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.227665
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.23387
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.2410827
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.2481747
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.2556214
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.2629366
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.2688966
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.2764845
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.282527
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.290216
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.2966433
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.3032117
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.3102612
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.317216
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.3245263
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.3318353
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.338079
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.344942
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.3514533
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.358809
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.365684
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.3723207
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.379624
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.3871193
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.3935227
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.401292
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.4073753
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.4143677
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.4212656
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.428916
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.43541
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.44221
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.4493337
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.451133
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.4636197
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.4697223
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.47662
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.483617
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.490568
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.498472
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.5046983
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.5114374
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.5180902
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.524998
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.5322247
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.5392985
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.546505
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.5533795
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.56078
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.5671444
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.5740232
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.5809937
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.5879035
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.594785
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.601405
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.608359
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.6152153
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.622488
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.6292305
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.63759
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.643862
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.650926
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.6579895
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.66499
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.6726317
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.678751
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.6849613
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.6918836
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.6985493
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.7057686
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.713252
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.7199125
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.726825
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.733521
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.7350044
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.7481666
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.7545085
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.761321
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.768106
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.774888
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.782211
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.789194
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.796172
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.804509
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.8102784
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.817281
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.824158
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.8310914
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.8384776
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.844888
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.851591
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.8587246
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.865674
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.8736
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.8805814
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.8867784
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.894668
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.900792
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.907682
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.9152727
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.9213605
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.928358
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.9348345
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.9418283
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.948755
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.9557996
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.964201
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.969769
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.976933
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.983806
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.9909935
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m4.997733
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.004678
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.011716
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.018052
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.0202527
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.0326996
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.039073
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.0459523
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.0529685
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.0601788
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.067778
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.0746565
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.0807962
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.0874786
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.0942993
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.1010294
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.107902
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.115166
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.122069
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.1290545
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.1369114
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.1436043
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.1507907
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.1572504
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.164333
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.17158
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.1784077
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.184904
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.191769
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.1986613
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.205502
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.2125573
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.219369
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.2265563
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.2339754
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.2408285
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.24763
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.2549524
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.26209
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.2686143
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.2754455
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.2863426
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.289018
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.2957644
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.3027296
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.3046956
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.317938
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.3253856
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.331087
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.338308
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.3448353
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.351424
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.3584957
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.365298
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.3724976
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.3792186
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.3864727
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.3931937
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4003644
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4079084
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.415268
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4255595
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4288044
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4350805
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4428353
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4490614
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4559793
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4633493
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4702334
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4776535
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4844546
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.491103
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.4972854
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.504177
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.511329
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.5180187
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.524781
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.5319724
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.5390716
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.546036
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.5537195
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.559914
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.5671535
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.5742536
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.5813417
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.587744
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.5899467
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.60266
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.608367
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.6153955
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.6221795
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.6291394
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.636594
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.6434965
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.6501603
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.658013
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.6645484
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.6713357
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.678566
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.688008
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.6919956
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.6987915
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.7058873
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.712827
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.719577
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.726576
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.7344913
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.740663
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.747171
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.7542005
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.7610836
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.7676206
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.7744465
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.7820654
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.7883577
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.7954283
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.8030844
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.810096
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.816317
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.823176
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.8302503
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.8374815
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.8459477
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.85166
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.858376
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.8652663
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.8723693
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.874629
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.886602
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.8934617
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.903316
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.9074845
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.9140625
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.92109
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.9280615
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.934936
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.9414063
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.94859
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.955655
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.9638753
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.969913
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.9764314
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.9831963
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.9905343
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m5.9976797
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.0047774
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.011312
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.0179605
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.0247045
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.0318255
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.03876
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.045814
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.052564
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.059802
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.066856
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.0736933
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.0807447
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.088129
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.0948033
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.1019945
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.108736
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.1156955
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.1222653
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.129403
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.1363096
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.143528
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.150205
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.1567698
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.1591096
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.1718473
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.1781282
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.184736
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.191546
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.198487
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.2054305
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.2123556
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.2196436
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.22619
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.2332296
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.2407813
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.2475753
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.2549715
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.2612896
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.2679777
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.274821
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.2817154
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.289194
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.295911
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.3029723
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.31379
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.3170595
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.323616
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.3305836
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.337612
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.34461
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.351484
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.35809
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.3650346
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.372057
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.3792486
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.386315
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.393179
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.400164
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.4077516
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.414283
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.421165
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.427956
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.4349113
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.441522
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.4435563
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.4570613
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.464955
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.4694276
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.4762506
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.4830537
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.491244
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.4977474
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.504686
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.511864
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.5179005
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.52472
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.5314965
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.5385017
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.545652
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.5524945
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.559468
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.5664635
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.573638
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.58122
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.5881033
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.5944552
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.601399
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.6079593
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.6151357
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.621778
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.62919
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.635816
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.64287
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.649776
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.6566052
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.663801
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.6707063
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.677789
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.684783
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.6913514
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.698669
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.7056055
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.7139454
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.721387
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.726207
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.7287693
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.74118
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.7472444
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.754061
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.7611704
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.768163
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.774809
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.7815704
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.7885475
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.7958755
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.803951
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.81023
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.8174706
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.823918
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.831709
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.8377595
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.844378
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.851454
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.858247
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.8647485
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.8717732
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.878602
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.8856483
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.893026
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9001245
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9072547
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9157367
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.922425
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.928131
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9344835
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9413576
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9482093
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9551086
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9651456
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9695196
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9765544
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9832973
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.9903183
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m6.997139
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.003991
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.010883
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.013087
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.0255647
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.0320263
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.0384707
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.0454483
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.052408
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.059248
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.0665703
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.073219
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.0805116
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.087559
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.0946455
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.101285
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.1083894
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.1149135
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.1215906
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.1286836
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.135946
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.142545
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.149836
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.1564775
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.163735
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.1709566
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.1778274
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.1846156
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.191324
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.1979866
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2050557
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2119865
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2189713
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.225916
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2331886
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2399592
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2470098
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2541842
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2609115
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.267799
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2748294
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.281392
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2883487
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2956367
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.2978234
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.3100414
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.319823
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.3234105
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.3303676
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.3373857
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.344444
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.3515177
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.358
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.365855
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.3722353
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.3792872
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.385905
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.39284
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.3997974
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.4067583
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.4136553
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.4205894
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.4274693
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.4347124
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.4414706
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.4484696
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.455044
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.4624662
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.46898
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.475841
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.482862
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.489695
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.497053
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.5041075
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.5111256
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.5179377
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.5246587
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.5314527
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.538336
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.5452304
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.5523453
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.559154
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.565987
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.5728645
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.5800476
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.582046
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.595095
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.601464
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.608002
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.614759
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.6220737
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.6289167
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.6361246
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.6435046
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.6507783
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.6573563
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.664838
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.671306
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.6777997
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.6843214
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.6912966
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.6981916
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.7053275
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.7140627
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.7207994
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.7261567
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.7327847
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.739858
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.7466726
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.7536244
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.760405
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.767727
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.774834
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.781667
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.7877607
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.794663
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.8014383
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.8083997
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.815273
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.822361
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.829359
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.8362484
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.844139
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.850682
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.857575
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.86439
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.866579
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.8796086
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.8855
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.8922596
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.899598
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.9061294
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.9135017
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.9214263
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.9292727
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.9363775
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.941299
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.9485474
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.95527
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.962496
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.969142
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.975952
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.982801
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.9909563
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m7.997098
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.003946
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.010901
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.017587
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.024456
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.0311985
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.038227
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.045443
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.052487
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.059462
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.067012
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.073387
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.080055
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.088526
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.094224
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.10129
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.10792
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.114896
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.122037
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.12845
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.135521
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.143234
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.14914
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.150908
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.163204
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.170868
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.177164
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.183963
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.190922
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.197713
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.204748
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.211386
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.218253
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.225328
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.232387
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.239437
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.247129
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.254343
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.260759
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.267456
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.274618
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.28133
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.287996
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.294924
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.301883
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.308946
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.315884
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.323558
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.330775
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.337845
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.344163
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.351038
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.357622
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.364785
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.37143
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.378346
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.385293
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.392324
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.399488
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.406552
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.413561
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.4202
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.427364
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.433862
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.436086
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.448722
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.454797
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.4633
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.469531
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.476091
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.483004
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.489683
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.496722
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.503779
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.510381
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.518647
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.524962
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.531323
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.538212
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.544952
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.552078
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.558799
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.566024
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.572817
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.579745
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.587177
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.593859
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.600838
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.607972
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.614584
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.621239
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.628367
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.635312
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.642326
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.649224
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.656381
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.662939
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.670152
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.677216
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.684067
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.691178
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.697849
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.704712
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.7115555
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.718602
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.72085
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.733071
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.743597
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.746854
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.753258
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.7604885
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.767329
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.7743
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.7811985
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.78799
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.79489
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.801782
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.808731
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.815816
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.822672
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.829673
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.836744
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.843773
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.851944
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.857891
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.864866
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.871068
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.8780575
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.885156
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.892255
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.899165
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.905912
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.912947
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.9204
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.928005
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.935121
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.942123
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.948789
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.954894
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.961879
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.968972
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.97583
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.982665
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.989856
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m8.997613
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.003539
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.005744
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.017383
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.024437
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.031248
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.037972
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.04464
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.05211
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.060001
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.066823
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.073884
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.081122
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.087063
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.093787
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.10068
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.107861
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.114688
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.121256
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.128774
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.13551
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.1425085
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.148895
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.156261
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.163128
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.17002
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.177156
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.18403
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.191077
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.197973
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.204626
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.211643
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.218401
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.225302
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.232258
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.239315
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.24638
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.253502
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.260427
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.267224
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.274582
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.281722
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.28772
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.289726
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.302662
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.30932
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.316128
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.322989
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.330238
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.337723
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.3463745
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.35159
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.357561
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.364401
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.371018
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.377828
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.384804
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.391877
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.398999
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.405878
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.412494
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.419629
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.426137
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.433314
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.440391
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.44706
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.454259
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.461153
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.467878
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.47479
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.482042
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.488691
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.495848
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.502549
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.50968
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.516706
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.523486
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.530712
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.538197
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.544438
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.551022
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.558499
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.565946
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.571865
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.573271
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.586493
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.593452
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.600188
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.606684
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.6141615
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.621175
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.627849
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.634795
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.642031
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.648787
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.656274
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.663273
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.670367
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.677245
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.684913
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.691567
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.698316
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.704861
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.711822
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.719359
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.725897
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.732904
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.741125
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.748591
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.753517
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.760457
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.767704
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.774228
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.780451
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.787851
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.794998
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.801317
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.808457
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.8159685
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.8227005
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.829628
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.835891
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.842726
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.850419
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.856598
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.857698
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.871196
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.877627
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.884654
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.891475
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.899311
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.906524
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.913373
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.919757
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.926703
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.933411
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.941013
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.947394
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.954369
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.961239
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.968283
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.975015
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.981821
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.988746
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m9.995807
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.002805
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.009631
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.016855
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.02405
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.031014
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.037486
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.044512
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.051406
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.058324
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.065336
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.072377
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.079217
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.086234
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.093538
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.1004
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.107302
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.114693
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.120837
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.127979
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.135191
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.142117
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.144323
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.156428
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.16367
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.169601
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.17648
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.183243
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.190162
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.197269
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.2039995
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.210883
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.217882
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.224821
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.231351
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.238339
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.245198
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.25213
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.25913
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.267053
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.273011
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.279878
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.287607
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.294572
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.301473
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.308307
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.315276
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.322431
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.329184
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m10.336814
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 21:53:33 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 21:53:33 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 21:53:33 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 21:53:33 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 21:53:33 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 21:53:33 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 21:57:44 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 21:57:44 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 21:57:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 21:57:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 21:57:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 21:57:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 4423680, alignment: 1024, memory_type_bits: 132 }
+[31m 21:57:44 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x561fe9b1b930
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2941756
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.294926
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.2954484
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3004267
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3034532
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3127315
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.317077
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3256018
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3323473
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3390595
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3459702
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3529189
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3603501
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3669499
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3737497
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.380883
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3878137
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.3942393
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4012693
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4085007
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4154221
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4223915
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4291493
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4312825
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4436921
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4502517
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.457537
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4643887
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4709157
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4775621
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4848214
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.492447
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.4991009
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5065382
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5130624
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.520632
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5272992
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5336171
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5405504
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5474848
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5544941
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5614243
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5684067
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5762557
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5830957
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.58925
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.5961524
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6030824
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6098024
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6165925
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6248218
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6304861
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6373569
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6444745
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6512915
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6588767
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6661611
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.672365
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.679429
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.68673
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.6936773
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7001094
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7070705
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7139794
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7163639
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7306579
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7347846
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7414478
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7491915
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7557623
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.762575
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7697281
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7763624
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7834015
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7899444
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.7970401
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.804028
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8109455
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8179865
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8248144
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8320419
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8390603
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8459852
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8532903
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8599917
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8668458
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8744283
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8808993
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8874958
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.8941829
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9016883
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.908908
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9160386
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9227206
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9297647
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9364015
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9431237
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.950419
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9572887
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9639225
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9707316
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9777582
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9865848
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9918481
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m1.9987901
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.0007017
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::ecs_plugin] [0m2.013981
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 21:57:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 21:57:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 21:57:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 21:57:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 21:57:44 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 21:57:44 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 22:12:46 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 22:12:46 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 22:12:46 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 22:12:46 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 22:12:46 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 22:12:46 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 4423680, alignment: 1024, memory_type_bits: 132 }
+[31m 22:12:46 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x55a319c81030
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 22:12:46 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 22:12:46 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 22:12:46 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 22:12:46 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 22:12:46 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
