@@ -35,7 +35,7 @@ fn init_vk_debug_messenger(
 
     let messenger_create_info = init::debug_messenger_create_info(debug_log_level);
 
-    let utils_messenger = if penguin_config::vk_config::VK_VALIDATION.is_enabled {
+    let utils_messenger = if crate::config::VK_VALIDATION.is_enabled {
         unsafe {
             Some(
                 debug_utils_loader
@@ -161,7 +161,7 @@ mod init {
                 log::info!("{} {}", vk_message_type, msg);
             }
             vk::DebugUtilsMessageSeverityFlagsEXT::VERBOSE => {
-                if penguin_config::vk_config::VK_VERBOSE_LOGGING_ENABLE {
+                if crate::config::VK_VERBOSE_LOGGING_ENABLE {
                     log::trace!("{} [{:?}]", vk_message_type, message);
                 }
             }

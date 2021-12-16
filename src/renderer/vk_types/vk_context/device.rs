@@ -98,7 +98,7 @@ mod init {
         let enable_extension_names = [ash::extensions::khr::Swapchain::name().as_ptr()];
 
         // validation layers
-        let enabled_validation_layers_raw: Vec<CString> = penguin_config::vk_config::VK_VALIDATION
+        let enabled_validation_layers_raw: Vec<CString> = crate::config::VK_VALIDATION
             .required_validation_layers
             .iter()
             .map(|name| CString::new(*name).expect("Couldn't unwrap layer name ptr"))
@@ -117,12 +117,12 @@ mod init {
             p_enabled_features: &physical_device_features,
             enabled_extension_count: enable_extension_names.len() as u32,
             pp_enabled_extension_names: enable_extension_names.as_ptr(),
-            enabled_layer_count: if penguin_config::vk_config::VK_VALIDATION.is_enabled {
+            enabled_layer_count: if crate::config::VK_VALIDATION.is_enabled {
                 enabled_validation_layers_raw.len() as u32
             } else {
                 0 as u32
             },
-            pp_enabled_layer_names: if penguin_config::vk_config::VK_VALIDATION.is_enabled {
+            pp_enabled_layer_names: if crate::config::VK_VALIDATION.is_enabled {
                 enabled_validation_layers.as_ptr()
             } else {
                 ptr::null()

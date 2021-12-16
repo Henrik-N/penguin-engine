@@ -2,7 +2,7 @@ use std::ffi::CStr;
 
 /// Checks if the machine supports the required validation layers.
 pub fn check_validation_layer_support(entry: &ash::Entry) {
-    for required_layer in penguin_config::vk_config::VK_VALIDATION.required_validation_layers.iter() {
+    for required_layer in crate::config::VK_VALIDATION.required_validation_layers.iter() {
         let found = entry
             .enumerate_instance_layer_properties()
             .unwrap()

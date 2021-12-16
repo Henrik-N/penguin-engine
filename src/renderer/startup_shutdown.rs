@@ -136,7 +136,7 @@ pub fn renderer_startup(
     // allocate buffers for uniform descriptor set bindings
     let (b0_buffer, b1_buffer) = {
         let b0_packed_range = context.packed_uniform_buffer_range::<GPUCameraData>();
-        let b0_size = b0_packed_range * (penguin_config::vk_config::MAX_FRAMES_COUNT) as u64;
+        let b0_size = b0_packed_range * (crate::config::MAX_FRAMES_COUNT) as u64;
         let b0_buffer = AllocatedBuffer::create_buffer(
             &context,
             AllocatedBufferCreateInfo {
@@ -151,7 +151,7 @@ pub fn renderer_startup(
 
         // scene data
         let b1_packed_range = context.packed_uniform_buffer_range::<GPUObjectDataOld>();
-        let b1_size = b1_packed_range * (penguin_config::vk_config::MAX_FRAMES_COUNT) as u64;
+        let b1_size = b1_packed_range * (crate::config::MAX_FRAMES_COUNT) as u64;
         let b1_buffer = AllocatedBuffer::create_buffer(
             &context,
             AllocatedBufferCreateInfo {
@@ -168,7 +168,7 @@ pub fn renderer_startup(
     };
 
     let s3_buffer = {
-        let s3_size = std::mem::size_of::<GPUObjectDataNew>() * penguin_config::vk_config::MAX_OBJECTS;
+        let s3_size = std::mem::size_of::<GPUObjectDataNew>() * crate::config::MAX_OBJECTS;
         let s3_buffer = AllocatedBuffer::create_buffer(
             &context,
             AllocatedBufferCreateInfo {
@@ -218,7 +218,7 @@ pub fn renderer_startup(
 
     let command_buffers = context.allocate_command_buffers(
         command_pool,
-        penguin_config::vk_config::MAX_FRAMES_COUNT as _);
+        crate::config::MAX_FRAMES_COUNT as _);
 
 
 
@@ -263,7 +263,7 @@ pub fn renderer_startup(
                     vk::DescriptorBufferInfo::builder()
                         .buffer(descriptor_sets_resource.get_set(1).allocated_buffers[0].handle)
                         .range(
-                            (std::mem::size_of::<GPUObjectDataNew>() * penguin_config::vk_config::MAX_OBJECTS) as _
+                            (std::mem::size_of::<GPUObjectDataNew>() * crate::config::MAX_OBJECTS) as _
                         )
                         .offset(0)
                         .build(),

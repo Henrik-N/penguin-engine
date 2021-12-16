@@ -50,7 +50,7 @@ fn create_ash_instance(
         .map(|extension| extension.as_ptr())
         .collect::<Vec<_>>();
 
-    if penguin_config::vk_config::VK_VALIDATION.is_enabled {
+    if crate::config::VK_VALIDATION.is_enabled {
         extension_names.push(ash::extensions::ext::DebugUtils::name().as_ptr());
     }
 
@@ -58,10 +58,10 @@ fn create_ash_instance(
         .application_info(&app_info)
         .enabled_extension_names(&extension_names);
 
-    if !penguin_config::vk_config::VK_VALIDATION.is_enabled {
+    if !crate::config::VK_VALIDATION.is_enabled {
         unsafe { entry.create_instance(&instance_desc, None) }
     } else {
-        let layer_names = penguin_config::vk_config::VK_VALIDATION
+        let layer_names = crate::config::VK_VALIDATION
             .required_validation_layers
             .iter()
             .map(|name| CString::new(*name).expect("Failed to build CString"))

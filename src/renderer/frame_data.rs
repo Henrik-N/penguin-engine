@@ -60,7 +60,7 @@ impl FrameDataContainer {
     }
 
     fn update_frame_index(&mut self) {
-        self.frame_index = (self.frame_index + 1) % penguin_config::vk_config::MAX_FRAMES_COUNT;
+        self.frame_index = (self.frame_index + 1) % crate::config::MAX_FRAMES_COUNT;
     }
 
     pub fn destroy(&mut self, context: &VkContext) {
