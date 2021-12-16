@@ -198,7 +198,7 @@ mod init {
             .into_iter()
             .map(|extension| crate::util::raw_c_string_to_string(&extension.extension_name)) // converts each raw string to strings
             .filter(|extension_name| {
-                penguin_config::vk_config::REQUIRED_DEVICE_EXTENSIONS.contains(&extension_name.as_str())
+                crate::config::REQUIRED_DEVICE_EXTENSIONS.contains(&extension_name.as_str())
             }) // filters out any extensions that aren't also in the DEVICE_EXTENSIONS array
             .collect();
 
@@ -206,7 +206,7 @@ mod init {
             .iter()
             .for_each(|name| log::debug!("Required extension: {} is supported.", name));
 
-        supported_extensions_found.len() == penguin_config::vk_config::REQUIRED_DEVICE_EXTENSIONS.len()
+        supported_extensions_found.len() == crate::config::REQUIRED_DEVICE_EXTENSIONS.len()
     }
 
     pub(crate) fn find_graphics_queue_family(

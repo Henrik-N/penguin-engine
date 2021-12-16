@@ -1,7 +1,7 @@
 [package]
 name = "penguin-renderer"
 version = "0.1.0"
-authors = ["Henrik Nilsson <github.com/Henrik-N> <n.henrik.g.nilsson@gmail.com>"]
+authors = ["Henrik Nilsson <github.com/Henrik-N>"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -11,18 +11,12 @@ disabled = []
 
 
 # ----- Workspace ----- #
-[dependencies.penguin-config]
-path = "../penguin-config"
-features = ["vk-config"]
-
-
 [dependencies.penguin-app]
-path = "../penguin-app"
+git = "https://github.com/Henrik-N/penguin-app"
 features = ["time-plugin"]
 
 [dependencies.legion]
 version = "0.4.0"
-
 
 # ----- Errors ----- #
 [dependencies.anyhow]
