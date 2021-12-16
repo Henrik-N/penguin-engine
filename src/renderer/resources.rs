@@ -1,8 +1,21 @@
 // ----------------- RESOURCES -----------------
 use std::collections::HashMap;
+use crate::renderer::memory::UploadContext;
+use crate::renderer::render_objects::{Material, Mesh, RenderObject};
 use crate::renderer::vk_types::{VkContext, Pipeline};
-use crate::render_objects::{Material, Mesh};
 
+
+#[derive(Default)]
+pub struct RenderObjectsResource {
+    pub render_objects: Vec<RenderObject>,
+}
+impl std::ops::Deref for RenderObjectsResource {
+    type Target = Vec<RenderObject>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.render_objects
+    }
+}
 
 
 #[derive(Default)]
@@ -14,8 +27,12 @@ impl MeshesResource {
         self.meshes.iter_mut().for_each(|(_name, mesh)| mesh.destroy(&context));
     }
 
-    pub fn insert_from_file(&mut self, context: &VkContext, (name, file_name): (&str, &str)) {
-        self.meshes.insert(name.to_owned(), Mesh::from_obj(context, file_name));
+    pub fn insert_from_file(&mut self, context: &VkContext, upload_context: &UploadContext, (name, file_name): (&str, &str)) {
+        self.meshes.insert(name.to_owned(), Mesh::from_obj(
+            context,
+            upload_context,
+            file_name,
+        ));
     }
 
     pub fn get(&self, name: &str) -> &Mesh {

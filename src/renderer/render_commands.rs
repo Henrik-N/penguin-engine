@@ -1,6 +1,6 @@
 use ash::vk;
+use crate::renderer::frame_data::FrameData;
 use crate::renderer::vk_types::*;
-use super::{FrameData, FrameDataContainer};
 
 
 pub struct SubmitRenderCommandsParams<'a> {
@@ -13,15 +13,8 @@ pub struct SubmitRenderCommandsParams<'a> {
 }
 
 
-pub struct RenderPassParams<'a> {
-    //pub context: &'a VkContext,
-    //pub command_buffer: vk::CommandBuffer,
-    pub frame_buffer: vk::Framebuffer,
-    pub frame_data: &'a FrameData,
-}
-
 pub fn submit_render_commands
-<RenderPassFn: FnOnce(RenderPassParams)>(
+<RenderPassFn: FnOnce(vk::Framebuffer)>(
     submit_render_commands_params: SubmitRenderCommandsParams,
     render_pass_fn: RenderPassFn,
 ) {
@@ -42,22 +35,19 @@ pub fn submit_render_commands
 
     let frame_buffer = frame_buffers.get(swapchain_image_index as _);
 
-
     //  record & submit command buffer to graphics queue
     {
         // ------ record command buffer ------
         {
             // wait for fence / previous command buffer
             // (aka wait until the GPU finished rendering the last frame in this case)
-            context.wait_for_fence(frame_data.render_fence, std::time::Duration::MAX);
+            context.wait_for_fence(frame_data.render_complete_fence, std::time::Duration::MAX);
+
 
             context.reset_command_buffer(frame_data.command_buffer, vk::CommandBufferResetFlags::empty()); //  vk::CommandBufferResetFlags::RELEASE_RESOURCES
             context.begin_command_buffer(frame_data.command_buffer, vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT);
 
-            render_pass_fn(RenderPassParams {
-                frame_buffer,
-                frame_data
-            });
+            render_pass_fn(frame_buffer);
 
             context.end_command_buffer(frame_data.command_buffer);
         }
@@ -74,7 +64,7 @@ pub fn submit_render_commands
                 .signal_semaphores(&signal_semaphores)
                 .command_buffers(&command_buffers);
 
-            context.submit_to_graphics_queue(submit_info, frame_data.render_fence);
+            context.submit_to_graphics_queue(submit_info, frame_data.render_complete_fence);
         }
     }
 
