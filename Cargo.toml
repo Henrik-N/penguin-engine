@@ -1,0 +1,8 @@
+[workspace]
+
+
+members = [
+    "penguin-renderer",
+    "penguin-engine-inner"
+]
+

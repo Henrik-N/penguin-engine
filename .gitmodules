@@ -1,0 +1,9 @@
+[submodule "penguin-app"]
+	path = penguin-app
+	url = https://github.com/Henrik-N/penguin-app
+[submodule "penguin-config"]
+	path = penguin-config
+	url = https://github.com/Henrik-N/penguin-config
+[submodule "penguin-config-derive"]
+	path = penguin-config-derive
+	url = https://github.com/Henrik-N/penguin-config-derive

@@ -1,0 +1,10 @@
+{
+  "logger_config": {
+    "output_path": "logs/output.log",
+    "debug_message_severity": "debug"
+  },
+  "window_config": {
+    "width": 640,
+    "height": 400
+  }
+}

@@ -1,0 +1,33 @@
+[package]
+name = "penguin-engine-inner"
+version = "0.1.0"
+authors = ["Henrik Nilsson <github.com/Henrik-N>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+
+# ----- Workspace ----- #
+[dependencies.penguin-config]
+git = "https://github.com/Henrik-N/penguin-config"
+
+
+[dependencies.penguin-app]
+git = "https://github.com/Henrik-N/penguin-app"
+# path = "../penguin-app"
+features = ["time-plugin"]
+
+[dependencies.penguin-renderer]
+path = "../penguin-renderer"
+
+
+[dependencies.legion]
+version = "0.4.0"
+
+
+# ----- Errors ----- #
+[dependencies.anyhow]
+version = "~1.0.51"
+features = ["backtrace"]
