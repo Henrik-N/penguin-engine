@@ -1,7 +1,7 @@
 [submodule "penguin-app"]
 	path = penguin-app
     url = https://github.com/Henrik-N/penguin-app
-    branch = main
+    branch = master
 [submodule "penguin-config"]
 	path = penguin-config
     url = https://github.com/Henrik-N/penguin-config
