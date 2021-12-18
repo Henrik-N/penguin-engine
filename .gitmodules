@@ -6,8 +6,4 @@
 	path = penguin-config
     url = https://github.com/Henrik-N/penguin-config
     branch = master
-[submodule "penguin-config-derive"]
-	path = penguin-config-derive
-    url = https://github.com/Henrik-N/penguin-config-derive
-    branch = master
 

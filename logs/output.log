@@ -2021,3 +2021,180 @@ _______________
 [35m 22:12:46 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
 [32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
 [32m 22:12:46 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 22:35:25 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 22:35:25 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 22:35:25 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 22:35:25 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 22:35:25 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 22:35:25 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 1966080, alignment: 1024, memory_type_bits: 132 }
+[31m 22:35:25 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x560428fc3050
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 22:35:25 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 22:35:25 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 22:35:25 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 22:35:25 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 22:35:25 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 22:35:25 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 00:58:32 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 00:58:32 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 00:58:32 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 00:58:32 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 00:58:32 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN VALIDATION] Validation Information: [ VUID-NONE ] Object 0: handle = 0x5650868e30b0, type = VK_OBJECT_TYPE_DEVICE; | MessageID = 0x745174a4 | Cannot open shader validation cache at //tmp//shader_validation_cache.bin for reading (it may not exist yet)
+[35m 00:58:32 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 1966080, alignment: 1024, memory_type_bits: 132 }
+[31m 00:58:32 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x5650868e30b0
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 00:58:32 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 00:58:32 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 00:58:32 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 00:58:32 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 00:58:32 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 00:58:32 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 01:00:10 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 01:00:10 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 01:00:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 01:00:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 01:00:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 01:00:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 1966080, alignment: 1024, memory_type_bits: 132 }
+[31m 01:00:10 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x564affe9ff60
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRENDERER SHUTDOWN STARTED!
+[35m 01:00:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: waiting for device idle..
+[35m 01:00:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::sync::context] [0mRenderer: device now idle
+[35m 01:00:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::frame_buffers] [0mDestroying frame buffers
+[35m 01:00:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::swapchain] [0mDestroying swapchain image views
+[35m 01:00:10 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::pipeline::pipeline] [0mPipeline gets destroyed!
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Unloading layer library libVkLayer_khronos_validation.so
+[32m 01:00:10 | [32mINFO[0m | [32m[penguin_renderer::renderer::startup_shutdown] [0mRenderer finished!
+[32m 01:14:09 | [32mINFO[0m | [32m[winit::platform_impl::platform::x11::window] [0mGuessed window scale factor: 1.5
+[35m 01:14:09 | [35mDEBUG[0m | [35m[winit::platform_impl::platform::x11::window] [0mCalculated physical dimensions: 640x400
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::instance] [0mUsing Vulkan version 1.2.186
+[35m 01:14:09 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::debug::validation_layers] [0mRequired validation layer [VK_LAYER_KHRONOS_validation] is supported
+[35m 01:14:09 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mFound 1 physical devices with Vulkan support
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mPhysical device: Discrete GPU
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mAvailable queue families:
+	queue family 0: graphics: 1 compute: 1 transfer: 1
+	queue family 1: graphics: 0 compute: 0 transfer: 1
+	queue family 2: graphics: 0 compute: 1 transfer: 1
+
+[35m 01:14:09 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::vk_context::physical_device::init] [0mRequired extension: VK_KHR_swapchain is supported.
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Loading layer library libVkLayer_khronos_validation.so
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m[VULKAN GENERAL] Inserted device layer VK_LAYER_KHRONOS_validation (libVkLayer_khronos_validation.so)
+[35m 01:14:09 | [35mDEBUG[0m | [35m[penguin_renderer::renderer::vk_types::depth_image] [0mdepth format: D16_UNORM
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_image] [0mimage memory requirements: MemoryRequirements { size: 655360, alignment: 1024, memory_type_bits: 132 }
+[31m 01:14:09 | [31mERROR[0m | [31m[penguin_renderer::renderer::vk_types::vk_context::debug_messenger::init] [0m
+[VULKAN VALIDATION]
+	VkShaderModuleCreateInfo-pCode
+	| 0 | VK_OBJECT_TYPE_DEVICE: 0x5651326b3a10
+
+MSG:  vkCreateShaderModule(): The SPIR-V Capability (DrawParameters) was declared, but none of the requirements were met to use it. 
+
+ISSUE: If pCode declares any of the capabilities listed in the SPIR-V Environment appendix, one of the corresponding requirements must be satisfied.
+
+SPEC: (https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/1.2-extensions/vkspec.html#VUID-VkShaderModuleCreateInfo-pCode-01091)
+_______________
+
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 512
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 512
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 640000
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 640000
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::allocated_buffer] [0mMEMORY SIZE: 7520256
+[32m 01:14:09 | [32mINFO[0m | [32m[penguin_renderer::renderer::memory::device_memory] [0mMEMORY SIZE: 7520256
