@@ -9,12 +9,6 @@ mod uniforms {
         pub data: Vec4,
         pub proj_view: Mat4,
     }
-
-    #[derive(Default, Clone, Copy)]
-    #[repr(C)]
-    pub struct GPUObjectDataOld {
-        pub transform: Mat4,
-    }
 }
 
 pub use buffers::*;
@@ -23,7 +17,7 @@ mod buffers {
 
     #[derive(Default, Clone, Copy)]
     #[repr(C)]
-    pub struct GPUObjectDataNew {
+    pub struct GPUObjectData {
         pub transform: Mat4,
     }
 }

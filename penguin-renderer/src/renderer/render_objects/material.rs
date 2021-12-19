@@ -1,9 +1,11 @@
 use ash::vk;
-use crate::renderer::vk_types::{Pipeline, VkContext};
+use crate::renderer::vk_types::{DescriptorSetContainer, Pipeline, VkContext};
 
 #[derive(Clone)]
 pub struct Material {
     pub pipeline: Pipeline,
+    //pub descriptor_set: DescriptorSetContainer,
+    //pub pipeline_layout: vk::PipelineLayout,
 }
 impl PartialEq for Material {
     fn eq(&self, other: &Self) -> bool {

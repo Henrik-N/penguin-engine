@@ -1,5 +1,5 @@
 use penguin_config::PenguinConfig;
-use penguin_app::{App, AppBuilder, config::AppConfig};
+use penguin_app::{App, config::AppConfig};
 
 
 fn main() {

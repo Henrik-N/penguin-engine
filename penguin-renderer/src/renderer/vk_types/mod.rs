@@ -13,8 +13,8 @@ mod depth_image;
 pub use depth_image::*;
 
 
-pub mod descriptor;
-pub use descriptor::*;
+pub mod descriptor_sets;
+pub use descriptor_sets::*;
 
 
 
@@ -28,7 +28,7 @@ mod render_pass;
 pub use render_pass::*;
 
 pub mod resources {
-    pub use super::descriptor::resource::*;
+    pub use super::descriptor_sets::resource::*;
 }
 
 pub use crate::renderer::shader::*;

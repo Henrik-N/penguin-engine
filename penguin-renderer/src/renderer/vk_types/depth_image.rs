@@ -1,5 +1,5 @@
 use ash::vk;
-use crate::renderer::memory::AllocatedImage;
+use crate::renderer::memory::{AllocatedImage, AllocatedImageCreateInfo, MemoryUsage};
 use crate::renderer::vk_types::{Swapchain, VkContext};
 
 pub struct DepthImage {
@@ -41,21 +41,25 @@ impl DepthImage {
 
         let depth_image = AllocatedImage::create(
             context,
-            vk::ImageCreateInfo::builder()
-                .image_type(vk::ImageType::TYPE_2D)
-                .format(depth_image_format)
-                .extent(vk::Extent3D {
-                    width: swapchain.extent.width,
-                    height: swapchain.extent.height,
-                    depth: 1,
-                })
-                .mip_levels(1)
-                .array_layers(1)
-                .samples(vk::SampleCountFlags::TYPE_1)
-                .tiling(vk::ImageTiling::OPTIMAL)
-                .usage(vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT)
-                .sharing_mode(vk::SharingMode::EXCLUSIVE),
-        );
+            AllocatedImageCreateInfo {
+                image_create_info: {
+                    vk::ImageCreateInfo::builder()
+                        .image_type(vk::ImageType::TYPE_2D)
+                        .format(depth_image_format)
+                        .extent(vk::Extent3D {
+                            width: swapchain.extent.width,
+                            height: swapchain.extent.height,
+                            depth: 1,
+                        })
+                        .mip_levels(1)
+                        .array_layers(1)
+                        .samples(vk::SampleCountFlags::TYPE_1)
+                        .tiling(vk::ImageTiling::OPTIMAL)
+                        .usage(vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT)
+                        .sharing_mode(vk::SharingMode::EXCLUSIVE)
+                },
+                memory_usage: MemoryUsage::GpuOnly,
+            });
 
         let image_view_create_info = vk::ImageViewCreateInfo::builder()
             .image(depth_image.handle)

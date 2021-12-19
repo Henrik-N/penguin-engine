@@ -9,3 +9,6 @@ pub use render_object::*;
 
 mod vertex;
 pub use vertex::*;
+
+mod texture;
+pub use texture::*;

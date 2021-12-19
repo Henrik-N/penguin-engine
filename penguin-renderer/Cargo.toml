@@ -33,6 +33,12 @@ version = "0.7.0"
 [dependencies.shaderc]  # shader compilation tools
 version = "0.7"
 
+# ----- Textures ----- #
+[dependencies.stb]
+version = "0.3.2"
+default-features = false
+features = ["stb_image"]
+
 
 # ----- Utility ----- #
 [dependencies.macaw] # math

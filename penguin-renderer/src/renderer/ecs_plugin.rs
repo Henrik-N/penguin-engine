@@ -1,11 +1,11 @@
 use penguin_app::ecs::*;
-use penguin_app::time_plugin::Time;
 
 use crate::renderer::{
     resources::{MaterialsResource, MeshesResource, RenderObjectsResource},
     render_loop,
     startup_shutdown,
 };
+use crate::renderer::resources::TexturesResource;
 use crate::renderer::vk_types::resource::DescriptorSetsResource;
 
 pub struct RendererPlugin;
@@ -15,6 +15,7 @@ impl Plugin for RendererPlugin {
 
         resources.insert(MeshesResource::default());
         resources.insert(MaterialsResource::default());
+        resources.insert(TexturesResource::default());
         resources.insert(RenderObjectsResource::default());
         resources.insert(DescriptorSetsResource::default());
 

@@ -20,6 +20,7 @@ impl AllocatedBuffer {
 }
 
 
+
 impl AllocatedBuffer {
     /// write to allocated gpu memory
     pub fn write_memory<T: Copy>(
@@ -59,10 +60,6 @@ impl<'a, T> Default for AllocatedBufferCreateInfo<'a, T> {
 
 impl AllocatedBuffer {
     pub fn create_buffer<T: Copy>(context: &VkContext, create_info: AllocatedBufferCreateInfo<T>) -> Self {
-        println!(
-            "BUFFER SIZE {}",
-            std::mem::size_of_val(create_info.initial_data) as u64
-        );
 
         let buffer = context.create_buffer(vk::BufferCreateInfo::builder()
             .size(create_info.buffer_size)

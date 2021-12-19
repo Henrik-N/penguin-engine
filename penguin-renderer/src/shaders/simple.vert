@@ -7,9 +7,9 @@ layout (set = 0, binding = 0) uniform GPUCameraData {
     mat4 proj_view;
 } u_camera;
 
-layout (set = 0, binding = 1) uniform GPUObjectDataOld {
-    mat4 transform;
-} u_object;
+//layout (set = 0, binding = 1) uniform GPUObjectDataOld {
+//    mat4 transform;
+//} u_object;
 
 
 struct RenderObjectData {
@@ -26,9 +26,10 @@ layout (std140, set = 1, binding = 0) readonly buffer GPUObjectDataNew {
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec3 v_color;
+layout (location = 3) in vec2 v_uv;
 
 layout (location = 0) out vec3 frag_color;
-
+layout (location = 1) out vec2 uv;
 
 void main() {
     mat4 model_matrix = object_buffer.objects[gl_BaseInstance].model_transform;
@@ -38,4 +39,5 @@ void main() {
     gl_Position = transform_matrix * vec4(v_position, 1.0);
 
     frag_color = v_color;
+    uv = v_uv;
 }

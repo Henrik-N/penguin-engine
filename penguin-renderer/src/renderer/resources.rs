@@ -1,8 +1,9 @@
 // ----------------- RESOURCES -----------------
 use std::collections::HashMap;
 use crate::renderer::memory::UploadContext;
-use crate::renderer::render_objects::{Material, Mesh, RenderObject};
+use crate::renderer::render_objects::{Material, Mesh, RenderObject, Texture};
 use crate::renderer::vk_types::{VkContext, Pipeline};
+
 
 
 #[derive(Default)]
@@ -18,13 +19,38 @@ impl std::ops::Deref for RenderObjectsResource {
 }
 
 
+
+#[derive(Default)]
+pub struct TexturesResource {
+    textures: HashMap<String, Texture>,
+}
+impl TexturesResource {
+    pub fn destroy(&mut self, context: &VkContext) {
+        self.textures.iter_mut().for_each(|(_name, texture)| texture.destroy(context));
+    }
+
+    pub fn insert_from_file(&mut self, context: &VkContext, upload_context: &UploadContext, (name, file_name): (&str, &str)) {
+        self.textures.insert(name.to_owned(), Texture::from_image_file(
+            context,
+            upload_context,
+            file_name,
+        ));
+    }
+
+    pub fn get(&self, name: &str) -> &Texture {
+        let name = name.to_owned();
+        self.textures.get(&name).expect(&format!("no texture called {}", name))
+    }
+}
+
+
 #[derive(Default)]
 pub struct MeshesResource {
     meshes: HashMap<String, Mesh>,
 }
 impl MeshesResource {
     pub fn destroy(&mut self, context: &VkContext) {
-        self.meshes.iter_mut().for_each(|(_name, mesh)| mesh.destroy(&context));
+        self.meshes.iter_mut().for_each(|(_name, mesh)| mesh.destroy(context));
     }
 
     pub fn insert_from_file(&mut self, context: &VkContext, upload_context: &UploadContext, (name, file_name): (&str, &str)) {

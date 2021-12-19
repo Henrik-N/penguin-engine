@@ -1,10 +1,11 @@
+use std::any::Any;
 use ash::vk;
-use crate::math_vk_format::Vec3;
+use crate::math_vk_format::{Vec2, Vec3};
 use crate::renderer::memory::{AllocatedBuffer, AllocatedBufferCreateInfo, DeviceMemoryWriteInfo, MemoryUsage, UploadContext};
 use crate::renderer::render_objects::Vertex;
 use crate::renderer::vk_types::VkContext;
 
-const MESHES_FOLDER_PATH: &'static str = "penguin-renderer/assets/meshes/";
+const MESHES_FOLDER_PATH: &str = "penguin-renderer/assets/meshes/";
 
 #[derive(Clone)]
 pub struct Mesh {
@@ -24,11 +25,12 @@ impl Mesh {
     }
 
     pub fn from_obj(context: &VkContext, upload_context: &UploadContext, file_name: &str) -> Self {
-        let file_path = String::from(MESHES_FOLDER_PATH.clone().to_string() + file_name);
+        let file_path = String::from(MESHES_FOLDER_PATH.to_owned() + file_name);
 
         let (vertices, vertex_count) = Self::load_verts_indices_from_obj(&file_path);
 
-        let size = std::mem::size_of::<Vertex>() * vertices.len();
+        let size = std::mem::size_of::<Vertex>() * vertex_count;
+        println!("mesh size: {}", size);
         //
         let mut staging_buffer = AllocatedBuffer::create_buffer(context, AllocatedBufferCreateInfo::<Vertex> {
             buffer_size: size as _,
@@ -54,21 +56,7 @@ impl Mesh {
         });
 
         upload_context.immediate_submit(context, |cmd_buffer| {
-            let copy = vk::BufferCopy {
-                src_offset: 0,
-                dst_offset: 0,
-                size: size as _,
-            };
-            let regions = [copy];
-
-            unsafe {
-                context.device.cmd_copy_buffer(
-                    cmd_buffer,
-                    staging_buffer.handle,
-                    gpu_buffer.handle,
-                    &regions,
-                )
-            }
+            context.copy_buffer(cmd_buffer, staging_buffer.handle, gpu_buffer.handle, size);
         });
 
         staging_buffer.destroy(context);
@@ -91,34 +79,55 @@ impl Mesh {
             Vec3::new(0., 0., 1.),
         );
 
-        for [a, b, c] in model.triangles() {
-            let a = a.position();
-            let b = b.position();
-            let c = c.position();
+        //log::info!("UV COUNT: {} ----------------- TRI COUNT: {}", model.triangles() as _, model.uvs().len());
+        //let uvs = model.uvs();
 
-            let a = Vec3::new(a[0], a[1], a[2]);
-            let b = Vec3::new(b[0], b[1], b[2]);
-            let c = Vec3::new(c[0], c[1], c[2]);
+        log::info!("UV COUNT: {}--------------------------------", model.uvs().len());
 
+
+        //for [a, b, c] in model.triangles()
+        for tri in model.triangles() {
+            let (a, b, c) = {
+                let (a, b, c): ([f32; 3], _, _) = (tri[0].position(), tri[1].position(), tri[2].position());
+                let a = Vec3::new(a[0], a[1], a[2]);
+                let b = Vec3::new(b[0], b[1], b[2]);
+                let c = Vec3::new(c[0], c[1], c[2]);
+                (a, b, c)
+            };
+
+            let uv = tri[0].uv().expect("mesh has no UVs");
             verts.push(Vertex {
                 position: a,
                 color: red,
                 normal: red,
+                uv: Vec2::new(uv[0], -uv[1]),
             });
+
+            let uv = tri[1].uv().expect("mesh has no UVs");
             verts.push(Vertex {
                 position: b,
                 color: green,
                 normal: green,
+                uv: Vec2::new(uv[0], -uv[1]),
             });
+
+            let uv = tri[2].uv().expect("mesh has no UVs");
             verts.push(Vertex {
                 position: c,
                 color: blue,
                 normal: blue,
+                uv: Vec2::new(uv[0], -uv[1]),
             });
+
         }
 
         let verts_count = verts.len();
 
         (verts, verts_count)
     }
+}
+
+
+fn vec3_from_f32_arr(arr: [f32; 3]) -> Vec3 {
+    Vec3::new(arr[0], arr[1], arr[2])
 }

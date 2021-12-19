@@ -5,6 +5,27 @@ use crate::renderer::vk_types::VkContext;
 
 
 impl VkContext {
+    pub fn copy_buffer(&self, command_buffer: vk::CommandBuffer, src: vk::Buffer, dst: vk::Buffer, size: usize) {
+        let copy = vk::BufferCopy {
+            src_offset: 0,
+            dst_offset: 0,
+            size: size as _,
+        };
+        let regions = [copy];
+
+        unsafe {
+            self.device.cmd_copy_buffer(
+                command_buffer,
+                src,
+                dst,
+                &regions,
+            )
+        }
+    }
+}
+
+
+impl VkContext {
     pub fn packed_uniform_buffer_range<T>(&self) -> u64 {
         let min_offset_align = self.min_uniform_buffer_offset_alignment();
         let packed_range = memory::util::packed_range_from_min_align::<T>(min_offset_align);

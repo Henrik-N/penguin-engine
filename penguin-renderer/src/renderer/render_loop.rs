@@ -7,7 +7,7 @@ use crate::math_vk_format::{Mat4, Vec3, Vec4};
 
 use crate::renderer::{
     frame_data::{FrameData, FrameDataContainer},
-    gpu_data::{GPUCameraData, GPUObjectDataNew, GPUObjectDataOld},
+    gpu_data::{GPUCameraData, GPUObjectData},
     memory::DeviceMemoryWriteInfo,
     render_commands::{self, SubmitRenderCommandsParams},
     resources::{MaterialsResource, MeshesResource, RenderObjectsResource},
@@ -48,7 +48,7 @@ fn draw(draw_params: DrawFunctionParams) {
     let mesh = resources.meshes.get("monkey");
 
     // create mvp matrix
-    let camera_loc = Vec3::new(0.0, 0.0, -2.0);
+    let camera_loc = Vec3::new(0.0, 10., -2.0);
     let camera_forward = Vec3::new(0.0, 0.0, 1.0);
     let camera_up = Vec3::new(0.0, 1.0, 0.0);
 
@@ -61,9 +61,9 @@ fn draw(draw_params: DrawFunctionParams) {
     context.bind_descriptor_sets(BindDescriptorSetsInfo {
         command_buffer: params.frame_data.command_buffer,
         pipeline_bind_point: vk::PipelineBindPoint::GRAPHICS,
-        pipeline_layout: resources.descriptor_sets.get_set(0).layout.pipeline,
+        pipeline_layout: resources.descriptor_sets.get_set(0).pipeline_layout,
         first_set: 0,
-        descriptor_set_handles: &resources.descriptor_sets.get_set_handles(&[0, 1]),
+        descriptor_set_handles: &resources.descriptor_sets.get_set_handles(&[0, 1, /*2*/]),
     });
 
 
@@ -85,33 +85,15 @@ fn draw(draw_params: DrawFunctionParams) {
         }
     );
 
+    //let spin = (params.frame_count as f32 * 0.4).to_radians();
+    let spin = 0.0_f32.to_radians();
 
-    let spin = (params.frame_count as f32 * 0.4).to_radians();
-
-
-    let buffer_data = [GPUObjectDataOld {
-        transform: Mat4::from_rotation_x(spin),
-    }];
-
-    let alignment = context.packed_uniform_buffer_range::<GPUObjectDataOld>();
-    let offset = (params.frame_data.frame_index) as u64 * alignment;
-    resources.descriptor_sets.get_set(0).allocated_buffers[1].write_memory(
-        &context,
-        DeviceMemoryWriteInfo {
-            data: &buffer_data,
-            size: alignment,
-            offset,
-            alignment
-        }
-    );
-
-
-    let buffer_data = [GPUObjectDataNew {
+    let buffer_data = [GPUObjectData {
         transform: Mat4::from_rotation_x(spin),
     }];
 
 
-    let alignment = std::mem::align_of::<GPUObjectDataNew>() as _;
+    let alignment = std::mem::align_of::<GPUObjectData>() as _;
     resources.descriptor_sets.get_set(1).allocated_buffers[0].write_memory(
         &context,
         DeviceMemoryWriteInfo {
@@ -123,8 +105,11 @@ fn draw(draw_params: DrawFunctionParams) {
     );
 
 
+
     // bind pipeline
     resources.render_objects.render_objects[0].material.bind(&context, params.frame_data.command_buffer);
+
+
 
     unsafe {
         // bind vertex buffers
