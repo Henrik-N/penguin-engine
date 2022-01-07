@@ -10,4 +10,3 @@ pub fn raw_c_string_to_string(c_string: &[std::os::raw::c_char]) -> String {
         .expect("Couldn't convert c string.")
         .to_owned()
 }
-

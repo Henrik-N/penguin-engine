@@ -1,5 +1,5 @@
-use crate::math_vk_format::*;
 use crate::core::utility;
+use crate::math_vk_format::*;
 use ash::vk;
 
 pub mod prelude {
@@ -30,9 +30,6 @@ impl PushConstants for MeshPushConstants {
         unsafe { utility::as_u8_slice(self) }
     }
 }
-
-
-
 
 //use crate::engine::renderer::pipeline::PPipelineBuilder;
 

@@ -1,9 +1,11 @@
-use std::any::Any;
-use ash::vk;
 use crate::math_vk_format::{Vec2, Vec3};
-use crate::renderer::memory::{AllocatedBuffer, AllocatedBufferCreateInfo, DeviceMemoryWriteInfo, MemoryUsage, UploadContext};
+use crate::renderer::memory::{
+    AllocatedBuffer, AllocatedBufferCreateInfo, DeviceMemoryWriteInfo, MemoryUsage, UploadContext,
+};
 use crate::renderer::render_objects::Vertex;
 use crate::renderer::vk_types::VkContext;
+use ash::vk;
+use std::any::Any;
 
 const MESHES_FOLDER_PATH: &str = "penguin-renderer/assets/meshes/";
 
@@ -32,28 +34,38 @@ impl Mesh {
         let size = std::mem::size_of::<Vertex>() * vertex_count;
         println!("mesh size: {}", size);
         //
-        let mut staging_buffer = AllocatedBuffer::create_buffer(context, AllocatedBufferCreateInfo::<Vertex> {
-            buffer_size: size as _,
-            buffer_usage: vk::BufferUsageFlags::TRANSFER_SRC,
-            memory_usage: MemoryUsage::CpuMemGpuVisible,
-            sharing_mode: vk::SharingMode::EXCLUSIVE,
-            ..Default::default()
-        });
+        let mut staging_buffer = AllocatedBuffer::create_buffer(
+            context,
+            AllocatedBufferCreateInfo::<Vertex> {
+                buffer_size: size as _,
+                buffer_usage: vk::BufferUsageFlags::TRANSFER_SRC,
+                memory_usage: MemoryUsage::CpuMemGpuVisible,
+                sharing_mode: vk::SharingMode::EXCLUSIVE,
+                ..Default::default()
+            },
+        );
 
-        staging_buffer.write_memory(context, DeviceMemoryWriteInfo {
-            data: &vertices,
-            size: size as _,
-            offset: 0,
-            alignment: std::mem::align_of::<Vertex>() as _,
-        });
+        staging_buffer.write_memory(
+            context,
+            DeviceMemoryWriteInfo {
+                data: &vertices,
+                size: size as _,
+                offset: 0,
+                alignment: std::mem::align_of::<Vertex>() as _,
+            },
+        );
 
-        let gpu_buffer = AllocatedBuffer::create_buffer(context, AllocatedBufferCreateInfo::<Vertex> {
-            buffer_size: size as _,
-            buffer_usage: vk::BufferUsageFlags::VERTEX_BUFFER | vk::BufferUsageFlags::TRANSFER_DST,
-            memory_usage: MemoryUsage::GpuOnly,
-            sharing_mode: vk::SharingMode::EXCLUSIVE,
-            ..Default::default()
-        });
+        let gpu_buffer = AllocatedBuffer::create_buffer(
+            context,
+            AllocatedBufferCreateInfo::<Vertex> {
+                buffer_size: size as _,
+                buffer_usage: vk::BufferUsageFlags::VERTEX_BUFFER
+                    | vk::BufferUsageFlags::TRANSFER_DST,
+                memory_usage: MemoryUsage::GpuOnly,
+                sharing_mode: vk::SharingMode::EXCLUSIVE,
+                ..Default::default()
+            },
+        );
 
         upload_context.immediate_submit(context, |cmd_buffer| {
             context.copy_buffer(cmd_buffer, staging_buffer.handle, gpu_buffer.handle, size);
@@ -82,13 +94,16 @@ impl Mesh {
         //log::info!("UV COUNT: {} ----------------- TRI COUNT: {}", model.triangles() as _, model.uvs().len());
         //let uvs = model.uvs();
 
-        log::info!("UV COUNT: {}--------------------------------", model.uvs().len());
-
+        log::info!(
+            "UV COUNT: {}--------------------------------",
+            model.uvs().len()
+        );
 
         //for [a, b, c] in model.triangles()
         for tri in model.triangles() {
             let (a, b, c) = {
-                let (a, b, c): ([f32; 3], _, _) = (tri[0].position(), tri[1].position(), tri[2].position());
+                let (a, b, c): ([f32; 3], _, _) =
+                    (tri[0].position(), tri[1].position(), tri[2].position());
                 let a = Vec3::new(a[0], a[1], a[2]);
                 let b = Vec3::new(b[0], b[1], b[2]);
                 let c = Vec3::new(c[0], c[1], c[2]);
@@ -118,7 +133,6 @@ impl Mesh {
                 normal: blue,
                 uv: Vec2::new(uv[0], -uv[1]),
             });
-
         }
 
         let verts_count = verts.len();
@@ -126,7 +140,6 @@ impl Mesh {
         (verts, verts_count)
     }
 }
-
 
 fn vec3_from_f32_arr(arr: [f32; 3]) -> Vec3 {
     Vec3::new(arr[0], arr[1], arr[2])

@@ -1,8 +1,7 @@
 // -------------------------- INSTANCE ----------------------------
+use anyhow::*;
 use ash::vk;
 use std::ffi::{CStr, CString};
-use anyhow::*;
-
 
 pub struct Instance {
     pub(super) entry: ash::Entry,
@@ -20,7 +19,8 @@ impl std::ops::Deref for Instance {
 impl Instance {
     pub fn init(window: &penguin_app::window::Window) -> Result<Self> {
         let entry = unsafe { ash::Entry::new() }?;
-        let required_surface_extensions = ash_window::enumerate_required_extensions(&window.handle)?;
+        let required_surface_extensions =
+            ash_window::enumerate_required_extensions(&window.handle)?;
 
         log::trace!("Creating Vulkan instance.");
         let instance: ash::Instance = create_ash_instance(&entry, &required_surface_extensions)?;
@@ -31,7 +31,6 @@ impl Instance {
         })
     }
 }
-
 
 fn create_ash_instance(
     entry: &ash::Entry,

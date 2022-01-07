@@ -1,6 +1,6 @@
-use ash::vk;
 use crate::renderer::vk_types::vk_context::instance::Instance;
 use anyhow::*;
+use ash::vk;
 
 pub struct DebugMessenger {
     pub debug_utils_loader: ash::extensions::ext::DebugUtils,
@@ -10,10 +10,7 @@ pub struct DebugMessenger {
 impl DebugMessenger {
     pub(crate) fn init(instance: &Instance, log_level_filter: log::LevelFilter) -> Result<Self> {
         let (debug_utils_loader, debug_messenger) =
-            init_vk_debug_messenger(
-                &instance.entry,
-                &instance.handle,
-                log_level_filter)?;
+            init_vk_debug_messenger(&instance.entry, &instance.handle, log_level_filter)?;
 
         Ok(Self {
             debug_utils_loader,
@@ -22,13 +19,14 @@ impl DebugMessenger {
     }
 }
 
-
-
 fn init_vk_debug_messenger(
     entry: &ash::Entry,
     instance: &ash::Instance,
     debug_log_level: log::LevelFilter,
-) -> Result<(ash::extensions::ext::DebugUtils, Option<vk::DebugUtilsMessengerEXT>)> {
+) -> Result<(
+    ash::extensions::ext::DebugUtils,
+    Option<vk::DebugUtilsMessengerEXT>,
+)> {
     log::trace!("Creating Vulkan utility messenger");
 
     let debug_utils_loader = ash::extensions::ext::DebugUtils::new(entry, instance);
@@ -37,10 +35,7 @@ fn init_vk_debug_messenger(
 
     let utils_messenger = if crate::config::VK_VALIDATION.is_enabled {
         unsafe {
-            Some(
-                debug_utils_loader
-                    .create_debug_utils_messenger(&messenger_create_info, None)?,
-            )
+            Some(debug_utils_loader.create_debug_utils_messenger(&messenger_create_info, None)?)
         }
     } else {
         None
@@ -49,7 +44,6 @@ fn init_vk_debug_messenger(
     Ok((debug_utils_loader, utils_messenger))
 }
 
-
 mod init {
     //////////////
     use ash::vk;
@@ -57,7 +51,9 @@ mod init {
     use std::ffi::CStr;
     use std::os::raw::c_void;
 
-    pub fn debug_messenger_create_info(debug_log_level: log::LevelFilter) -> vk::DebugUtilsMessengerCreateInfoEXT {
+    pub fn debug_messenger_create_info(
+        debug_log_level: log::LevelFilter,
+    ) -> vk::DebugUtilsMessengerCreateInfoEXT {
         let message_severity = match debug_log_level {
             LevelFilter::Off => vk::DebugUtilsMessageSeverityFlagsEXT::empty(),
             LevelFilter::Error => vk::DebugUtilsMessageSeverityFlagsEXT::ERROR,

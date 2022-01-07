@@ -1,10 +1,9 @@
 #![allow(dead_code)]
 
-use crate::math_vk_format::*;
 use crate::core::config;
+use crate::math_vk_format::*;
 use ash::vk;
 use std::rc::Rc;
-
 
 /// Descriptor set layouts cache
 ///
@@ -75,9 +74,9 @@ mod descriptor_set_builder {
     //use super::descriptor_set_layout;
     use super::DescriptorSetAllocator;
     use super::DescriptorSetLayoutsCache;
-    use std::rc::Rc;
     use crate::renderer::memory;
     use crate::renderer::memory::MemType;
+    use std::rc::Rc;
 
     pub struct BufferCreationData {
         pub pd_properties: vk::PhysicalDeviceProperties,
@@ -133,7 +132,8 @@ mod descriptor_set_builder {
 
             // several instances means allocating at different times, memory needs to be packed for
             // it's buffer region
-            let packed_align = memory::packed_range_from_min_align::<DescriptorDataType>(min_ubuffer_offset_align);
+            let packed_align =
+                memory::packed_range_from_min_align::<DescriptorDataType>(min_ubuffer_offset_align);
             let mem_size = packed_align * instances as u64;
 
             let mem_range = std::mem::size_of::<DescriptorDataType>() as u64;
@@ -416,123 +416,123 @@ impl DescriptorSetBindingFrequency {
 // //        }
 // //    }
 
-    //pub fn new(
-    //    device: Rc<ash::Device>,
-    //    pd_properties: vk::PhysicalDeviceProperties,
-    //    pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
-    //    descriptor_pool: vk::DescriptorPool,
-    //) -> Self {
-    //    //let gb_packed_align = Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align); let fb_packed_align = Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align);
+//pub fn new(
+//    device: Rc<ash::Device>,
+//    pd_properties: vk::PhysicalDeviceProperties,
+//    pd_memory_properties: vk::PhysicalDeviceMemoryProperties,
+//    descriptor_pool: vk::DescriptorPool,
+//) -> Self {
+//    //let gb_packed_align = Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align); let fb_packed_align = Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align);
 
-    //    // With the minimum offset alignment we can define the offsets of the
-    //    // the different subtypes
-    //    let min_ubuffer_offset_align = pd_properties.limits.min_uniform_buffer_offset_alignment;
+//    // With the minimum offset alignment we can define the offsets of the
+//    // the different subtypes
+//    let min_ubuffer_offset_align = pd_properties.limits.min_uniform_buffer_offset_alignment;
 
-    //    let gb_packed_align =
-    //        Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align);
-    //    let fb_packed_align =
-    //        Self::packed_range_from_min_align::<UniformBufferFrameData>(min_ubuffer_offset_align);
+//    let gb_packed_align =
+//        Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align);
+//    let fb_packed_align =
+//        Self::packed_range_from_min_align::<UniformBufferFrameData>(min_ubuffer_offset_align);
 
-    //    // The function create_buffer automatically aligns the memory upon creation
-    //    // based on the given struct's size.
-    //    let packed_size_bytes: u64 =
-    //        gb_packed_align + fb_packed_align * config::MAX_FRAMES_COUNT as u64;
-    //    let initial_data: Vec<u8> = (0..packed_size_bytes).map(|_| 0_u8).collect();
+//    // The function create_buffer automatically aligns the memory upon creation
+//    // based on the given struct's size.
+//    let packed_size_bytes: u64 =
+//        gb_packed_align + fb_packed_align * config::MAX_FRAMES_COUNT as u64;
+//    let initial_data: Vec<u8> = (0..packed_size_bytes).map(|_| 0_u8).collect();
 
-    //    let gb_create_info = AllocatedBufferCreateInfo {
-    //        pd_memory_properties,
-    //        initial_data: &initial_data, // size of allocated memory will be size of initial_data, the rest of the size is for dynamic mem
-    //        buffer_usage: vk::BufferUsageFlags::UNIFORM_BUFFER,
-    //        memory_usage: MemoryUsage::CpuToGpu,
-    //        memory_map_flags: vk::MemoryMapFlags::empty(),
-    //        sharing_mode: vk::SharingMode::EXCLUSIVE,
-    //    };
+//    let gb_create_info = AllocatedBufferCreateInfo {
+//        pd_memory_properties,
+//        initial_data: &initial_data, // size of allocated memory will be size of initial_data, the rest of the size is for dynamic mem
+//        buffer_usage: vk::BufferUsageFlags::UNIFORM_BUFFER,
+//        memory_usage: MemoryUsage::CpuToGpu,
+//        memory_map_flags: vk::MemoryMapFlags::empty(),
+//        sharing_mode: vk::SharingMode::EXCLUSIVE,
+//    };
 
-    //    let global_buffer = AllocatedBuffer::create_buffer(&gb_create_info);
+//    let global_buffer = AllocatedBuffer::create_buffer(&gb_create_info);
 
-    //    // descriptor layouts
-    //    let global_layout = UniformBufferGlobalData::create_descriptor_set_layout(&device);
-    //    let frames_layout = UniformBufferFrameData::create_descriptor_set_layout(&device);
-    //    let descriptor_set_layouts = [global_layout, frames_layout];
+//    // descriptor layouts
+//    let global_layout = UniformBufferGlobalData::create_descriptor_set_layout(&device);
+//    let frames_layout = UniformBufferFrameData::create_descriptor_set_layout(&device);
+//    let descriptor_set_layouts = [global_layout, frames_layout];
 
-    //    let descriptor_sets_allocate_info = vk::DescriptorSetAllocateInfo::builder()
-    //        .descriptor_pool(descriptor_pool)
-    //        .set_layouts(&descriptor_set_layouts);
+//    let descriptor_sets_allocate_info = vk::DescriptorSetAllocateInfo::builder()
+//        .descriptor_pool(descriptor_pool)
+//        .set_layouts(&descriptor_set_layouts);
 
-    //    // descriptor sets
-    //    log::debug!("Allocating descriptor sets.");
-    //    let allocated_descriptor_sets =
-    //        unsafe { device.allocate_descriptor_sets(&descriptor_sets_allocate_info) }
-    //            .expect("Couldn't allocate global descriptor set");
+//    // descriptor sets
+//    log::debug!("Allocating descriptor sets.");
+//    let allocated_descriptor_sets =
+//        unsafe { device.allocate_descriptor_sets(&descriptor_sets_allocate_info) }
+//            .expect("Couldn't allocate global descriptor set");
 
-    //    // descriptor buffer infos
-    //    let gb_packed_align =
-    //        Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align);
+//    // descriptor buffer infos
+//    let gb_packed_align =
+//        Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align);
 
-    //    let global_info = [
-    //        // global set
-    //        vk::DescriptorBufferInfo::builder()
-    //            .buffer(global_buffer.handle)
-    //            .offset(0)
-    //            .range(gb_packed_align)
-    //            //std::mem::size_of::<UniformBufferGlobalData>() as u64)
-    //            //std::mem::size_of::<
-    //            //Self::packed_global_range
-    //            //gb_packed_align)
-    //            //Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align))
-    //            .build(),
-    //    ];
+//    let global_info = [
+//        // global set
+//        vk::DescriptorBufferInfo::builder()
+//            .buffer(global_buffer.handle)
+//            .offset(0)
+//            .range(gb_packed_align)
+//            //std::mem::size_of::<UniformBufferGlobalData>() as u64)
+//            //std::mem::size_of::<
+//            //Self::packed_global_range
+//            //gb_packed_align)
+//            //Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align))
+//            .build(),
+//    ];
 
-    //    let fb_packed_align =
-    //        Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align);
+//    let fb_packed_align =
+//        Self::packed_range_from_min_align::<UniformBufferGlobalData>(min_ubuffer_offset_align);
 
-    //    let per_frame_info = [
-    //        // per-frame set
-    //        vk::DescriptorBufferInfo::builder()
-    //            .buffer(global_buffer.handle)
-    //            .offset(0)
-    //            .range(fb_packed_align as u64)
-    //            //std::mem::size_of::<UniformBufferFrameData>() as u64)
-    //            .build(),
-    //    ];
+//    let per_frame_info = [
+//        // per-frame set
+//        vk::DescriptorBufferInfo::builder()
+//            .buffer(global_buffer.handle)
+//            .offset(0)
+//            .range(fb_packed_align as u64)
+//            //std::mem::size_of::<UniformBufferFrameData>() as u64)
+//            .build(),
+//    ];
 
-    //    // write sets
-    //    let global_write_set = [
-    //        // global set, writing to binding 0
-    //        vk::WriteDescriptorSet::builder()
-    //            .dst_binding(UniformBufferGlobalData::binding_index())
-    //            .dst_set(allocated_descriptor_sets[0])
-    //            .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER)
-    //            .buffer_info(&global_info)
-    //            .build(),
-    //    ];
-    //    let frames_write_set = [vk::WriteDescriptorSet::builder()
-    //        .dst_binding(UniformBufferFrameData::binding_index())
-    //        .dst_set(allocated_descriptor_sets[1])
-    //        .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER_DYNAMIC)
-    //        .buffer_info(&per_frame_info)
-    //        .build()];
+//    // write sets
+//    let global_write_set = [
+//        // global set, writing to binding 0
+//        vk::WriteDescriptorSet::builder()
+//            .dst_binding(UniformBufferGlobalData::binding_index())
+//            .dst_set(allocated_descriptor_sets[0])
+//            .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER)
+//            .buffer_info(&global_info)
+//            .build(),
+//    ];
+//    let frames_write_set = [vk::WriteDescriptorSet::builder()
+//        .dst_binding(UniformBufferFrameData::binding_index())
+//        .dst_set(allocated_descriptor_sets[1])
+//        .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER_DYNAMIC)
+//        .buffer_info(&per_frame_info)
+//        .build()];
 
-    //    let write_sets: Vec<_> = global_write_set
-    //        .into_iter()
-    //        .chain(frames_write_set)
-    //        .collect();
+//    let write_sets: Vec<_> = global_write_set
+//        .into_iter()
+//        .chain(frames_write_set)
+//        .collect();
 
-    //    unsafe {
-    //        device.update_descriptor_sets(&write_sets, &[]);
-    //    }
+//    unsafe {
+//        device.update_descriptor_sets(&write_sets, &[]);
+//    }
 
-    //    Self {
-    //        device: Rc::clone(&device),
-    //        min_ubuffer_offset_align,
-    //        global_layout,
-    //        global_set: allocated_descriptor_sets[0],
-    //        global_buffer,
-    //        frames_layout,
-    //        frames_set: allocated_descriptor_sets[1],
-    //        //frames_buffer,
-    //    }
-    //}
+//    Self {
+//        device: Rc::clone(&device),
+//        min_ubuffer_offset_align,
+//        global_layout,
+//        global_set: allocated_descriptor_sets[0],
+//        global_buffer,
+//        frames_layout,
+//        frames_set: allocated_descriptor_sets[1],
+//        //frames_buffer,
+//    }
+//}
 //}
 
 // struct UniformBufferBuilder<'a, T> {

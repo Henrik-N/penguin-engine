@@ -1,6 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::VkContext;
-
+use ash::vk;
 
 #[derive(Debug, Copy, Clone, Default)]
 pub struct DescriptorPool {
@@ -23,19 +22,29 @@ impl DescriptorPool {
     const MAX_UNIFORM_BUFFER_COUNT: u32 = 10;
     const MAX_DESCRIPTOR_SET_COUNT: u32 = 10;
 
-    pub fn from_sizes(context: &VkContext, max_descriptor_sets: u32, pool_sizes: &[vk::DescriptorPoolSize])
-                      -> Self {
+    pub fn from_sizes(
+        context: &VkContext,
+        max_descriptor_sets: u32,
+        flags: vk::DescriptorPoolCreateFlags,
+        pool_sizes: &[vk::DescriptorPoolSize],
+    ) -> Self {
         log::trace!("Creating descriptor pool.");
 
         let descriptor_pool_create_info = vk::DescriptorPoolCreateInfo::builder()
             .max_sets(max_descriptor_sets)
-            .pool_sizes(pool_sizes);
+            .pool_sizes(pool_sizes)
+            .flags(flags);
 
-        let descriptor_pool =
-            unsafe { context.device.create_descriptor_pool(&descriptor_pool_create_info, None) }
-                .expect("Couldn't create descriptor pool");
+        let descriptor_pool = unsafe {
+            context
+                .device
+                .create_descriptor_pool(&descriptor_pool_create_info, None)
+        }
+        .expect("Couldn't create descriptor pool");
 
-        Self { handle: descriptor_pool }
+        Self {
+            handle: descriptor_pool,
+        }
     }
 
     pub fn create_pool(device: &ash::Device) -> Self {
@@ -61,8 +70,10 @@ impl DescriptorPool {
 }
 
 impl DescriptorPool {
-    pub fn destroy(&mut self, context: &VkContext) {
-        unsafe { context.device.destroy_descriptor_pool(self.handle, None); }
+    pub fn destroy(&self, context: &VkContext) {
+        unsafe {
+            context.device.destroy_descriptor_pool(self.handle, None);
+        }
     }
 
     pub fn init(context: &VkContext) -> Self {
@@ -92,7 +103,7 @@ impl DescriptorPool {
                 .handle
                 .create_descriptor_pool(&descriptor_pool_create_info, None)
         }
-            .expect("Couldn't create descriptor pool");
+        .expect("Couldn't create descriptor pool");
 
         Self {
             handle: descriptor_pool,

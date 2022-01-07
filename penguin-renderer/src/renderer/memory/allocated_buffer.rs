@@ -1,14 +1,13 @@
-use ash::vk;
-use crate::renderer::memory::{DeviceMemoryWriteInfo, MemoryUsage};
 use crate::renderer::memory::device_memory::{DeviceMemory, DeviceMemoryCreateInfoFromBuffer};
+use crate::renderer::memory::{DeviceMemoryWriteInfo, MemoryUsage};
 use crate::renderer::vk_types::VkContext;
-
-
+use ash::vk;
 
 #[derive(Debug, Clone)]
 pub struct AllocatedBuffer {
     pub handle: vk::Buffer,
     memory: DeviceMemory,
+    size: vk::DeviceSize,
 }
 impl AllocatedBuffer {
     pub fn destroy(&mut self, context: &VkContext) {
@@ -19,20 +18,26 @@ impl AllocatedBuffer {
     }
 }
 
-
+impl AllocatedBuffer {
+    pub fn descriptor_buffer_info(&self, offset: vk::DeviceSize) -> vk::DescriptorBufferInfo {
+        vk::DescriptorBufferInfo::builder()
+            .buffer(self.handle)
+            .offset(offset)
+            .range(self.size)
+            .build()
+    }
+}
 
 impl AllocatedBuffer {
     /// write to allocated gpu memory
     pub fn write_memory<T: Copy>(
         &self,
         context: &VkContext,
-        write_memory_info: DeviceMemoryWriteInfo<T>) {
-
+        write_memory_info: DeviceMemoryWriteInfo<T>,
+    ) {
         self.memory.write_memory(context, write_memory_info);
     }
 }
-
-
 
 pub struct AllocatedBufferCreateInfo<'a, T> {
     pub initial_data: &'a [T],
@@ -56,15 +61,16 @@ impl<'a, T> Default for AllocatedBufferCreateInfo<'a, T> {
     }
 }
 
-
-
 impl AllocatedBuffer {
-    pub fn create_buffer<T: Copy>(context: &VkContext, create_info: AllocatedBufferCreateInfo<T>) -> Self {
-
-        let buffer = context.create_buffer(vk::BufferCreateInfo::builder()
-            .size(create_info.buffer_size)
-            .usage(create_info.buffer_usage)
-            .sharing_mode(create_info.sharing_mode)
+    pub fn create_buffer<T: Copy>(
+        context: &VkContext,
+        create_info: AllocatedBufferCreateInfo<T>,
+    ) -> Self {
+        let buffer = context.create_buffer(
+            vk::BufferCreateInfo::builder()
+                .size(create_info.buffer_size)
+                .usage(create_info.buffer_usage)
+                .sharing_mode(create_info.sharing_mode),
         );
 
         let memory_requirements: vk::MemoryRequirements =
@@ -80,8 +86,10 @@ impl AllocatedBuffer {
                 buffer,
                 memory_usage: create_info.memory_usage,
                 map_flags: create_info.memory_map_flags,
-            }
+            },
         );
+
+        let size = (std::mem::size_of::<T>() * create_info.initial_data.len()) as _;
 
         if create_info.initial_data.len() > 0 {
             // memcpy
@@ -89,7 +97,7 @@ impl AllocatedBuffer {
                 &context,
                 DeviceMemoryWriteInfo {
                     data: create_info.initial_data,
-                    size: (std::mem::size_of::<T>() * create_info.initial_data.len()) as _,
+                    size,
                     offset: 0,
                     alignment: std::mem::align_of::<T>() as _,
                 },
@@ -102,6 +110,7 @@ impl AllocatedBuffer {
         Self {
             handle: buffer,
             memory: device_memory,
+            size,
         }
     }
 }

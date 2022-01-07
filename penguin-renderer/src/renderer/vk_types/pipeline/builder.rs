@@ -1,5 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::{Pipeline, Shader, VkContext};
+use ash::vk;
 
 impl Pipeline {
     pub fn builder(
@@ -8,15 +8,9 @@ impl Pipeline {
         render_pass: vk::RenderPass,
         pipeline_bindpoint: vk::PipelineBindPoint,
     ) -> PipelineBuilder {
-        PipelineBuilder::default(
-            context,
-            swapchain_extent,
-            render_pass,
-            pipeline_bindpoint,
-        )
+        PipelineBuilder::default(context, swapchain_extent, render_pass, pipeline_bindpoint)
     }
 }
-
 
 pub struct PipelineBuilder<'a> {
     context: &'a VkContext,
@@ -152,7 +146,7 @@ impl<'a> PipelineBuilder<'a> {
                 .src_alpha_blend_factor(vk::BlendFactor::ONE)
                 .dst_alpha_blend_factor(vk::BlendFactor::ZERO)
                 .alpha_blend_op(vk::BlendOp::ADD), //
-            //.build()
+                                                   //.build()
         ];
 
         let color_blending = vk::PipelineColorBlendStateCreateInfo::builder()
@@ -223,7 +217,6 @@ impl<'a> PipelineBuilder<'a> {
 
         self
     }
-
 
     #[allow(unused)]
     fn add_vertex_shader_push_constants<PushConstantType>(&mut self, size: u32) {
@@ -362,15 +355,15 @@ impl<'a> PipelineBuilder<'a> {
         //    //.push_constant_ranges(&push_constant_ranges)
         //    ;
 
-
         //let pipeline_layout = unsafe {
         //    self.device
         //        .create_pipeline_layout(&pipeline_layout_create_info, None)
         //}
         //    .expect("Couldn't create pipeline layout");
 
-        let pipeline_layout = self.pipeline_layout.expect("no pipeline layout provided to pipeline builder");
-
+        let pipeline_layout = self
+            .pipeline_layout
+            .expect("no pipeline layout provided to pipeline builder");
 
         // Render pass
         let render_pass = self.render_pass;
@@ -402,7 +395,7 @@ impl<'a> PipelineBuilder<'a> {
                 None,
             )
         }
-            .expect("Couldn't create graphics pipeline");
+        .expect("Couldn't create graphics pipeline");
 
         Pipeline {
             handle: graphics_pipelines[0],

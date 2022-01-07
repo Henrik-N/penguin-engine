@@ -1,6 +1,5 @@
-use ash::vk;
 use crate::math_vk_format::{Vec2, Vec3, VkFormat};
-
+use ash::vk;
 
 #[derive(Clone, Copy, Default)]
 pub struct Vertex {
@@ -52,4 +51,3 @@ impl Vertex {
         ]
     }
 }
-

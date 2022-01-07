@@ -2,7 +2,6 @@ use crate::renderer::vk_types::vk_context::VkContext;
 /// ------------------------- VK COMPONENTS ----------------------------------
 use crate::renderer::vk_types::{DepthImage, FrameBuffers, RenderPass, Swapchain};
 
-
 pub struct VkComponents {
     pub swapchain: Swapchain,
     pub depth_image: DepthImage,
@@ -10,8 +9,10 @@ pub struct VkComponents {
     pub frame_buffers: FrameBuffers,
 }
 
-
-pub fn init_vk_components(window: &penguin_app::window::Window, context: &VkContext) -> VkComponents {
+pub fn init_vk_components(
+    window: &penguin_app::window::Window,
+    context: &VkContext,
+) -> VkComponents {
     log::trace!("Creating swapchain.");
     let swapchain = Swapchain::init(window, context);
     // ///////////////////////////////////////
@@ -32,4 +33,3 @@ pub fn init_vk_components(window: &penguin_app::window::Window, context: &VkCont
         frame_buffers,
     }
 }
-

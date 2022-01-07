@@ -1,6 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::{Instance, PhysicalDevice};
-
+use ash::vk;
 
 pub struct Device {
     pub handle: ash::Device,
@@ -13,8 +12,6 @@ impl std::ops::Deref for Device {
         &self.handle
     }
 }
-
-
 
 impl super::Device {
     pub(crate) fn init(instance: &Instance, physical_device: &PhysicalDevice) -> Self {
@@ -38,9 +35,6 @@ impl super::Device {
     }
 }
 
-
-
-
 pub fn create_logical_device(
     instance: &ash::Instance,
     physical_device: vk::PhysicalDevice,
@@ -48,7 +42,6 @@ pub fn create_logical_device(
 ) -> ash::Device {
     init::create_logical_device(&instance, physical_device, graphics_queue_index)
 }
-
 
 pub fn get_graphics_queue_handle(
     logical_device: &ash::Device,
@@ -60,9 +53,9 @@ pub fn get_graphics_queue_handle(
 }
 
 mod init {
+    use ash::vk;
     use std::ffi::CString;
     use std::ptr;
-    use ash::vk;
 
     // ------------------- LOGICAL DEVICE ---------------------------------
     fn required_device_features() -> vk::PhysicalDeviceFeatures {
@@ -93,7 +86,6 @@ mod init {
 
         // Specify device features to use
         let physical_device_features = required_device_features();
-
 
         let enable_extension_names = [ash::extensions::khr::Swapchain::name().as_ptr()];
 

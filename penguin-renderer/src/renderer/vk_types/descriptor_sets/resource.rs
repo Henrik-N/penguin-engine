@@ -1,5 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::{DescriptorPool, DescriptorSetContainer, VkContext};
+use ash::vk;
 
 pub struct DescriptorSetsResource {
     pub pool: DescriptorPool,
@@ -7,7 +7,10 @@ pub struct DescriptorSetsResource {
 }
 impl Default for DescriptorSetsResource {
     fn default() -> Self {
-        Self { pool: DescriptorPool::default(), sets: Vec::with_capacity(4) }
+        Self {
+            pool: DescriptorPool::default(),
+            sets: Vec::with_capacity(4),
+        }
     }
 }
 impl DescriptorSetsResource {
@@ -21,9 +24,10 @@ impl DescriptorSetsResource {
     }
 
     pub fn get_set_handles(&self, set_ids: &[usize]) -> Vec<vk::DescriptorSet> {
-        set_ids.iter().map(|&set_id| {
-            self.get_set(set_id).set.handle
-        }).collect::<Vec<vk::DescriptorSet>>()
+        set_ids
+            .iter()
+            .map(|&set_id| self.get_set(set_id).set.handle)
+            .collect::<Vec<vk::DescriptorSet>>()
     }
 
     pub fn get_set(&self, set: usize) -> &DescriptorSetContainer {

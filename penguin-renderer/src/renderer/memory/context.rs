@@ -1,11 +1,16 @@
-use ash::util::Align;
-use ash::vk;
 use crate::renderer::memory;
 use crate::renderer::vk_types::VkContext;
-
+use ash::util::Align;
+use ash::vk;
 
 impl VkContext {
-    pub fn copy_buffer(&self, command_buffer: vk::CommandBuffer, src: vk::Buffer, dst: vk::Buffer, size: usize) {
+    pub fn copy_buffer(
+        &self,
+        command_buffer: vk::CommandBuffer,
+        src: vk::Buffer,
+        dst: vk::Buffer,
+        size: usize,
+    ) {
         let copy = vk::BufferCopy {
             src_offset: 0,
             dst_offset: 0,
@@ -14,16 +19,11 @@ impl VkContext {
         let regions = [copy];
 
         unsafe {
-            self.device.cmd_copy_buffer(
-                command_buffer,
-                src,
-                dst,
-                &regions,
-            )
+            self.device
+                .cmd_copy_buffer(command_buffer, src, dst, &regions)
         }
     }
 }
-
 
 impl VkContext {
     pub fn packed_uniform_buffer_range<T>(&self) -> u64 {
@@ -49,14 +49,12 @@ impl VkContext {
     }
 }
 
-
 impl VkContext {
     pub fn create_buffer(&self, create_info: vk::BufferCreateInfoBuilder) -> vk::Buffer {
         unsafe { self.device.create_buffer(&create_info, None) }
             .expect("Couldn't create index buffer")
     }
 }
-
 
 impl VkContext {
     /// Allocates gpu memory
@@ -66,27 +64,29 @@ impl VkContext {
 
     /// Associates a buffer handle with gpu memory
     pub fn bind_buffer_memory(&self, buffer: vk::Buffer, memory: vk::DeviceMemory) {
-        unsafe {
-            self.device.bind_buffer_memory(buffer, memory, 0)
-        }.expect("Couldn't bind memory buffer");
+        unsafe { self.device.bind_buffer_memory(buffer, memory, 0) }
+            .expect("Couldn't bind memory buffer");
     }
 
     /// Associates an image handle with gpu memory
     pub fn bind_image_memory(&self, image: vk::Image, memory: vk::DeviceMemory) {
-        unsafe {
-            self.device.bind_image_memory(image, memory, 0)
-        }.expect("couldn't bind image memory");
+        unsafe { self.device.bind_image_memory(image, memory, 0) }
+            .expect("couldn't bind image memory");
     }
 
-    pub fn map_memory(&self,
-                      memory: vk::DeviceMemory,
-                      offset: vk::DeviceSize,
-                      memory_size: vk::DeviceSize,
-                      map_flags: vk::MemoryMapFlags,
+    pub fn map_memory(
+        &self,
+        memory: vk::DeviceMemory,
+        offset: vk::DeviceSize,
+        memory_size: vk::DeviceSize,
+        map_flags: vk::MemoryMapFlags,
     ) -> *mut core::ffi::c_void {
         // map memory
-        let ptr_to_memory = unsafe { self.device.map_memory(memory, offset, memory_size, map_flags) }
-            .expect("Couldn't get pointer to memory");
+        let ptr_to_memory = unsafe {
+            self.device
+                .map_memory(memory, offset, memory_size, map_flags)
+        }
+        .expect("Couldn't get pointer to memory");
 
         ptr_to_memory
     }
@@ -110,9 +110,6 @@ impl VkContext {
         memory_slice.copy_from_slice(&new_data);
     }
 }
-
-
-
 
 //impl VkContext {
 //fn allocate_vk_buffer(
@@ -158,4 +155,3 @@ impl VkContext {
 //    (self.alloc_memory(&allocate_info), mem_info)
 //}
 //}
-

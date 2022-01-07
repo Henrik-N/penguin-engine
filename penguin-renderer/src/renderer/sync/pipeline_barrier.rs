@@ -1,5 +1,5 @@
+use crate::renderer::vk_types::VkContext;
 use ash::vk;
-use crate::renderer::vk_types::{VkContext};
 
 // https://gpuopen.com/learn/vulkan-barriers-explained/
 
@@ -11,11 +11,10 @@ pub struct PipelineBarrierBuilder<'a> {
 
     memory_barriers: &'a [vk::MemoryBarrier],
     buffer_memory_barriers: &'a [vk::BufferMemoryBarrier],
-    image_memory_barriers: &'a [vk::ImageMemoryBarrier]
+    image_memory_barriers: &'a [vk::ImageMemoryBarrier],
 }
 
 impl<'a> PipelineBarrierBuilder<'a> {
-
     pub fn builder() -> Self {
         Self::default()
     }
@@ -42,29 +41,34 @@ impl<'a> PipelineBarrierBuilder<'a> {
     }
 
     #[allow(unused)]
-    pub fn buffer_memory_barriers(mut self, buffer_memory_barriers: &'a [vk::BufferMemoryBarrier]) -> Self {
+    pub fn buffer_memory_barriers(
+        mut self,
+        buffer_memory_barriers: &'a [vk::BufferMemoryBarrier],
+    ) -> Self {
         self.buffer_memory_barriers = buffer_memory_barriers;
         self
     }
 
     #[allow(unused)]
-    pub fn image_memory_barriers(mut self, image_memory_barriers: &'a [vk::ImageMemoryBarrier]) -> Self {
+    pub fn image_memory_barriers(
+        mut self,
+        image_memory_barriers: &'a [vk::ImageMemoryBarrier],
+    ) -> Self {
         self.image_memory_barriers = image_memory_barriers;
         self
     }
 
     pub fn build_exec(self, context: &VkContext, command_buffer: vk::CommandBuffer) {
-       unsafe {
-           context.device.cmd_pipeline_barrier(
-               command_buffer,
-               self.src_stage_mask,
-               self.dst_stage_mask,
-               self.dependency_flags,
-               self.memory_barriers,
-               self.buffer_memory_barriers,
-               self.image_memory_barriers,
-           );
-       }
+        unsafe {
+            context.device.cmd_pipeline_barrier(
+                command_buffer,
+                self.src_stage_mask,
+                self.dst_stage_mask,
+                self.dependency_flags,
+                self.memory_barriers,
+                self.buffer_memory_barriers,
+                self.image_memory_barriers,
+            );
+        }
     }
 }
-

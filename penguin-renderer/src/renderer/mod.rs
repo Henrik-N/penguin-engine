@@ -7,14 +7,10 @@ mod resources;
 mod startup_shutdown;
 mod sync;
 
-
 mod ecs_plugin;
 pub use ecs_plugin::*;
 
-
-
-pub mod render_objects;
 pub mod memory;
-pub mod vk_types;
+pub mod render_objects;
 mod shader;
-
+pub mod vk_types;

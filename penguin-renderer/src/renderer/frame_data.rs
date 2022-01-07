@@ -1,5 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::VkContext;
+use ash::vk;
 
 pub struct FrameData {
     pub command_buffer: vk::CommandBuffer,
@@ -14,9 +14,15 @@ pub struct FrameData {
 impl FrameData {
     pub fn destroy(&mut self, context: &VkContext) {
         unsafe {
-            context.device.destroy_semaphore(self.presenting_complete_semaphore, None);
-            context.device.destroy_semaphore(self.rendering_complete_semaphore, None);
-            context.device.destroy_fence(self.render_complete_fence, None);
+            context
+                .device
+                .destroy_semaphore(self.presenting_complete_semaphore, None);
+            context
+                .device
+                .destroy_semaphore(self.rendering_complete_semaphore, None);
+            context
+                .device
+                .destroy_fence(self.render_complete_fence, None);
         }
     }
 }
@@ -34,7 +40,7 @@ impl FrameDataContainer {
             frame_count: 0,
             frame_index: 0,
             command_pool,
-            frame_datas
+            frame_datas,
         }
     }
 
@@ -64,7 +70,9 @@ impl FrameDataContainer {
     }
 
     pub fn destroy(&mut self, context: &VkContext) {
-        self.frame_datas.iter_mut().for_each(|frame_data| frame_data.destroy(context));
-        unsafe {context.device.destroy_command_pool(self.command_pool, None)};
+        self.frame_datas
+            .iter_mut()
+            .for_each(|frame_data| frame_data.destroy(context));
+        unsafe { context.device.destroy_command_pool(self.command_pool, None) };
     }
 }

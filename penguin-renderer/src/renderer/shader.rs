@@ -1,8 +1,8 @@
 use ash::vk;
 use std::io::Read;
 
-use std::ffi::CString;
 use crate::renderer::vk_types::VkContext;
+use std::ffi::CString;
 
 const SHADERS_FOLDER_PATH: &str = "penguin-renderer/src/shaders/";
 
@@ -16,7 +16,9 @@ pub struct Shader<'a> {
 impl<'a> Drop for Shader<'a> {
     fn drop(&mut self) {
         unsafe {
-            self.context.device.destroy_shader_module(self.shader_module, None);
+            self.context
+                .device
+                .destroy_shader_module(self.shader_module, None);
         }
     }
 }
@@ -65,8 +67,12 @@ impl<'a> Shader<'a> {
         let module_create_info =
             vk::ShaderModuleCreateInfo::builder().code(&binary_result.as_binary());
 
-        let shader_module = unsafe { context.device.create_shader_module(&module_create_info, None) }
-            .expect("Couldn't create shader module");
+        let shader_module = unsafe {
+            context
+                .device
+                .create_shader_module(&module_create_info, None)
+        }
+        .expect("Couldn't create shader module");
 
         Self {
             context,

@@ -1,5 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::{DescriptorSetLayout, VkContext};
+use ash::vk;
 
 pub struct PipelineLayout {
     pub handle: vk::PipelineLayout,
@@ -19,17 +19,25 @@ impl PipelineLayout {
     }
 
     pub fn new(context: &VkContext, layouts: &[DescriptorSetLayout]) -> Self {
-        let layout_handles = layouts.iter().map(|layout| layout.handle).collect::<Vec<_>>();
+        let layout_handles = layouts
+            .iter()
+            .map(|layout| layout.handle)
+            .collect::<Vec<_>>();
 
         let pipeline_layout_create_info = vk::PipelineLayoutCreateInfo::builder()
             .set_layouts(layout_handles.as_slice())
             .build();
 
         let pipeline_layout = unsafe {
-            context.device.create_pipeline_layout(&pipeline_layout_create_info, None)
-        }.expect("couldn't create pipeline layout");
+            context
+                .device
+                .create_pipeline_layout(&pipeline_layout_create_info, None)
+        }
+        .expect("couldn't create pipeline layout");
 
-        Self { handle: pipeline_layout }
+        Self {
+            handle: pipeline_layout,
+        }
     }
 
     pub fn builder() -> PipelineLayoutBuilder {
@@ -53,9 +61,14 @@ impl PipelineLayoutBuilder {
             .build();
 
         let pipeline_layout = unsafe {
-            context.device.create_pipeline_layout(&pipeline_layout_create_info, None)
-        }.expect("couldn't create pipeline layout");
+            context
+                .device
+                .create_pipeline_layout(&pipeline_layout_create_info, None)
+        }
+        .expect("couldn't create pipeline layout");
 
-        PipelineLayout { handle: pipeline_layout }
+        PipelineLayout {
+            handle: pipeline_layout,
+        }
     }
 }

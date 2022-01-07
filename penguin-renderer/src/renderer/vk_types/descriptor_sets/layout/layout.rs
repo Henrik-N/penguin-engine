@@ -1,8 +1,8 @@
+use crate::renderer::vk_types::{DescriptorSet, VkContext};
 use ash::vk;
-use crate::renderer::vk_types::VkContext;
+use std::hash::Hasher;
 
-
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Copy)]
 pub struct DescriptorSetLayout {
     pub handle: vk::DescriptorSetLayout,
 }
@@ -14,44 +14,115 @@ impl std::ops::Deref for DescriptorSetLayout {
     }
 }
 impl DescriptorSetLayout {
-    pub fn builder(context: &VkContext) -> DescriptorSetLayoutBuilder {
-        DescriptorSetLayoutBuilder::builder(context)
+    pub fn builder() -> DescriptorSetLayoutBuilder {
+        DescriptorSetLayoutBuilder::builder()
     }
 
     pub fn destroy(&self, context: &VkContext) {
-        unsafe { context.device.destroy_descriptor_set_layout(self.handle, None) }
+        unsafe {
+            context
+                .device
+                .destroy_descriptor_set_layout(self.handle, None)
+        }
     }
 }
 
-
-pub struct DescriptorSetLayoutBuilder<'a> {
-    context: &'a VkContext,
-    layout_bindings: Vec<vk::DescriptorSetLayoutBinding>,
+#[derive(Clone)]
+struct DescriptorSetLayoutBinding {
+    handle: vk::DescriptorSetLayoutBinding,
 }
-impl<'a> DescriptorSetLayoutBuilder<'a> {
-    fn builder(context: &'a VkContext) -> Self {
+impl std::ops::Deref for DescriptorSetLayoutBinding {
+    type Target = vk::DescriptorSetLayoutBinding;
+    fn deref(&self) -> &Self::Target {
+        &self.handle
+    }
+}
+impl std::hash::Hash for DescriptorSetLayoutBinding {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        state.write_u32(self.binding);
+        self.descriptor_type.hash(state);
+        state.write_u32(self.descriptor_count);
+        self.stage_flags.hash(state);
+        //state.write_u32(self.stage_flags as _);
+        // todo p_immutable_samplers
+        state.finish();
+    }
+}
+impl From<vk::DescriptorSetLayoutBinding> for DescriptorSetLayoutBinding {
+    fn from(handle: vk::DescriptorSetLayoutBinding) -> Self {
+        Self { handle }
+    }
+}
+
+#[derive(Clone, Hash)]
+pub struct DescriptorSetLayoutBuilder {
+    layout_bindings: Vec<DescriptorSetLayoutBinding>,
+}
+
+impl Eq for DescriptorSetLayoutBuilder {}
+impl PartialEq for DescriptorSetLayoutBuilder {
+    fn eq(&self, other: &Self) -> bool {
+        if self.layout_bindings.len() != other.layout_bindings.len() {
+            return false;
+        }
+
+        let first_non_equal = self
+            .layout_bindings
+            .iter()
+            .zip(other.layout_bindings.iter())
+            .find(|(this, other)| {
+                let equal = if this.binding == other.binding &&
+                    this.descriptor_type == other.descriptor_type &&
+                    this.descriptor_count == other.descriptor_count &&
+                    this.stage_flags == other.stage_flags &&
+                    // todo can probably be the same even though the pointer is different
+                    this.p_immutable_samplers == other.p_immutable_samplers
+                {
+                    true
+                } else {
+                    false
+                };
+
+                !equal
+            });
+
+        first_non_equal.is_none()
+    }
+}
+
+impl DescriptorSetLayoutBuilder {
+    fn builder() -> Self {
         Self {
-            context,
             layout_bindings: vec![],
         }
     }
 
     pub fn layout_binding(mut self, layout_binding: vk::DescriptorSetLayoutBindingBuilder) -> Self {
-        self.layout_bindings.push(layout_binding.build());
+        self.layout_bindings.push(layout_binding.build().into());
         self
     }
 
-    pub fn build(self) -> DescriptorSetLayout {
+    pub fn build_vk_type(self, context: &VkContext) -> vk::DescriptorSetLayout {
         // create layout
-        let layout_create_info = vk::DescriptorSetLayoutCreateInfo::builder()
-            .bindings(&self.layout_bindings);
+        let bindings = self
+            .layout_bindings
+            .iter()
+            .map(|b| b.handle)
+            .collect::<Vec<_>>();
 
-        let layout = unsafe {
-            self.context.device
-                .create_descriptor_set_layout(&layout_create_info, None) }
-            .expect("Couldn't create descriptor set layout");
+        let layout_create_info = vk::DescriptorSetLayoutCreateInfo::builder().bindings(&bindings);
 
-        DescriptorSetLayout { handle: layout }
+        unsafe {
+            context
+                .device
+                .create_descriptor_set_layout(&layout_create_info, None)
+        }
+        .expect("Couldn't create descriptor set layout")
+    }
+
+    pub fn build(self, context: &VkContext) -> DescriptorSetLayout {
+        DescriptorSetLayout {
+            handle: self.build_vk_type(context),
+        }
     }
 }
-

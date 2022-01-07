@@ -1,8 +1,10 @@
-use ash::vk;
-use crate::renderer::memory::{AllocatedBuffer, AllocatedBufferCreateInfo, AllocatedImage, AllocatedImageCreateInfo, MemoryUsage, UploadContext};
+use crate::renderer::memory::{
+    AllocatedBuffer, AllocatedBufferCreateInfo, AllocatedImage, AllocatedImageCreateInfo,
+    MemoryUsage, UploadContext,
+};
 use crate::renderer::sync::PipelineBarrierBuilder;
 use crate::renderer::vk_types::VkContext;
-
+use ash::vk;
 
 const IMAGES_FOLDER_PATH: &str = "penguin-renderer/assets/images/";
 
@@ -18,11 +20,16 @@ impl Texture {
 }
 
 impl Texture {
-    pub fn from_image_file(context: &VkContext, upload_context: &UploadContext, image_file_name: &str) -> Self {
+    pub fn from_image_file(
+        context: &VkContext,
+        upload_context: &UploadContext,
+        image_file_name: &str,
+    ) -> Self {
         let (allocated_image, image_format, subresource_range) = AllocatedImage::from_image_file(
             context,
             upload_context,
-            &(IMAGES_FOLDER_PATH.to_owned() + image_file_name));
+            &(IMAGES_FOLDER_PATH.to_owned() + image_file_name),
+        );
 
         let image_view_create_info = vk::ImageViewCreateInfo::builder()
             .image(allocated_image.handle)
@@ -31,8 +38,11 @@ impl Texture {
             .view_type(vk::ImageViewType::TYPE_2D);
 
         let image_view = unsafe {
-            context.device.create_image_view(&image_view_create_info, None)
-        }.expect("couldn't create image view");
+            context
+                .device
+                .create_image_view(&image_view_create_info, None)
+        }
+        .expect("couldn't create image view");
 
         Self {
             image: allocated_image,
@@ -41,28 +51,33 @@ impl Texture {
     }
 }
 
-
 impl AllocatedImage {
-    fn from_image_file(context: &VkContext, upload_context: &UploadContext, file_path: &str)
-        -> (Self, vk::Format, vk::ImageSubresourceRange) {
-
-        let file = std::fs::File::open(file_path).expect(&format!("couldn't open file: {}", file_path));
+    fn from_image_file(
+        context: &VkContext,
+        upload_context: &UploadContext,
+        file_path: &str,
+    ) -> (Self, vk::Format, vk::ImageSubresourceRange) {
+        let file =
+            std::fs::File::open(file_path).expect(&format!("couldn't open file: {}", file_path));
         let mut reader = std::io::BufReader::new(file);
 
         let vk_format = vk::Format::R8G8B8A8_SRGB;
-        let (image_info, pixels) = stb::image::stbi_load_from_reader(
-            &mut reader, stb::image::Channels::RgbAlpha,
-        ).expect(&format!("couldn't read image {} as RBGA", file_path));
+        let (image_info, pixels) =
+            stb::image::stbi_load_from_reader(&mut reader, stb::image::Channels::RgbAlpha)
+                .expect(&format!("couldn't read image {} as RBGA", file_path));
 
         let size = pixels.size(); // aka pixel count / height * width * channel_count)
 
-        let mut staging_buffer = AllocatedBuffer::create_buffer(context, AllocatedBufferCreateInfo::<u8> {
-            buffer_size: size as _,
-            buffer_usage: vk::BufferUsageFlags::TRANSFER_SRC,
-            memory_usage: MemoryUsage::CpuMemGpuVisible,
-            sharing_mode: vk::SharingMode::EXCLUSIVE,
-            ..Default::default()
-        });
+        let mut staging_buffer = AllocatedBuffer::create_buffer(
+            context,
+            AllocatedBufferCreateInfo::<u8> {
+                buffer_size: size as _,
+                buffer_usage: vk::BufferUsageFlags::TRANSFER_SRC,
+                memory_usage: MemoryUsage::CpuMemGpuVisible,
+                sharing_mode: vk::SharingMode::EXCLUSIVE,
+                ..Default::default()
+            },
+        );
 
         let image_extent = vk::Extent3D::builder()
             .height(image_info.height as _)
@@ -85,8 +100,8 @@ impl AllocatedImage {
                         .format(vk_format)
                         .extent(image_extent)
                 },
-                memory_usage: MemoryUsage::GpuOnly
-            }
+                memory_usage: MemoryUsage::GpuOnly,
+            },
         );
 
         let subresource_range = vk::ImageSubresourceRange::builder()
@@ -105,24 +120,21 @@ impl AllocatedImage {
             .layer_count(1)
             .build();
 
-
         upload_context.immediate_submit(context, |cmd_buffer| {
             // perform layout transition to prepare image to be ready to be a destination
             // for memory transfers
             PipelineBarrierBuilder::builder()
                 .src_stage_mask(vk::PipelineStageFlags::TOP_OF_PIPE)
                 .dst_stage_mask(vk::PipelineStageFlags::TRANSFER)
-                .image_memory_barriers(&[
-                    vk::ImageMemoryBarrier::builder()
-                        .image(allocated_image.handle)
-                        .old_layout(vk::ImageLayout::UNDEFINED)
-                        .new_layout(vk::ImageLayout::TRANSFER_DST_OPTIMAL)
-                        .subresource_range(subresource_range)
-                        // prepare image layout to be ready to be a destination for memory transfers
-                        .src_access_mask(vk::AccessFlags::empty())
-                        .dst_access_mask(vk::AccessFlags::TRANSFER_WRITE)
-                        .build()
-                ])
+                .image_memory_barriers(&[vk::ImageMemoryBarrier::builder()
+                    .image(allocated_image.handle)
+                    .old_layout(vk::ImageLayout::UNDEFINED)
+                    .new_layout(vk::ImageLayout::TRANSFER_DST_OPTIMAL)
+                    .subresource_range(subresource_range)
+                    // prepare image layout to be ready to be a destination for memory transfers
+                    .src_access_mask(vk::AccessFlags::empty())
+                    .dst_access_mask(vk::AccessFlags::TRANSFER_WRITE)
+                    .build()])
                 .build_exec(context, cmd_buffer);
 
             {
@@ -150,16 +162,14 @@ impl AllocatedImage {
             PipelineBarrierBuilder::builder()
                 .src_stage_mask(vk::PipelineStageFlags::TRANSFER)
                 .dst_stage_mask(vk::PipelineStageFlags::FRAGMENT_SHADER)
-                .image_memory_barriers(&[
-                    vk::ImageMemoryBarrier::builder()
-                        .image(allocated_image.handle)
-                        .subresource_range(subresource_range)
-                        .old_layout(vk::ImageLayout::TRANSFER_DST_OPTIMAL)
-                        .new_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL)
-                        .src_access_mask(vk::AccessFlags::TRANSFER_WRITE)
-                        .dst_access_mask(vk::AccessFlags::SHADER_READ)
-                        .build()
-                ])
+                .image_memory_barriers(&[vk::ImageMemoryBarrier::builder()
+                    .image(allocated_image.handle)
+                    .subresource_range(subresource_range)
+                    .old_layout(vk::ImageLayout::TRANSFER_DST_OPTIMAL)
+                    .new_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL)
+                    .src_access_mask(vk::AccessFlags::TRANSFER_WRITE)
+                    .dst_access_mask(vk::AccessFlags::SHADER_READ)
+                    .build()])
                 .build_exec(context, cmd_buffer);
         });
 

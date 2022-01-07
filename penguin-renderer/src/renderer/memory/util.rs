@@ -8,7 +8,6 @@ pub fn packed_range_from_min_align_manual(mem_range: u64, min_align: u64) -> u64
     packed_range
 }
 
-
 pub fn packed_range_from_min_align<T>(min_align: u64) -> u64 {
     let mem_range = std::mem::size_of::<T>() as u64;
     let mut packed_range = 0;

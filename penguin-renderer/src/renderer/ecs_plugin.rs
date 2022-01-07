@@ -1,18 +1,17 @@
 use penguin_app::ecs::*;
 
-use crate::renderer::{
-    resources::{MaterialsResource, MeshesResource, RenderObjectsResource},
-    render_loop,
-    startup_shutdown,
-};
 use crate::renderer::resources::TexturesResource;
 use crate::renderer::vk_types::resource::DescriptorSetsResource;
+use crate::renderer::{
+    render_loop,
+    resources::{MaterialsResource, MeshesResource, RenderObjectsResource},
+    startup_shutdown,
+};
 
 pub struct RendererPlugin;
 
 impl Plugin for RendererPlugin {
     fn startup(&mut self, resources: &mut Resources) -> Vec<Step> {
-
         resources.insert(MeshesResource::default());
         resources.insert(MaterialsResource::default());
         resources.insert(TexturesResource::default());
@@ -28,7 +27,8 @@ impl Plugin for RendererPlugin {
     fn run() -> Vec<Step> {
         Schedule::builder()
             .add_thread_local(render_loop::render_system())
-            .build().into_vec()
+            .build()
+            .into_vec()
     }
 
     fn shutdown() -> Vec<Step> {
@@ -36,6 +36,6 @@ impl Plugin for RendererPlugin {
             .add_thread_local(startup_shutdown::renderer_shutdown_system())
             .build()
             .into_vec()
-
     }
 }
+

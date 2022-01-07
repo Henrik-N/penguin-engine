@@ -1,18 +1,24 @@
-use ash::vk;
-use crate::renderer::vk_types::VkContext;
 use super::*;
+use crate::renderer::vk_types::VkContext;
+use ash::vk;
 
 pub use layout::*;
 mod layout {
     use super::*;
 
     impl VkContext {
-        pub fn create_descriptor_set_layout(&self, bindings: &[vk::DescriptorSetLayoutBinding]) -> vk::DescriptorSetLayout {
-            let layout_create_info = vk::DescriptorSetLayoutCreateInfo::builder().bindings(&bindings);
+        pub fn create_descriptor_set_layout(
+            &self,
+            bindings: &[vk::DescriptorSetLayoutBinding],
+        ) -> vk::DescriptorSetLayout {
+            let layout_create_info =
+                vk::DescriptorSetLayoutCreateInfo::builder().bindings(&bindings);
 
-            unsafe { self.device
-                .create_descriptor_set_layout(&layout_create_info, None) }
-                .expect("Couldn't create descriptor set layout")
+            unsafe {
+                self.device
+                    .create_descriptor_set_layout(&layout_create_info, None)
+            }
+            .expect("Couldn't create descriptor set layout")
         }
     }
 }
@@ -20,13 +26,14 @@ mod layout {
 pub use sets::*;
 mod sets {
     use super::*;
+    use ash::prelude::VkResult;
 
     impl VkContext {
         pub fn alloc_descriptor_set(
             &self,
             descriptor_pool: DescriptorPool,
-            layout: vk::DescriptorSetLayout
-        ) -> vk::DescriptorSet {
+            layout: vk::DescriptorSetLayout,
+        ) -> VkResult<vk::DescriptorSet> {
             let descriptor_set_layouts = [layout];
 
             let descriptor_sets_allocate_info = vk::DescriptorSetAllocateInfo::builder()
@@ -35,11 +42,12 @@ mod sets {
 
             // descriptor sets
             log::debug!("Allocating descriptor sets.");
-            let allocated_descriptor_sets =
-                unsafe { self.device.allocate_descriptor_sets(&descriptor_sets_allocate_info) }
-                    .expect("Couldn't allocate global descriptor set");
+            let allocated_descriptor_sets = unsafe {
+                self.device
+                    .allocate_descriptor_sets(&descriptor_sets_allocate_info)
+            }?;
 
-            allocated_descriptor_sets[0]
+            Ok(allocated_descriptor_sets[0])
         }
     }
 
@@ -52,10 +60,7 @@ mod sets {
     }
 
     impl VkContext {
-        pub fn bind_descriptor_sets(
-            &self,
-            bind_info: BindDescriptorSetsInfo,
-        ) {
+        pub fn bind_descriptor_sets(&self, bind_info: BindDescriptorSetsInfo) {
             let BindDescriptorSetsInfo {
                 command_buffer,
                 pipeline_bind_point,

@@ -1,7 +1,6 @@
-use ash::vk;
 use crate::renderer::frame_data::FrameData;
 use crate::renderer::vk_types::*;
-
+use ash::vk;
 
 pub struct SubmitRenderCommandsParams<'a> {
     pub context: &'a VkContext,
@@ -12,9 +11,7 @@ pub struct SubmitRenderCommandsParams<'a> {
     pub frame_data: &'a FrameData,
 }
 
-
-pub fn submit_render_commands
-<RenderPassFn: FnOnce(vk::Framebuffer)>(
+pub fn submit_render_commands<RenderPassFn: FnOnce(vk::Framebuffer)>(
     submit_render_commands_params: SubmitRenderCommandsParams,
     render_pass_fn: RenderPassFn,
 ) {
@@ -23,14 +20,14 @@ pub fn submit_render_commands
         swapchain,
         frame_buffers,
         frame_data,
-        pipeline_wait_stage_flags
+        pipeline_wait_stage_flags,
     } = submit_render_commands_params;
 
     // find next image
     let swapchain_image_index = swapchain.acquire_next_swapchain_image(
         frame_data.presenting_complete_semaphore,
         vk::Fence::null(),
-        std::time::Duration::from_secs(1)
+        std::time::Duration::from_secs(1),
     );
 
     let frame_buffer = frame_buffers.get(swapchain_image_index as _);
@@ -43,9 +40,14 @@ pub fn submit_render_commands
             // (aka wait until the GPU finished rendering the last frame in this case)
             context.wait_for_fence(frame_data.render_complete_fence, std::time::Duration::MAX);
 
-
-            context.reset_command_buffer(frame_data.command_buffer, vk::CommandBufferResetFlags::empty()); //  vk::CommandBufferResetFlags::RELEASE_RESOURCES
-            context.begin_command_buffer(frame_data.command_buffer, vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT);
+            context.reset_command_buffer(
+                frame_data.command_buffer,
+                vk::CommandBufferResetFlags::empty(),
+            ); //  vk::CommandBufferResetFlags::RELEASE_RESOURCES
+            context.begin_command_buffer(
+                frame_data.command_buffer,
+                vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT,
+            );
 
             render_pass_fn(frame_buffer);
 
@@ -68,7 +70,6 @@ pub fn submit_render_commands
         }
     }
 
-
     // after commands are submitted, wait for rending to complete and then display the image to the screen
     {
         let swapchains = [swapchain.handle];
@@ -81,7 +82,8 @@ pub fn submit_render_commands
             .image_indices(&image_indices);
 
         unsafe {
-            swapchain.loader
+            swapchain
+                .loader
                 .queue_present(context.device.graphics_queue_handle, &present_info)
                 .expect("Couldn't submit to present queue");
         }

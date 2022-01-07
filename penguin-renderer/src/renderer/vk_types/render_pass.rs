@@ -1,6 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::{Swapchain, VkContext};
-
+use ash::vk;
 
 #[derive(Debug)]
 pub struct RenderPass {
@@ -15,7 +14,6 @@ impl std::ops::Deref for RenderPass {
     }
 }
 
-
 impl RenderPass {
     pub fn destroy(&mut self, context: &VkContext) {
         unsafe {
@@ -27,10 +25,7 @@ impl RenderPass {
         Self::create_default_render_pass(context, swapchain.format)
     }
 
-    fn create_default_render_pass(
-        context: &VkContext,
-        swapchain_format: vk::Format,
-    ) -> Self {
+    fn create_default_render_pass(context: &VkContext, swapchain_format: vk::Format) -> Self {
         // description of image for writing render commands into
         let render_pass_attachments = [
             // color attachment
@@ -104,12 +99,14 @@ impl RenderPass {
             .subpasses(&subpass)
             .dependencies(&dependencies);
 
-
         Self {
-            handle: unsafe { context.device.create_render_pass(&render_pass_create_info, None) }
-                .expect("Couldn't create render pass!"),
-            attachment_count: render_pass_attachments.len()
+            handle: unsafe {
+                context
+                    .device
+                    .create_render_pass(&render_pass_create_info, None)
+            }
+            .expect("Couldn't create render pass!"),
+            attachment_count: render_pass_attachments.len(),
         }
     }
 }
-

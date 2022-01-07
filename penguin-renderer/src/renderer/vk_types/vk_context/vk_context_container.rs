@@ -1,6 +1,6 @@
+use crate::renderer::vk_types::{DebugMessenger, Device, Instance, PhysicalDevice, Surface};
 /// ------------------------- VK CONTEXT ----------------------------------
 use ash::vk;
-use crate::renderer::vk_types::{Instance, DebugMessenger, Surface, PhysicalDevice, Device};
 
 pub struct VkContext {
     pub instance: Instance,
@@ -13,9 +13,11 @@ pub struct VkContext {
 impl VkContext {
     #[allow(unused)]
     pub fn pd_device_properties(&self) -> vk::PhysicalDeviceProperties {
-        unsafe { self.instance.get_physical_device_properties(self.physical_device.handle) }
+        unsafe {
+            self.instance
+                .get_physical_device_properties(self.physical_device.handle)
+        }
     }
-
 
     #[allow(unused)]
     pub fn find_supported_format(
@@ -44,7 +46,6 @@ impl VkContext {
         supported_format
     }
 }
-
 
 impl VkContext {
     pub fn destroy(&mut self) {
@@ -79,8 +80,8 @@ impl VkContext {
         log::trace!("Creating instance.");
         let instance = Instance::init(window).expect("couldn't init vk instance");
         log::trace!("Creating vk debug messenger.");
-        let debug_messenger =
-            DebugMessenger::init(&instance, log_level_filter).expect("couldn't init vk debug messenger");
+        let debug_messenger = DebugMessenger::init(&instance, log_level_filter)
+            .expect("couldn't init vk debug messenger");
         log::trace!("Creating surface.");
         let surface = Surface::init(&instance, window).expect("couldn't init vk surface");
         log::trace!("Selecting physical device and caching it's properties.");
@@ -89,7 +90,6 @@ impl VkContext {
 
         log::trace!("Creating logical device.");
         let device = Device::init(&instance, &physical_device);
-
 
         Self {
             instance,

@@ -7,17 +7,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
-
-# ----- Workspace ----- #
-[dependencies.penguin-config]
-git = "https://github.com/Henrik-N/penguin-config"
-
-
-[dependencies.penguin-app]
-git = "https://github.com/Henrik-N/penguin-app"
-features = ["time-plugin"]
-
-[dependencies.penguin-renderer]
-path = "../penguin-renderer"
-
+penguin-application = { version = "0.1", features = ["time-plugin"] }
+penguin-config = {version = "0.1" }
+penguin-renderer = { path = "../penguin-renderer" }

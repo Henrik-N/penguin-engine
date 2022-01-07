@@ -1,5 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::{DepthImage, RenderPass, Swapchain, VkContext};
+use ash::vk;
 
 pub struct FrameBuffers {
     pub frame_buffers: Vec<vk::Framebuffer>,
@@ -7,13 +7,15 @@ pub struct FrameBuffers {
 
 impl FrameBuffers {
     pub fn get(&self, image_index: usize) -> vk::Framebuffer {
-        self.frame_buffers.get(image_index)
-            .expect(&format!("no frame buffer for the given index {}", image_index))
+        self.frame_buffers
+            .get(image_index)
+            .expect(&format!(
+                "no frame buffer for the given index {}",
+                image_index
+            ))
             .clone()
     }
 }
-
-
 
 impl FrameBuffers {
     pub fn destroy(&mut self, context: &VkContext) {
@@ -49,4 +51,3 @@ impl FrameBuffers {
         Self { frame_buffers }
     }
 }
-

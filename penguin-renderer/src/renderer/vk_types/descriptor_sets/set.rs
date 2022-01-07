@@ -1,6 +1,6 @@
-use ash::vk;
 use crate::renderer::memory::AllocatedBuffer;
 use crate::renderer::vk_types::{DescriptorPool, DescriptorSetLayout, VkContext};
+use ash::vk;
 
 use anyhow::*;
 
@@ -11,28 +11,35 @@ pub struct DescriptorSetBuilder {
 }
 impl DescriptorSetBuilder {
     fn builder() -> Self {
-       Self::default()
+        Self::default()
     }
 
     pub fn layout(mut self, layout: DescriptorSetLayout) -> Self {
-       self.layout = Some(layout);
-       self
+        self.layout = Some(layout);
+        self
     }
 
-    pub fn build(self, context: &VkContext, descriptor_pool: &DescriptorPool) -> DescriptorSet {
-        let layout = self.layout.expect("trying to build descriptor set without layout");
+    pub fn build(
+        self,
+        context: &VkContext,
+        descriptor_pool: &DescriptorPool,
+    ) -> Result<DescriptorSet> {
+        let layout = self
+            .layout
+            .expect("trying to build descriptor set without layout");
 
         let descriptor_set = unsafe {
-            context.device.allocate_descriptor_sets(&vk::DescriptorSetAllocateInfo::builder()
-                .descriptor_pool(descriptor_pool.handle)
-                .set_layouts(&[layout.handle])
+            context.device.allocate_descriptor_sets(
+                &vk::DescriptorSetAllocateInfo::builder()
+                    .descriptor_pool(descriptor_pool.handle)
+                    .set_layouts(&[layout.handle]),
             )
-        }.expect("couldn't allocate descriptor set")[0];
+        }?[0];
 
-        DescriptorSet {
+        Ok(DescriptorSet {
             handle: descriptor_set,
             layout,
-        }
+        })
     }
 }
 
@@ -50,7 +57,6 @@ impl DescriptorSet {
     }
 }
 
-
 #[derive(Default)]
 pub struct DescriptorSetContainer {
     pub set: DescriptorSet,
@@ -65,7 +71,9 @@ impl DescriptorSetContainer {
     }
 
     pub fn destroy(&mut self, context: &VkContext) {
-        self.allocated_buffers.iter_mut().for_each(|buffer| buffer.destroy(context));
+        self.allocated_buffers
+            .iter_mut()
+            .for_each(|buffer| buffer.destroy(context));
         self.set.destroy(context);
     }
 

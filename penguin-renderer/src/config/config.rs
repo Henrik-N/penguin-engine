@@ -1,19 +1,15 @@
 /// The required extensions for the physical device that we will be selecting.
 pub const REQUIRED_DEVICE_EXTENSIONS: [&'static str; 1] = ["VK_KHR_swapchain"];
 
-
-
 #[cfg(all(debug_assertions))]
 const DEBUG_ENABLED: bool = true;
 #[cfg(not(debug_assertions))]
 const DEBUG_ENABLED: bool = false;
 
-
 pub const VK_VALIDATION: ValidationInfo = ValidationInfo {
     is_enabled: DEBUG_ENABLED,
     required_validation_layers: ["VK_LAYER_KHRONOS_validation"],
 };
-
 
 // -------------
 pub struct ValidationInfo {

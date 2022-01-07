@@ -1,5 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::{DescriptorSetContainer, Pipeline, VkContext};
+use ash::vk;
 
 #[derive(Clone)]
 pub struct Material {

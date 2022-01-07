@@ -1,8 +1,7 @@
-use ash::vk;
-use crate::renderer::vk_types::Surface;
 use crate::renderer::vk_types::vk_context::instance::Instance;
+use crate::renderer::vk_types::Surface;
 use anyhow::*;
-
+use ash::vk;
 
 pub struct PhysicalDevice {
     pub handle: vk::PhysicalDevice,
@@ -18,11 +17,7 @@ impl std::ops::Deref for PhysicalDevice {
 
 impl PhysicalDevice {
     pub(crate) fn init(instance: &Instance, surface: &Surface) -> Result<Self> {
-
-        let (handle, queue_index) = init::select_physical_device(
-            instance,
-            surface,
-        )?;
+        let (handle, queue_index) = init::select_physical_device(instance, surface)?;
 
         Ok(Self {
             handle,
@@ -30,9 +25,6 @@ impl PhysicalDevice {
         })
     }
 }
-
-
-
 
 pub struct SwapchainSupportDetails {
     pub surface_capabilities: vk::SurfaceCapabilitiesKHR,
@@ -48,18 +40,25 @@ impl PhysicalDevice {
 
 fn query_swapchain_support(pd: vk::PhysicalDevice, surface: &Surface) -> SwapchainSupportDetails {
     let surface_capabilities = unsafe {
-        surface.loader.get_physical_device_surface_capabilities(pd, surface.handle)
+        surface
+            .loader
+            .get_physical_device_surface_capabilities(pd, surface.handle)
     }
-        .expect("Couldn't get surface capabilities");
+    .expect("Couldn't get surface capabilities");
 
-    let surface_color_formats =
-        unsafe { surface.loader.get_physical_device_surface_formats(pd, surface.handle) }
-            .expect("Couldn't get surface formats.");
+    let surface_color_formats = unsafe {
+        surface
+            .loader
+            .get_physical_device_surface_formats(pd, surface.handle)
+    }
+    .expect("Couldn't get surface formats.");
 
     let surface_present_modes = unsafe {
-        surface.loader.get_physical_device_surface_present_modes(pd, surface.handle)
+        surface
+            .loader
+            .get_physical_device_surface_present_modes(pd, surface.handle)
     }
-        .expect("Couldn't get surface presenet modes.");
+    .expect("Couldn't get surface presenet modes.");
 
     SwapchainSupportDetails {
         surface_capabilities,
@@ -67,7 +66,6 @@ fn query_swapchain_support(pd: vk::PhysicalDevice, surface: &Surface) -> Swapcha
         surface_present_modes,
     }
 }
-
 
 mod init {
     // --------------------- PHYSICAL DEVICE -----------------------
@@ -80,6 +78,8 @@ mod init {
         surface: &Surface,
     ) -> Result<(vk::PhysicalDevice, PhysicalDeviceQueueIndex)> {
         // Find devices with vulkan support
+
+        log::trace!("Enumerating physical devices...");
         let physical_devices = unsafe {
             instance
                 .enumerate_physical_devices()
@@ -87,16 +87,15 @@ mod init {
         };
 
         log::debug!(
-                "Found {} physical devices with Vulkan support",
-                physical_devices.len()
-            );
+            "Found {} physical devices with Vulkan support",
+            physical_devices.len()
+        );
 
         // Select suitable physical device
         let mut suitable_device = None;
 
         for &physical_device in physical_devices.iter() {
-            let device_info =
-                check_device_suitablity_info(&instance, physical_device, &surface);
+            let device_info = check_device_suitablity_info(&instance, physical_device, &surface);
 
             if device_info.is_suitable() {
                 if suitable_device.is_none() {
@@ -141,12 +140,14 @@ mod init {
         surface: &Surface,
     ) -> PhysicalDeviceInfo {
         let properties = unsafe { instance.get_physical_device_properties(physical_device) };
-        // let features = unsafe { instance.get_physical_device_features(physical_device) };
-        let features = unsafe {
-            instance.get_physical_device_features(physical_device)
-        };
 
-        let geometry_shader_support = if features.geometry_shader == vk::FALSE { false } else { true };
+        let features = unsafe { instance.get_physical_device_features(physical_device) };
+
+        let geometry_shader_support = if features.geometry_shader == vk::FALSE {
+            false
+        } else {
+            true
+        };
 
         let device_type = match properties.device_type {
             vk::PhysicalDeviceType::CPU => "Cpu",
@@ -158,8 +159,7 @@ mod init {
         };
         log::info!("Physical device: {}", device_type);
 
-        let graphics_queue_index =
-            find_graphics_queue_family(&instance, physical_device, surface);
+        let graphics_queue_index = find_graphics_queue_family(&instance, physical_device, surface);
 
         let are_required_extensions_supported =
             check_required_extensions_supported(&instance, physical_device);
@@ -181,8 +181,8 @@ mod init {
         }
     }
 
-    use ash::vk;
     use crate::renderer::vk_types::{Instance, Surface};
+    use ash::vk;
 
     /// Checks if the listed device extensions are supported on the given physical device.
     fn check_required_extensions_supported(
@@ -221,24 +221,34 @@ mod init {
 
         log::trace!("Trying to find graphics queue family");
 
-
         let mut queues_support = "Available queue families:\n".to_owned();
         //log::info!("QUEUES SUPPORT -----------------------");
-        available_queue_families.iter().enumerate().for_each(|(index, queue_family_property)| {
-            let has_graphics_queue = queue_family_property.queue_flags.contains(vk::QueueFlags::GRAPHICS) as u32;
-            let has_compute_queue = queue_family_property.queue_flags.contains(vk::QueueFlags::COMPUTE) as u32;
-            let has_transfer_queue = queue_family_property.queue_flags.contains(vk::QueueFlags::TRANSFER) as u32;
+        available_queue_families
+            .iter()
+            .enumerate()
+            .for_each(|(index, queue_family_property)| {
+                let has_graphics_queue = queue_family_property
+                    .queue_flags
+                    .contains(vk::QueueFlags::GRAPHICS)
+                    as u32;
+                let has_compute_queue = queue_family_property
+                    .queue_flags
+                    .contains(vk::QueueFlags::COMPUTE)
+                    as u32;
+                let has_transfer_queue = queue_family_property
+                    .queue_flags
+                    .contains(vk::QueueFlags::TRANSFER)
+                    as u32;
 
-            queues_support += &format!("\tqueue family {}: graphics: {} compute: {} transfer: {}\n", index, has_graphics_queue, has_compute_queue, has_transfer_queue);
-        });
+                queues_support += &format!(
+                    "\tqueue family {}: graphics: {} compute: {} transfer: {}\n",
+                    index, has_graphics_queue, has_compute_queue, has_transfer_queue
+                );
+            });
         log::info!("{}", queues_support);
-
-
 
         let queue_family_index = available_queue_families.iter().enumerate().find_map(
             |(index, queue_family_property)| {
-
-
                 let graphics_support = queue_family_property
                     .queue_flags
                     .contains(vk::QueueFlags::GRAPHICS);
@@ -247,7 +257,6 @@ mod init {
                     return None;
                 }
 
-
                 let present_support = unsafe {
                     surface.loader.get_physical_device_surface_support(
                         physical_device,
@@ -255,7 +264,7 @@ mod init {
                         surface.handle,
                     )
                 }
-                    .expect("Returned vk false.");
+                .expect("Returned vk false.");
 
                 if present_support {
                     return Some(index as u32);

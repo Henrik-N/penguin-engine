@@ -1,17 +1,21 @@
+use crate::math_vk_format::Vec3;
+use crate::renderer::frame_data::{FrameData, FrameDataContainer};
+use crate::renderer::gpu_data::{GPUCameraData, GPUObjectData};
+use crate::renderer::memory::{
+    AllocatedBuffer, AllocatedBufferCreateInfo, MemoryUsage, UploadContext,
+};
+use crate::renderer::render_objects::{RenderObject, Texture, Vertex};
+use crate::renderer::resources::{
+    MaterialsResource, MeshesResource, RenderObjectsResource, TexturesResource,
+};
+use crate::renderer::vk_types::descriptor_sets::DescriptorSetContainer;
+use crate::renderer::vk_types::resources::DescriptorSetsResource;
+use crate::renderer::vk_types::*;
 use ash::vk;
+use ash::vk::DescriptorSetLayoutBinding;
 use penguin_app::ecs::*;
 use penguin_app::window::Window;
 use stb::image::Channels::Default;
-use crate::math_vk_format::{Vec3};
-use crate::renderer::frame_data::{FrameData, FrameDataContainer};
-use crate::renderer::resources::{MaterialsResource, MeshesResource, RenderObjectsResource, TexturesResource};
-use crate::renderer::memory::{AllocatedBuffer, AllocatedBufferCreateInfo, MemoryUsage, UploadContext};
-use crate::renderer::gpu_data::{GPUCameraData, GPUObjectData};
-use crate::renderer::render_objects::{RenderObject, Texture, Vertex};
-use crate::renderer::vk_types::descriptor_sets::DescriptorSetContainer;
-use crate::renderer::vk_types::*;
-use crate::renderer::vk_types::resources::DescriptorSetsResource;
-
 
 use uniform_buffer::*;
 mod uniform_buffer {
@@ -20,23 +24,33 @@ mod uniform_buffer {
     pub fn uniform_buffer_desc_set(context: &VkContext, pool: &DescriptorPool) -> DescriptorSet {
         DescriptorSet::builder()
             .layout(
-                DescriptorSetLayout::builder(context)
-                    .layout_binding(vk::DescriptorSetLayoutBinding::builder()
-                        .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER)
-                        .descriptor_count(1)
-                        .binding(0)
-                        .stage_flags(vk::ShaderStageFlags::VERTEX)
+                DescriptorSetLayout::builder()
+                    .layout_binding(
+                        vk::DescriptorSetLayoutBinding::builder()
+                            .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER)
+                            .descriptor_count(1)
+                            .binding(0)
+                            .stage_flags(vk::ShaderStageFlags::VERTEX),
                     )
-                    .build()
+                    .build(context),
             )
             .build(context, pool)
+            .expect("couldn't alloc uniform buffer set")
     }
 
-    pub fn update_ubuffer_desc_info(context: &VkContext, desc_buffer_info: &mut vk::DescriptorBufferInfo, frame_index: usize) {
-        desc_buffer_info.offset = (context.packed_uniform_buffer_range::<GPUCameraData>() * (frame_index as u64)) as _;
+    pub fn update_ubuffer_desc_info(
+        context: &VkContext,
+        desc_buffer_info: &mut vk::DescriptorBufferInfo,
+        frame_index: usize,
+    ) {
+        desc_buffer_info.offset =
+            (context.packed_uniform_buffer_range::<GPUCameraData>() * (frame_index as u64)) as _;
     }
 
-    pub fn uniform_buffer_write_set(resource: &DescriptorSetsResource, desc_buffer_info: &[vk::DescriptorBufferInfo]) -> vk::WriteDescriptorSet {
+    pub fn uniform_buffer_write_set(
+        resource: &DescriptorSetsResource,
+        desc_buffer_info: &[vk::DescriptorBufferInfo],
+    ) -> vk::WriteDescriptorSet {
         vk::WriteDescriptorSet::builder()
             .dst_set(resource.get_set(0).handle())
             .dst_binding(0)
@@ -57,7 +71,8 @@ mod uniform_buffer {
                 memory_usage: MemoryUsage::GpuMemCpuWritable,
                 sharing_mode: vk::SharingMode::EXCLUSIVE,
                 memory_map_flags: vk::MemoryMapFlags::empty(),
-            });
+            },
+        );
 
         let desc_buffer_info = vk::DescriptorBufferInfo::builder()
             .buffer(buffer.handle)
@@ -76,19 +91,24 @@ mod storage_buffer {
     pub fn storage_buffer_desc_set(context: &VkContext, pool: &DescriptorPool) -> DescriptorSet {
         DescriptorSet::builder()
             .layout(
-                DescriptorSetLayout::builder(context)
-                    .layout_binding(vk::DescriptorSetLayoutBinding::builder()
-                        .descriptor_type(vk::DescriptorType::STORAGE_BUFFER)
-                        .descriptor_count(1)
-                        .binding(0)
-                        .stage_flags(vk::ShaderStageFlags::VERTEX)
+                DescriptorSetLayout::builder()
+                    .layout_binding(
+                        vk::DescriptorSetLayoutBinding::builder()
+                            .descriptor_type(vk::DescriptorType::STORAGE_BUFFER)
+                            .descriptor_count(1)
+                            .binding(0)
+                            .stage_flags(vk::ShaderStageFlags::VERTEX),
                     )
-                    .build()
+                    .build(context),
             )
             .build(context, pool)
+            .expect("couldn't allo storage set")
     }
 
-    pub fn storage_buffer_write_set(resource: &DescriptorSetsResource, desc_buffer_info: &[vk::DescriptorBufferInfo]) -> vk::WriteDescriptorSet {
+    pub fn storage_buffer_write_set(
+        resource: &DescriptorSetsResource,
+        desc_buffer_info: &[vk::DescriptorBufferInfo],
+    ) -> vk::WriteDescriptorSet {
         vk::WriteDescriptorSet::builder()
             .dst_set(resource.get_set(1).handle())
             .dst_binding(0)
@@ -97,7 +117,7 @@ mod storage_buffer {
             .build()
     }
 
-    pub fn storage_buffer(context: &VkContext) -> (AllocatedBuffer, vk::DescriptorBufferInfo)  {
+    pub fn storage_buffer(context: &VkContext) -> (AllocatedBuffer, vk::DescriptorBufferInfo) {
         let size = std::mem::size_of::<GPUObjectData>() * crate::config::MAX_OBJECTS;
         let buffer = AllocatedBuffer::create_buffer(
             &context,
@@ -108,7 +128,8 @@ mod storage_buffer {
                 memory_usage: MemoryUsage::GpuMemCpuWritable,
                 sharing_mode: vk::SharingMode::EXCLUSIVE,
                 memory_map_flags: vk::MemoryMapFlags::empty(),
-            });
+            },
+        );
 
         let storage_buffer_desc_info = vk::DescriptorBufferInfo::builder()
             .buffer(buffer.handle)
@@ -122,21 +143,23 @@ mod storage_buffer {
 
 use image_sampler::*;
 mod image_sampler {
-   use super::*;
+    use super::*;
 
     pub fn single_texture_desc_set(context: &VkContext, pool: &DescriptorPool) -> DescriptorSet {
         DescriptorSet::builder()
             .layout(
-                DescriptorSetLayout::builder(context)
-                    .layout_binding(vk::DescriptorSetLayoutBinding::builder()
-                        .descriptor_type(vk::DescriptorType::COMBINED_IMAGE_SAMPLER)
-                        .descriptor_count(1)
-                        .binding(0)
-                        .stage_flags(vk::ShaderStageFlags::FRAGMENT)
+                DescriptorSetLayout::builder()
+                    .layout_binding(
+                        vk::DescriptorSetLayoutBinding::builder()
+                            .descriptor_type(vk::DescriptorType::COMBINED_IMAGE_SAMPLER)
+                            .descriptor_count(1)
+                            .binding(0)
+                            .stage_flags(vk::ShaderStageFlags::FRAGMENT),
                     )
-                    .build()
+                    .build(context),
             )
             .build(context, pool)
+            .expect("couldn't alloc single texture set")
     }
 
     pub fn blocky_sampler(context: &VkContext) -> vk::Sampler {
@@ -149,34 +172,31 @@ mod image_sampler {
             .address_mode_v(address_mode)
             .address_mode_w(address_mode);
 
-        unsafe {
-            context.device.create_sampler(&sampler_create_info, None)
-        }.expect("couldn't create blocky sampler")
+        unsafe { context.device.create_sampler(&sampler_create_info, None) }
+            .expect("couldn't create blocky sampler")
     }
-
 }
-
 
 fn textured_pipeline(
     context: &VkContext,
     swapchain: &Swapchain,
     render_pass: &RenderPass,
-    pipeline_layout: &PipelineLayout)
-    -> Pipeline {
-
-    Pipeline::builder(&context, swapchain.extent, render_pass.handle,
-        vk::PipelineBindPoint::GRAPHICS)
-        .shaders(&["simple.vert", "textured.frag"])
-        .vertex_input(
-            &Vertex::create_binding_descriptions(0),
-            &Vertex::create_attribute_descriptions(0))
-        .pipeline_layout(pipeline_layout.handle)
-        .build()
+    pipeline_layout: &PipelineLayout,
+) -> Pipeline {
+    Pipeline::builder(
+        &context,
+        swapchain.extent,
+        render_pass.handle,
+        vk::PipelineBindPoint::GRAPHICS,
+    )
+    .shaders(&["simple.vert", "textured.frag"])
+    .vertex_input(
+        &Vertex::create_binding_descriptions(0),
+        &Vertex::create_attribute_descriptions(0),
+    )
+    .pipeline_layout(pipeline_layout.handle)
+    .build()
 }
-
-
-
-
 
 #[system]
 pub fn renderer_startup(
@@ -197,7 +217,6 @@ pub fn renderer_startup(
 
     // /------------------ OTHER RENDERER STRUCTS----------------------------------------
 
-
     let VkComponents {
         swapchain,
         depth_image,
@@ -207,12 +226,25 @@ pub fn renderer_startup(
     } = init_vk_components(window, &context);
     // ///////////////////////////////////////
 
-
-    descriptor_sets_resource.init_pool(DescriptorPool::from_sizes(&context, 20, &[
-        vk::DescriptorPoolSize { descriptor_count: 10, ty: vk::DescriptorType::UNIFORM_BUFFER },
-        vk::DescriptorPoolSize { descriptor_count: 10, ty: vk::DescriptorType::STORAGE_BUFFER },
-        vk::DescriptorPoolSize { descriptor_count: 10, ty: vk::DescriptorType::COMBINED_IMAGE_SAMPLER },
-    ]));
+    descriptor_sets_resource.init_pool(DescriptorPool::from_sizes(
+        &context,
+        20,
+        vk::DescriptorPoolCreateFlags::empty(),
+        &[
+            vk::DescriptorPoolSize {
+                descriptor_count: 10,
+                ty: vk::DescriptorType::UNIFORM_BUFFER,
+            },
+            vk::DescriptorPoolSize {
+                descriptor_count: 10,
+                ty: vk::DescriptorType::STORAGE_BUFFER,
+            },
+            vk::DescriptorPoolSize {
+                descriptor_count: 10,
+                ty: vk::DescriptorType::COMBINED_IMAGE_SAMPLER,
+            },
+        ],
+    ));
     let descriptor_pool = descriptor_sets_resource.pool;
 
     /////////////////////
@@ -231,7 +263,6 @@ pub fn renderer_startup(
 
     // textured pipeline
     let pipeline = textured_pipeline(&context, &swapchain, &render_pass, &pipeline_layout);
-
 
     ////////////////////////////////////////////
     let (uniform_buffer, mut uniform_desc_buffer_info) = uniform_buffer(&context);
@@ -254,7 +285,6 @@ pub fn renderer_startup(
     };
 
     ////////////////////////////////////////////
-
 
     // /------------------ RESOURCES  -----------------------------------------------------
     meshes.insert_from_file(&context, &upload_context, ("monkey", "lost_empire.obj"));
@@ -289,39 +319,47 @@ pub fn renderer_startup(
     descriptor_sets_resource.sets = vec![
         uniform_buffer_descriptor_set_container, // 0
         storage_buffer_descriptor_set_container, // 1
-        single_texture_desc_set_container, // 2
+        single_texture_desc_set_container,       // 2
     ];
-
 
     let command_pool = context.alloc_command_pool(
         context.physical_device.graphics_queue_index,
-        vk::CommandPoolCreateFlags::RESET_COMMAND_BUFFER);
+        vk::CommandPoolCreateFlags::RESET_COMMAND_BUFFER,
+    );
 
-    let command_buffers = context.allocate_command_buffers(
-        command_pool,
-        crate::config::MAX_FRAMES_COUNT as _);
-
+    let command_buffers =
+        context.allocate_command_buffers(command_pool, crate::config::MAX_FRAMES_COUNT as _);
 
     let frame_datas = FrameDataContainer::new(
         command_pool,
-        command_buffers.into_iter().enumerate()
+        command_buffers
+            .into_iter()
+            .enumerate()
             .map(|(frame_index, command_buffer)| {
                 // fence --------------
                 let render_fence = context.create_fence(vk::FenceCreateFlags::SIGNALED);
 
                 // semaphores --------------
-                let rendering_complete_semaphore = context.create_semaphore(vk::SemaphoreCreateFlags::empty());
-                let presenting_complete_semaphore = context.create_semaphore(vk::SemaphoreCreateFlags::empty());
+                let rendering_complete_semaphore =
+                    context.create_semaphore(vk::SemaphoreCreateFlags::empty());
+                let presenting_complete_semaphore =
+                    context.create_semaphore(vk::SemaphoreCreateFlags::empty());
 
                 // write sets
                 // *
-                update_ubuffer_desc_info(&context, &mut uniform_desc_buffer_info, frame_index);
+                //update_ubuffer_desc_info(&context, &mut uniform_desc_buffer_info, frame_index);
 
                 let write_sets = [
                     // set 0, binding 0
-                    uniform_buffer_write_set(&descriptor_sets_resource, &[uniform_desc_buffer_info]),
+                    uniform_buffer_write_set(
+                        &descriptor_sets_resource,
+                        &[uniform_desc_buffer_info],
+                    ),
                     // set 1, binding 0
-                    storage_buffer_write_set(&descriptor_sets_resource, &[storage_buffer_desc_info]),
+                    storage_buffer_write_set(
+                        &descriptor_sets_resource,
+                        &[storage_buffer_desc_info],
+                    ),
                     single_texture_write_set.clone(),
                 ];
 
@@ -337,19 +375,17 @@ pub fn renderer_startup(
                     uniform_buffer_descriptor_set: uniform_buffer_desc_set.handle,
                     frame_index: frame_index as _,
                 }
-            }).collect::<Vec<FrameData>>(),
+            })
+            .collect::<Vec<FrameData>>(),
     );
-
-
 
     let render_object = RenderObject {
         material: materials.get("default").clone(),
         mesh: meshes.get("monkey").clone(),
         translation: Vec3::new(0., 0., 0.),
-        name: "bunny".to_owned()
+        name: "bunny".to_owned(),
     };
     render_objects.render_objects.push(render_object);
-
 
     let _renderer_entity: Entity = cmd.push((
         context,
@@ -364,7 +400,6 @@ pub fn renderer_startup(
         upload_context,
     ));
 }
-
 
 #[system]
 pub fn renderer_shutdown(
@@ -387,11 +422,16 @@ pub fn renderer_shutdown(
     log::info!("RENDERER SHUTDOWN STARTED!");
 
     query.iter_mut(world).for_each(
-        |(context, swapchain, frame_buffers, render_pass, depth_image,
-             //descriptor_pool,
-             frame_datas,
-            upload_context
-         ): (
+        |(
+            context,
+            swapchain,
+            frame_buffers,
+            render_pass,
+            depth_image,
+            //descriptor_pool,
+            frame_datas,
+            upload_context,
+        ): (
             &mut VkContext,
             &mut Swapchain,
             &mut FrameBuffers,
@@ -399,7 +439,7 @@ pub fn renderer_shutdown(
             &mut DepthImage,
             &mut FrameDataContainer,
             //
-            &mut UploadContext
+            &mut UploadContext,
         )| {
             // wait for device idle..
             context.wait_for_device_idle();
@@ -409,7 +449,6 @@ pub fn renderer_shutdown(
             frame_buffers.destroy(context);
 
             render_pass.destroy(context);
-
 
             swapchain.destroy(context);
 
@@ -424,12 +463,9 @@ pub fn renderer_shutdown(
 
             upload_context.destroy(context);
 
-
             context.destroy();
 
             log::info!("Renderer finished!");
         },
     );
 }
-
-

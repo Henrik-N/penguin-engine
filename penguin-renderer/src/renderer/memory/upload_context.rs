@@ -1,6 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::VkContext;
-
+use ash::vk;
 
 // Context for memory transfers
 #[derive(Copy, Clone)]

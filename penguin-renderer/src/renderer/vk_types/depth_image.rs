@@ -1,6 +1,6 @@
-use ash::vk;
 use crate::renderer::memory::{AllocatedImage, AllocatedImageCreateInfo, MemoryUsage};
 use crate::renderer::vk_types::{Swapchain, VkContext};
+use ash::vk;
 
 pub struct DepthImage {
     pub image: AllocatedImage,
@@ -27,7 +27,7 @@ impl DepthImage {
 
 impl DepthImage {
     pub fn destroy(&mut self, context: &VkContext) {
-        unsafe {context.device.destroy_image_view(self.image_view, None)};
+        unsafe { context.device.destroy_image_view(self.image_view, None) };
         self.image.destroy(&context);
     }
 
@@ -59,7 +59,8 @@ impl DepthImage {
                         .sharing_mode(vk::SharingMode::EXCLUSIVE)
                 },
                 memory_usage: MemoryUsage::GpuOnly,
-            });
+            },
+        );
 
         let image_view_create_info = vk::ImageViewCreateInfo::builder()
             .image(depth_image.handle)
@@ -75,9 +76,12 @@ impl DepthImage {
                     .build(),
             );
 
-        let depth_image_view= unsafe {
-            context.device.create_image_view(&image_view_create_info, None)
-        }.expect("couldn't create image view");
+        let depth_image_view = unsafe {
+            context
+                .device
+                .create_image_view(&image_view_create_info, None)
+        }
+        .expect("couldn't create image view");
 
         Self {
             image: depth_image,

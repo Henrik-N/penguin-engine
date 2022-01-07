@@ -1,6 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::VkContext;
-
+use ash::vk;
 
 pub struct Swapchain {
     pub loader: ash::extensions::khr::Swapchain,
@@ -12,7 +11,12 @@ pub struct Swapchain {
 }
 
 impl Swapchain {
-    pub fn acquire_next_swapchain_image(&self, semaphore: vk::Semaphore, fence: vk::Fence, timeout: std::time::Duration) -> u32 {
+    pub fn acquire_next_swapchain_image(
+        &self,
+        semaphore: vk::Semaphore,
+        fence: vk::Fence,
+        timeout: std::time::Duration,
+    ) -> u32 {
         log::trace!("Acquiring next swapchain image");
 
         // todo: Handle suboptimal case?
@@ -24,7 +28,8 @@ impl Swapchain {
                 semaphore,
                 fence,
             )
-        }.expect("Couldn't acquire next swapchain image");
+        }
+        .expect("Couldn't acquire next swapchain image");
         log::trace!("Swapchain image {} aquired!", image_index);
 
         image_index
@@ -41,7 +46,9 @@ impl Swapchain {
 
     pub fn init(window: &penguin_app::window::Window, context: &VkContext) -> Self {
         log::trace!("Querying device for swapchain support");
-        let swapchain_support_details = context.physical_device.query_swapchain_support(&context.surface);
+        let swapchain_support_details = context
+            .physical_device
+            .query_swapchain_support(&context.surface);
 
         log::trace!("Creating swapchain");
         init::init_swapchain(
@@ -53,10 +60,9 @@ impl Swapchain {
     }
 }
 
-
 mod init {
-    use ash::vk;
     use crate::renderer::vk_types::{Swapchain, SwapchainSupportDetails, VkContext};
+    use ash::vk;
 
     pub(crate) fn init_swapchain(
         context: &VkContext,
@@ -80,9 +86,9 @@ mod init {
             .max_image_count
             > 0
             && image_count
-            < swapchain_support_details
-            .surface_capabilities
-            .max_image_count
+                < swapchain_support_details
+                    .surface_capabilities
+                    .max_image_count
         {
             image_count = swapchain_support_details
                 .surface_capabilities
@@ -97,8 +103,8 @@ mod init {
         let extent = select_swapchain_extent(
             &swapchain_support_details.surface_capabilities,
             window_width,
-            window_height);
-
+            window_height,
+        );
 
         let (image_sharing_mode, _queue_family_index_count, queue_family_indices) =
             // Use exclusive mode if same, as it is more performant
@@ -126,7 +132,8 @@ mod init {
             .present_mode(present_mode)
             .clipped(true);
 
-        let swapchain_loader = ash::extensions::khr::Swapchain::new(&context.instance.handle, &context.device.handle);
+        let swapchain_loader =
+            ash::extensions::khr::Swapchain::new(&context.instance.handle, &context.device.handle);
 
         let swapchain = unsafe {
             swapchain_loader
@@ -179,7 +186,11 @@ mod init {
         vk::PresentModeKHR::FIFO_RELAXED
     }
 
-    fn select_swapchain_extent(surface_capabilities: &vk::SurfaceCapabilitiesKHR, window_width: u32, window_height: u32) -> vk::Extent2D {
+    fn select_swapchain_extent(
+        surface_capabilities: &vk::SurfaceCapabilitiesKHR,
+        window_width: u32,
+        window_height: u32,
+    ) -> vk::Extent2D {
         // Translate the screen coordinates into pixel resolution if they are not the same. (On high DPI-displays for example, sometimes they differ).
 
         if surface_capabilities.current_extent.width != u32::MAX {

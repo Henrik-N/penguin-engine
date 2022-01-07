@@ -1,9 +1,6 @@
-use ash::vk;
-use penguin_app::{
-    ecs::*,
-    window::Window,
-};
 use crate::math_vk_format::{Mat4, Vec3, Vec4};
+use ash::vk;
+use penguin_app::{ecs::*, window::Window};
 
 use crate::renderer::{
     frame_data::{FrameData, FrameDataContainer},
@@ -12,11 +9,10 @@ use crate::renderer::{
     render_commands::{self, SubmitRenderCommandsParams},
     resources::{MaterialsResource, MeshesResource, RenderObjectsResource},
     vk_types::{
-        resource::DescriptorSetsResource,
-        BindDescriptorSetsInfo, FrameBuffers, RenderPass, Swapchain, VkContext,
+        resource::DescriptorSetsResource, BindDescriptorSetsInfo, FrameBuffers, RenderPass,
+        Swapchain, VkContext,
     },
 };
-
 
 pub struct DrawParams<'a> {
     pub aspect_ratio: f32,
@@ -40,9 +36,10 @@ pub struct DrawFunctionParams<'a> {
 
 fn draw(draw_params: DrawFunctionParams) {
     let DrawFunctionParams {
-        context, params, resources
+        context,
+        params,
+        resources,
     } = draw_params;
-
 
     //let material = resources.materials.get("default");
     let mesh = resources.meshes.get("monkey");
@@ -57,21 +54,18 @@ fn draw(draw_params: DrawFunctionParams) {
     let (z_near, z_far) = (0.1_f32, 200.0_f32);
     let projection = Mat4::perspective_rh(params.fov_y, params.aspect_ratio, z_near, z_far);
 
-
     context.bind_descriptor_sets(BindDescriptorSetsInfo {
         command_buffer: params.frame_data.command_buffer,
         pipeline_bind_point: vk::PipelineBindPoint::GRAPHICS,
         pipeline_layout: resources.descriptor_sets.get_set(0).pipeline_layout,
         first_set: 0,
-        descriptor_set_handles: &resources.descriptor_sets.get_set_handles(&[0, 1, /*2*/]),
+        descriptor_set_handles: &resources.descriptor_sets.get_set_handles(&[0, 1 /*2*/]),
     });
 
-
-    let buffer_data = [
-        GPUCameraData {
-            data: Vec4::default(),
-            proj_view: projection * view,
-        }];
+    let buffer_data = [GPUCameraData {
+        data: Vec4::default(),
+        proj_view: projection * view,
+    }];
 
     let alignment = context.packed_uniform_buffer_range::<GPUCameraData>();
     let offset = (params.frame_data.frame_index) as u64 * alignment;
@@ -81,17 +75,16 @@ fn draw(draw_params: DrawFunctionParams) {
             data: &buffer_data,
             size: alignment,
             offset,
-            alignment
-        }
+            alignment,
+        },
     );
 
-    //let spin = (params.frame_count as f32 * 0.4).to_radians();
-    let spin = 0.0_f32.to_radians();
+    let spin = (params.frame_count as f32 * 0.4).to_radians();
+    //let spin = 0.0_f32.to_radians();
 
     let buffer_data = [GPUObjectData {
         transform: Mat4::from_rotation_x(spin),
     }];
-
 
     let alignment = std::mem::align_of::<GPUObjectData>() as _;
     resources.descriptor_sets.get_set(1).allocated_buffers[0].write_memory(
@@ -101,15 +94,13 @@ fn draw(draw_params: DrawFunctionParams) {
             size: alignment,
             offset: 0,
             alignment,
-        }
+        },
     );
 
-
-
     // bind pipeline
-    resources.render_objects.render_objects[0].material.bind(&context, params.frame_data.command_buffer);
-
-
+    resources.render_objects.render_objects[0]
+        .material
+        .bind(&context, params.frame_data.command_buffer);
 
     unsafe {
         // bind vertex buffers
@@ -117,16 +108,19 @@ fn draw(draw_params: DrawFunctionParams) {
             params.frame_data.command_buffer,
             0,
             &[resources.render_objects[0].mesh.vertex_buffer.handle],
-            &[0]);
+            &[0],
+        );
 
         let instance_id = 0;
 
         // draw mesh
-        context.device.cmd_draw(params.frame_data.command_buffer,
-                                mesh.vertex_count as u32,
-                                1,
-                                0,
-                                instance_id);
+        context.device.cmd_draw(
+            params.frame_data.command_buffer,
+            mesh.vertex_count as u32,
+            1,
+            0,
+            instance_id,
+        );
     }
 }
 
@@ -156,7 +150,7 @@ pub fn render(
             pipeline_wait_stage_flags: &[vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT],
             frame_data,
         },
-        |frame_buffer: vk::Framebuffer | {
+        |frame_buffer: vk::Framebuffer| {
             render_pass_func(
                 context,
                 RenderPassParams {
@@ -165,12 +159,13 @@ pub fn render(
                     swapchain,
                     render_pass,
                     frame_data,
-                    frame_buffer
+                    frame_buffer,
                 },
                 DrawFunctionParams {
                     context,
                     params: DrawParams {
-                        aspect_ratio: window.dimensions.width as f32 / window.dimensions.height as f32,
+                        aspect_ratio: window.dimensions.width as f32
+                            / window.dimensions.height as f32,
                         fov_y: 70.0_f32.to_radians(),
                         frame_data,
                         frame_count: frame_datas.frame_count(),
@@ -181,9 +176,9 @@ pub fn render(
                         descriptor_sets,
                         render_objects,
                     },
-                }
+                },
             );
-        }
+        },
     )
 }
 
@@ -225,7 +220,6 @@ fn render_pass_func(
         })
         .clear_values(&clear_values);
 
-
     unsafe {
         context.device.cmd_begin_render_pass(
             params.frame_data.command_buffer,
@@ -237,6 +231,8 @@ fn render_pass_func(
     draw(draw_params);
 
     unsafe {
-        context.device.cmd_end_render_pass(params.frame_data.command_buffer);
+        context
+            .device
+            .cmd_end_render_pass(params.frame_data.command_buffer);
     }
 }

@@ -1,7 +1,6 @@
-use ash::vk;
-use anyhow::*;
 use crate::renderer::vk_types::Instance;
-
+use anyhow::*;
+use ash::vk;
 
 pub struct Surface {
     pub handle: vk::SurfaceKHR,
@@ -14,9 +13,6 @@ impl std::ops::Deref for Surface {
         &self.handle
     }
 }
-
-
-
 
 impl Surface {
     pub(crate) fn init(instance: &Instance, window: &penguin_app::window::Window) -> Result<Self> {

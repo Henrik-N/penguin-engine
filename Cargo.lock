@@ -1180,9 +1180,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "19b17cddbe7ec3f8bc800887bab5e717348c95ea2ca0b1bf0837fb964dc67099"
 
 [[package]]
-name = "penguin-app"
-version = "0.1.0"
-source = "git+https://github.com/Henrik-N/penguin-app#126e5882b3cc38bd73df885d11135f67c436ac15"
+name = "penguin-application"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6f9770ef8b1fbf6e11f85e4439fdd985fb448a99cd7e9452dbc1e5673fe31a0a"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1196,8 +1197,9 @@ dependencies = [
 
 [[package]]
 name = "penguin-config"
-version = "0.1.0"
-source = "git+https://github.com/Henrik-N/penguin-config#ef104ad7ed75c8563e6e866ad1e2593a39d668f1"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "91316cddbf211c1129a80a4f45388e5fca0528b1decdde02706f26c793bd43bf"
 dependencies = [
  "penguin-config-derive",
  "serde",
@@ -1206,10 +1208,12 @@ dependencies = [
 
 [[package]]
 name = "penguin-config-derive"
-version = "0.1.0"
-source = "git+https://github.com/Henrik-N/penguin-config-derive#9937b67d02471a09aa3f546072cc1bf95d9178ce"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "91c60bb9b295a0aefbfb40aca40fc7012a39d8485faf5ac5126ebcb2fa152065"
 dependencies = [
  "darling",
+ "proc-macro2 1.0.34",
  "quote 1.0.10",
  "syn",
 ]
@@ -1218,7 +1222,7 @@ dependencies = [
 name = "penguin-engine-inner"
 version = "0.1.0"
 dependencies = [
- "penguin-app",
+ "penguin-application",
  "penguin-config",
  "penguin-renderer",
 ]
@@ -1235,7 +1239,7 @@ dependencies = [
  "legion",
  "log",
  "macaw",
- "penguin-app",
+ "penguin-application",
  "shaderc",
  "stb",
  "wavefront",

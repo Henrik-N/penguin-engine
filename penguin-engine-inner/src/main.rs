@@ -1,6 +1,5 @@
+use penguin_app::{config::AppConfig, App};
 use penguin_config::PenguinConfig;
-use penguin_app::{App, config::AppConfig};
-
 
 fn main() {
     App::builder(AppConfig::read_config())

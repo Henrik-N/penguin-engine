@@ -1,5 +1,5 @@
-use ash::vk;
 use crate::renderer::vk_types::VkContext;
+use ash::vk;
 
 #[derive(Eq, PartialEq, Clone)]
 pub struct Pipeline {
@@ -15,13 +15,14 @@ impl std::ops::Deref for Pipeline {
     }
 }
 
-
 impl Pipeline {
     pub fn destroy(&mut self, context: &VkContext) {
         log::debug!("Pipeline gets destroyed!");
         unsafe {
             context.device.destroy_pipeline(self.handle, None);
-            context.device.destroy_pipeline_layout(self.pipeline_layout, None);
+            context
+                .device
+                .destroy_pipeline_layout(self.pipeline_layout, None);
         }
     }
 }

@@ -11,49 +11,31 @@ disabled = []
 
 
 # ----- Workspace ----- #
-[dependencies.penguin-app]
-git = "https://github.com/Henrik-N/penguin-app"
-features = ["time-plugin"]
+[dependencies]
+penguin-application = { version = "0.1", features = ["time-plugin"] }
 
-[dependencies.legion]
-version = "0.4.0"
+# ----- ECS ----- #
+legion = { version = "0.4.0" }
 
 # ----- Errors ----- #
-[dependencies.anyhow]
-version = "~1.0.51"
-features = ["backtrace"]
+anyhow = { version = "1.0", features = ["backtrace"] }
 
 # ----- Vulkan ----- #
-[dependencies.ash] # lightweight Vulkan wrapper / API bindings with type safety
-version = "0.33"
-[dependencies.ash-window] # interop library between ash and raw-window-handle (surface creation)
-version = "0.7.0"
+ash = { version = "0.33" } # lightweight Vulkan wrapper / API bindings with type safety
+ash-window = "0.7.0"# interop library between ash and raw-window-handle (surface creation)
 
 # ----- Shaders ----- #
-[dependencies.shaderc]  # shader compilation tools
-version = "0.7"
+shaderc = { version = "0.7" } # shader compilation tools
 
 # ----- Textures ----- #
-[dependencies.stb]
-version = "0.3.2"
-default-features = false
-features = ["stb_image"]
-
+stb = { version = "0.3.2", default-features = false, features = ["stb_image"] }
 
 # ----- Utility ----- #
-[dependencies.macaw] # math
-version = "0.15"
+macaw = { version = "0.15" } # math
+wavefront = "0.2.2" # mesh file loader
 
-[dependencies.wavefront] # mesh file loader
-version = "0.2.2"
-
-[dependencies.chrono] # time
-version = "0.4"
-
+chrono = { version = "0.4" } # time
 
 # ----- Logging ----- #
-[dependencies.log]
-version = "0.4"
-[dependencies.fern]
-version = "0.5"
-features = ["colored"]
+log = { version = "0.4" }
+fern = { version = "0.5", features = ["colored"] }

@@ -24,46 +24,72 @@ pub mod vk_formats {
 
     // f32
     impl VkFormat for f32 {
-        fn vk_format() -> vk::Format { vk::Format::R32_SFLOAT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32_SFLOAT
+        }
     }
     impl VkFormat for Vec2 {
-        fn vk_format() -> vk::Format { vk::Format::R32G32_SFLOAT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32G32_SFLOAT
+        }
     }
     impl VkFormat for Vec3 {
-        fn vk_format() -> vk::Format { vk::Format::R32G32B32_SFLOAT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32G32B32_SFLOAT
+        }
     }
     impl VkFormat for Vec3A {
-        fn vk_format() -> vk::Format { vk::Format::R32G32B32_SFLOAT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32G32B32_SFLOAT
+        }
     }
     impl VkFormat for Vec4 {
-        fn vk_format() -> vk::Format { vk::Format::R32G32B32A32_SFLOAT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32G32B32A32_SFLOAT
+        }
     }
 
     // i32
     impl VkFormat for i32 {
-        fn vk_format() -> vk::Format { vk::Format::R32_SINT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32_SINT
+        }
     }
     impl VkFormat for IVec2 {
-        fn vk_format() -> vk::Format { vk::Format::R32G32_SINT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32G32_SINT
+        }
     }
     impl VkFormat for IVec3 {
-        fn vk_format() -> vk::Format { vk::Format::R32G32B32_SINT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32G32B32_SINT
+        }
     }
     impl VkFormat for IVec4 {
-        fn vk_format() -> vk::Format { vk::Format::R32G32B32A32_SINT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32G32B32A32_SINT
+        }
     }
 
     // u32
     impl VkFormat for u32 {
-        fn vk_format() -> vk::Format { vk::Format::R32_UINT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32_UINT
+        }
     }
     impl VkFormat for UVec2 {
-        fn vk_format() -> vk::Format { vk::Format::R32G32_UINT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32G32_UINT
+        }
     }
     impl VkFormat for UVec3 {
-        fn vk_format() -> vk::Format { vk::Format::R32G32B32_UINT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32G32B32_UINT
+        }
     }
     impl VkFormat for UVec4 {
-        fn vk_format() -> vk::Format { vk::Format::R32G32B32A32_UINT }
+        fn vk_format() -> vk::Format {
+            vk::Format::R32G32B32A32_UINT
+        }
     }
 }
