@@ -29,6 +29,7 @@ impl<'a> PipelineBarrierBuilder<'a> {
         self
     }
 
+    #[allow(unused)]
     pub fn dependency_flags(mut self, flags: vk::DependencyFlags) -> Self {
         self.dependency_flags = flags;
         self

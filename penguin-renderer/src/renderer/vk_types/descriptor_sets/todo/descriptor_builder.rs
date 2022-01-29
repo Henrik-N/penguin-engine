@@ -17,8 +17,6 @@ impl DescriptorBuilderBindParams {
     }
 }
 
-
-
 //mod new {
 //    use ash::vk;
 //
@@ -87,7 +85,6 @@ impl DescriptorBuilderBindParams {
 //        }
 //    }
 //}
-
 
 //#[derive(Default)]
 //struct DescriptorBuilder<'a> {

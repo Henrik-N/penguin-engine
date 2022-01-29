@@ -1,18 +1,14 @@
 use crate::renderer::vk_types::{Swapchain, VkContext};
 use ash::vk;
 
+use crate::impl_deref;
+
 #[derive(Debug)]
 pub struct RenderPass {
     pub handle: vk::RenderPass,
     pub attachment_count: usize,
 }
-impl std::ops::Deref for RenderPass {
-    type Target = vk::RenderPass;
-
-    fn deref(&self) -> &Self::Target {
-        &self.handle
-    }
-}
+impl_deref!(RenderPass, handle, vk::RenderPass);
 
 impl RenderPass {
     pub fn destroy(&mut self, context: &VkContext) {

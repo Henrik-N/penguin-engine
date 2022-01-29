@@ -71,6 +71,7 @@ impl AllocatedImage {
         let mut staging_buffer = AllocatedBuffer::create_buffer(
             context,
             AllocatedBufferCreateInfo::<u8> {
+                initial_data: pixels.as_slice(),
                 buffer_size: size as _,
                 buffer_usage: vk::BufferUsageFlags::TRANSFER_SRC,
                 memory_usage: MemoryUsage::CpuMemGpuVisible,

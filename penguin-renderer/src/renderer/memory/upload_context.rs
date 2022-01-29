@@ -42,7 +42,7 @@ impl UploadContext {
         context.end_command_buffer(command_buffer);
 
         let command_buffers = [command_buffer];
-        let submit_info = vk::SubmitInfo::builder().command_buffers(&command_buffers);
+        let submit_info = vk::SubmitInfo::builder().command_buffers(&command_buffers).build();
 
         context.submit_to_graphics_queue(submit_info, self.upload_fence);
 

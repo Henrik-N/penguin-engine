@@ -1,6 +1,7 @@
 use crate::renderer::vk_types::VkContext;
 use ash::vk;
 
+#[derive(Clone)]
 pub struct FrameData {
     pub command_buffer: vk::CommandBuffer,
 
@@ -34,6 +35,7 @@ pub struct FrameDataContainer {
     pub frame_datas: Vec<FrameData>,
 }
 
+
 impl FrameDataContainer {
     pub fn new(command_pool: vk::CommandPool, frame_datas: Vec<FrameData>) -> Self {
         Self {
@@ -52,17 +54,9 @@ impl FrameDataContainer {
         self.frame_count
     }
 
-    pub fn update_current_to_next_frame(&mut self) {
-        self.increment_frame_count();
+    pub fn increment_frame(&mut self) {
+        self.frame_count = self.frame_count.overflowing_add(1).0;
         self.update_frame_index();
-    }
-
-    fn increment_frame_count(&mut self) {
-        if self.frame_count + 1 < usize::MAX {
-            self.frame_count += 1;
-        } else {
-            self.frame_count = 0;
-        }
     }
 
     fn update_frame_index(&mut self) {

@@ -13,8 +13,8 @@ pub struct Swapchain {
 impl Swapchain {
     pub fn acquire_next_swapchain_image(
         &self,
-        semaphore: vk::Semaphore,
-        fence: vk::Fence,
+        signal_semaphore: vk::Semaphore,
+        signal_fence: vk::Fence,
         timeout: std::time::Duration,
     ) -> u32 {
         log::trace!("Acquiring next swapchain image");
@@ -25,8 +25,8 @@ impl Swapchain {
                 self.handle,
                 // timeout 1 sec, specified in nanoseconds
                 timeout.as_nanos() as _,
-                semaphore,
-                fence,
+                signal_semaphore,
+                signal_fence,
             )
         }
         .expect("Couldn't acquire next swapchain image");

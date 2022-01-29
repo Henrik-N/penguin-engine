@@ -91,6 +91,8 @@ impl AllocatedBuffer {
 
         let size = (std::mem::size_of::<T>() * create_info.initial_data.len()) as _;
 
+        // only initialize device memory of initial data is set, otherwise this
+        //  is a CPU-only buffer
         if create_info.initial_data.len() > 0 {
             // memcpy
             device_memory.write_memory(

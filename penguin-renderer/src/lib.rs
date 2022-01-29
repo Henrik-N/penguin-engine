@@ -1,4 +1,3 @@
-//#![allow(unused)]
 
 mod config;
 pub mod math_vk_format;
@@ -6,3 +5,4 @@ pub mod math_vk_format;
 mod old;
 pub mod renderer;
 mod util;
+mod macros;

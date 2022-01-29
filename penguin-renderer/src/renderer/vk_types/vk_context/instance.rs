@@ -2,19 +2,13 @@
 use anyhow::*;
 use ash::vk;
 use std::ffi::{CStr, CString};
+use crate::impl_deref;
 
 pub struct Instance {
     pub(super) entry: ash::Entry,
     pub handle: ash::Instance,
 }
-
-impl std::ops::Deref for Instance {
-    type Target = ash::Instance;
-
-    fn deref(&self) -> &Self::Target {
-        &self.handle
-    }
-}
+impl_deref!(Instance, handle, ash::Instance);
 
 impl Instance {
     pub fn init(window: &penguin_app::window::Window) -> Result<Self> {

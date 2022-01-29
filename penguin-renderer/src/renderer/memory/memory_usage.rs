@@ -2,6 +2,8 @@ use ash::vk;
 
 // https://zeux.io/2020/02/27/writing-an-efficient-vulkan-renderer/
 
+
+/// Helper enum for abstracting VkMemoryPropertyFlags to their intended memory usage.
 #[derive(Eq, PartialEq, Clone, Copy)]
 pub enum MemoryUsage {
     /// GPU memory directly writable by from the CPU. For uniform & dynamic vertex/index and smaller data (generally up to 256MB).
@@ -15,7 +17,7 @@ pub enum MemoryUsage {
 }
 
 impl MemoryUsage {
-    /// Finds the best memory flags for the intended usage
+    /// Returns the best memory flags for the intended usage
     pub fn memory_property_flags(&self) -> vk::MemoryPropertyFlags {
         match self {
             MemoryUsage::GpuMemCpuWritable => {

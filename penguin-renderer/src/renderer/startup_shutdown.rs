@@ -4,7 +4,7 @@ use crate::renderer::gpu_data::{GPUCameraData, GPUObjectData};
 use crate::renderer::memory::{
     AllocatedBuffer, AllocatedBufferCreateInfo, MemoryUsage, UploadContext,
 };
-use crate::renderer::render_objects::{RenderObject, Texture, Vertex};
+use crate::renderer::render_objects::{RenderObject, Vertex};
 use crate::renderer::resources::{
     MaterialsResource, MeshesResource, RenderObjectsResource, TexturesResource,
 };
@@ -12,14 +12,39 @@ use crate::renderer::vk_types::descriptor_sets::DescriptorSetContainer;
 use crate::renderer::vk_types::resources::DescriptorSetsResource;
 use crate::renderer::vk_types::*;
 use ash::vk;
-use ash::vk::DescriptorSetLayoutBinding;
 use penguin_app::ecs::*;
 use penguin_app::window::Window;
-use stb::image::Channels::Default;
 
 use uniform_buffer::*;
 mod uniform_buffer {
     use super::*;
+
+    struct UniformBuffer<T> {
+
+        marker: std::marker::PhantomData<T>,
+    }
+    impl<T> UniformBuffer<T> {
+        fn create_descriptor_set(
+            context: &VkContext,
+            descriptor_pool: &DescriptorPool,
+            binding: u32,
+        ) -> DescriptorSet {
+            DescriptorSet::builder()
+                .layout(
+                    DescriptorSetLayout::builder()
+                        .layout_binding(
+                            vk::DescriptorSetLayoutBinding::builder()
+                                .descriptor_type(vk::DescriptorType::UNIFORM_BUFFER)
+                                .descriptor_count(1)
+                                .binding(binding)
+                                .stage_flags(vk::ShaderStageFlags::VERTEX),
+                        )
+                        .build(context),
+                )
+                .build(context, descriptor_pool)
+                .expect("couldn't alloc uniform buffer set")
+        }
+    }
 
     pub fn uniform_buffer_desc_set(context: &VkContext, pool: &DescriptorPool) -> DescriptorSet {
         DescriptorSet::builder()
@@ -38,14 +63,14 @@ mod uniform_buffer {
             .expect("couldn't alloc uniform buffer set")
     }
 
-    pub fn update_ubuffer_desc_info(
-        context: &VkContext,
-        desc_buffer_info: &mut vk::DescriptorBufferInfo,
-        frame_index: usize,
-    ) {
-        desc_buffer_info.offset =
-            (context.packed_uniform_buffer_range::<GPUCameraData>() * (frame_index as u64)) as _;
-    }
+    //pub fn update_ubuffer_desc_info(
+    //    context: &VkContext,
+    //    desc_buffer_info: &mut vk::DescriptorBufferInfo,
+    //    frame_index: usize,
+    //) {
+    //    desc_buffer_info.offset =
+    //        (context.packed_uniform_buffer_range::<GPUCameraData>() * (frame_index as u64)) as _;
+    //}
 
     pub fn uniform_buffer_write_set(
         resource: &DescriptorSetsResource,
@@ -265,7 +290,7 @@ pub fn renderer_startup(
     let pipeline = textured_pipeline(&context, &swapchain, &render_pass, &pipeline_layout);
 
     ////////////////////////////////////////////
-    let (uniform_buffer, mut uniform_desc_buffer_info) = uniform_buffer(&context);
+    let (uniform_buffer, uniform_desc_buffer_info) = uniform_buffer(&context);
 
     let uniform_buffer_descriptor_set_container = DescriptorSetContainer {
         set: uniform_buffer_desc_set.clone(),

@@ -2,17 +2,13 @@ use crate::renderer::vk_types::Instance;
 use anyhow::*;
 use ash::vk;
 
+use crate::impl_deref;
+
 pub struct Surface {
     pub handle: vk::SurfaceKHR,
     pub loader: ash::extensions::khr::Surface,
 }
-impl std::ops::Deref for Surface {
-    type Target = vk::SurfaceKHR;
-
-    fn deref(&self) -> &Self::Target {
-        &self.handle
-    }
-}
+impl_deref!(Surface, handle, vk::SurfaceKHR);
 
 impl Surface {
     pub(crate) fn init(instance: &Instance, window: &penguin_app::window::Window) -> Result<Self> {

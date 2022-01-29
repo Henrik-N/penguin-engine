@@ -1,54 +1,85 @@
 use crate::renderer::vk_types::{
-DescriptorPool, DescriptorSet, DescriptorSetLayout, DescriptorSetLayoutBuilder, VkContext,
+    DescriptorPool, DescriptorSetLayout, VkContext,
 };
-use anyhow::*;
 use ash::prelude::VkResult;
 use ash::vk;
-use stb::image::Channels;
+
+
+/// Caches VKDescriptorLayouts to avoid creating a bunch of duplicates
+struct DescriptorLayoutCache {
+
+}
 
 
 
-type PoolMaxDescriptorSetCount = usize;
-const POOL_SIZES: (PoolMaxDescriptorSetCount, [(vk::DescriptorPoolSize); 3]) = (
-    30,
-    [
-        vk::DescriptorPoolSize {
-            ty: vk::DescriptorType::UNIFORM_BUFFER,
-            descriptor_count: 10,
-        },
-        vk::DescriptorPoolSize {
-            ty: vk::DescriptorType::STORAGE_BUFFER,
-            descriptor_count: 10,
-        },
-        vk::DescriptorPoolSize {
-            ty: vk::DescriptorType::COMBINED_IMAGE_SAMPLER,
-            descriptor_count: 10,
-        },
-    ],
-);
-
+/// Allocator for descriptor sets.
+///
+///     Keeps an amount of VkDescriptorPools for allocating VkDescriptorSets.
+///     Reuses pools if possible and recreates pools if necessary.
 #[derive(Default)]
 pub struct DescriptorAllocator {
+    ///
     current_pool: Option<DescriptorPool>,
-    used_pools: Vec<DescriptorPool>,
+    /// pools with allocated descriptor sets
+    pools_allocated: Vec<DescriptorPool>,
+    /// available, created but reset pools
     free_pools: Vec<DescriptorPool>,
 }
+impl DescriptorAllocator {
+    /// For each 0..descriptor_count to allocate per pool, multiply descriptor_count with with the
+    ///     corresponding multiplier.
+    const POOL_DESCRIPTOR_MULTIPLIERS: [(vk::DescriptorType, f32); 3] = [
+        (vk::DescriptorType::UNIFORM_BUFFER, 2.),
+        (vk::DescriptorType::STORAGE_BUFFER, 2.),
+        (vk::DescriptorType::COMBINED_IMAGE_SAMPLER, 2.),
+    ];
+
+
+    //const POOL_DESCRIPTOR_MULTIPLIERS: (usize, [vk::DescriptorPoolSize; 3]) = (
+    //    30, // total descriptor count
+    //    [
+    //        vk::DescriptorPoolSize {
+    //            ty: vk::DescriptorType::UNIFORM_BUFFER,
+    //            descriptor_count: 10,
+    //        },
+    //        vk::DescriptorPoolSize {
+    //            ty: vk::DescriptorType::STORAGE_BUFFER,
+    //            descriptor_count: 10,
+    //        },
+    //        vk::DescriptorPoolSize {
+    //            ty: vk::DescriptorType::COMBINED_IMAGE_SAMPLER,
+    //            descriptor_count: 10,
+    //        },
+    //    ],
+    //);
+}
+
+
 impl DescriptorAllocator {
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Destroy all pools
     pub fn destroy_pools(&self, context: &VkContext) {
         self.free_pools
             .iter()
             .for_each(|pool| pool.destroy(context));
-        self.used_pools
+        self.pools_allocated
             .iter()
             .for_each(|pool| pool.destroy(context));
     }
 
-    fn take_pool(&mut self, context: &VkContext) -> DescriptorPool {
+
+    /// Clears up all allocated pools.
+    pub fn reset(&mut self) {
+        self.free_pools.extend(self.pools_allocated.iter());
+        self.pools_allocated.clear();
+        self.current_pool = None;
+    }
+
+
+
+    fn take_pool(&mut self) -> DescriptorPool {
         let new_pool = if let Some(pool) = self.free_pools.pop() {
             pool
         } else {
@@ -60,7 +91,7 @@ impl DescriptorAllocator {
             //    vk::DescriptorPoolCreateFlags::empty(),
             //)
         };
-        self.used_pools.push(new_pool);
+        self.pools_allocated.push(new_pool);
         new_pool
     }
 
@@ -75,7 +106,7 @@ impl DescriptorAllocator {
                 pool
             } else {
                 // if no current pool, get a new one
-                let new_pool = self.take_pool(context);
+                let new_pool = self.take_pool();
                 self.current_pool = Some(new_pool);
                 new_pool
             }
@@ -87,16 +118,18 @@ impl DescriptorAllocator {
             VkResult::Ok(allocated_set) => allocated_set,
             // if memory error, try allocating a new pool
             VkResult::Err(err)
-            if err == vk::Result::ERROR_FRAGMENTED_POOL || err == vk::Result::ERROR_OUT_OF_POOL_MEMORY =>
-                {
-                    let desc_pool = self.take_pool(context);
+                if err == vk::Result::ERROR_FRAGMENTED_POOL
+                    || err == vk::Result::ERROR_OUT_OF_POOL_MEMORY =>
+            {
+                let desc_pool = self.take_pool();
 
-                    context
-                        .alloc_descriptor_set(desc_pool, layout.handle)
-                        .expect("descriptor set allocator received a bad pool even after retry,\
-                            this shouldn't be able to happen")
-
-                }
+                context
+                    .alloc_descriptor_set(desc_pool, layout.handle)
+                    .expect(
+                        "descriptor set allocator received a bad pool even after retry,\
+                            this shouldn't be able to happen",
+                    )
+            }
             // if any other error, print it and panic
             VkResult::Err(err) => {
                 let err_msg = format!("unknown error {:?}", err);
@@ -107,13 +140,6 @@ impl DescriptorAllocator {
 
         allocated_set
     }
-
-    pub fn reset_used_pools(&mut self) {
-        self.free_pools.extend(self.used_pools.iter());
-        self.used_pools.clear();
-        self.current_pool = None;
-    }
-
 }
 
 //pub struct PoolSizes {

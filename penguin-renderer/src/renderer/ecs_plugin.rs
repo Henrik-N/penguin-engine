@@ -2,11 +2,7 @@ use penguin_app::ecs::*;
 
 use crate::renderer::resources::TexturesResource;
 use crate::renderer::vk_types::resource::DescriptorSetsResource;
-use crate::renderer::{
-    render_loop,
-    resources::{MaterialsResource, MeshesResource, RenderObjectsResource},
-    startup_shutdown,
-};
+use crate::renderer::{render_loop, resources::{MaterialsResource, MeshesResource, RenderObjectsResource}, startup_shutdown};
 
 pub struct RendererPlugin;
 
@@ -38,4 +34,3 @@ impl Plugin for RendererPlugin {
             .into_vec()
     }
 }
-

@@ -2,18 +2,13 @@ use crate::renderer::vk_types::vk_context::instance::Instance;
 use crate::renderer::vk_types::Surface;
 use anyhow::*;
 use ash::vk;
+use crate::impl_deref;
 
 pub struct PhysicalDevice {
     pub handle: vk::PhysicalDevice,
     pub graphics_queue_index: u32,
 }
-impl std::ops::Deref for PhysicalDevice {
-    type Target = vk::PhysicalDevice;
-
-    fn deref(&self) -> &Self::Target {
-        &self.handle
-    }
-}
+impl_deref!(PhysicalDevice, handle, vk::PhysicalDevice);
 
 impl PhysicalDevice {
     pub(crate) fn init(instance: &Instance, surface: &Surface) -> Result<Self> {

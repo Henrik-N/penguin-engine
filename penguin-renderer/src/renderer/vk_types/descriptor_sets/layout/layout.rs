@@ -1,18 +1,14 @@
-use crate::renderer::vk_types::{DescriptorSet, VkContext};
+use crate::renderer::vk_types::VkContext;
 use ash::vk;
 use std::hash::Hasher;
+use crate::impl_deref;
 
 #[derive(Default, Clone, Copy)]
 pub struct DescriptorSetLayout {
     pub handle: vk::DescriptorSetLayout,
 }
-impl std::ops::Deref for DescriptorSetLayout {
-    type Target = vk::DescriptorSetLayout;
+impl_deref!(DescriptorSetLayout, handle, vk::DescriptorSetLayout);
 
-    fn deref(&self) -> &Self::Target {
-        &self.handle
-    }
-}
 impl DescriptorSetLayout {
     pub fn builder() -> DescriptorSetLayoutBuilder {
         DescriptorSetLayoutBuilder::builder()
@@ -31,12 +27,8 @@ impl DescriptorSetLayout {
 struct DescriptorSetLayoutBinding {
     handle: vk::DescriptorSetLayoutBinding,
 }
-impl std::ops::Deref for DescriptorSetLayoutBinding {
-    type Target = vk::DescriptorSetLayoutBinding;
-    fn deref(&self) -> &Self::Target {
-        &self.handle
-    }
-}
+impl_deref!(DescriptorSetLayoutBinding, handle, vk::DescriptorSetLayoutBinding);
+
 impl std::hash::Hash for DescriptorSetLayoutBinding {
     fn hash<H: Hasher>(&self, state: &mut H) {
         state.write_u32(self.binding);

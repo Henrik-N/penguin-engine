@@ -1,4 +1,4 @@
-use crate::renderer::vk_types::{DescriptorSetContainer, Pipeline, VkContext};
+use crate::renderer::vk_types::{Pipeline, VkContext};
 use ash::vk;
 
 #[derive(Clone)]

@@ -1,17 +1,13 @@
 use crate::renderer::vk_types::{Instance, PhysicalDevice};
 use ash::vk;
 
+use crate::impl_deref;
+
 pub struct Device {
     pub handle: ash::Device,
     pub graphics_queue_handle: vk::Queue,
 }
-impl std::ops::Deref for Device {
-    type Target = ash::Device;
-
-    fn deref(&self) -> &Self::Target {
-        &self.handle
-    }
-}
+impl_deref!(Device, handle, ash::Device);
 
 impl super::Device {
     pub(crate) fn init(instance: &Instance, physical_device: &PhysicalDevice) -> Self {

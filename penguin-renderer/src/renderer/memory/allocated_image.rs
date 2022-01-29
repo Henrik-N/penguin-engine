@@ -1,9 +1,8 @@
 use crate::renderer::memory;
 use crate::renderer::memory::device_memory::DeviceMemory;
 use crate::renderer::memory::{
-    AllocatedBuffer, AllocatedBufferCreateInfo, MemoryUsage, UploadContext,
+    MemoryUsage, UploadContext,
 };
-use crate::renderer::sync::PipelineBarrierBuilder;
 use crate::renderer::vk_types::VkContext;
 use ash::vk;
 
@@ -50,12 +49,12 @@ impl AllocatedImage {
         )
         .expect("Couldn't find suitable memory index for image");
 
-        let depth_image_allocate_info = vk::MemoryAllocateInfo::builder()
+        let image_allocate_info = vk::MemoryAllocateInfo::builder()
             .allocation_size(image_memory_requirements.size)
             .memory_type_index(image_memory_index);
 
         // allocate memory
-        let memory = context.alloc_memory(&depth_image_allocate_info);
+        let memory = context.alloc_memory(&image_allocate_info);
 
         context.bind_image_memory(image, memory);
 

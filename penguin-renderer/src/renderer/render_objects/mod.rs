@@ -11,4 +11,7 @@ mod vertex;
 pub use vertex::*;
 
 mod texture;
+mod transform;
+mod voxel;
+
 pub use texture::*;

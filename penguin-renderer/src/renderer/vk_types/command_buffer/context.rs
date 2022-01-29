@@ -52,8 +52,8 @@ impl VkContext {
         }
     }
 
-    pub fn submit_to_graphics_queue(&self, submit_info: vk::SubmitInfoBuilder, fence: vk::Fence) {
-        let submit_info = [submit_info.build()];
+    pub fn submit_to_graphics_queue(&self, submit_info: vk::SubmitInfo, fence: vk::Fence) {
+        let submit_info = [submit_info];
 
         unsafe {
             // the render fence will block until the graphics commands finish execution

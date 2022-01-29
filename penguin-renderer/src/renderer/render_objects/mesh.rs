@@ -5,7 +5,6 @@ use crate::renderer::memory::{
 use crate::renderer::render_objects::Vertex;
 use crate::renderer::vk_types::VkContext;
 use ash::vk;
-use std::any::Any;
 
 const MESHES_FOLDER_PATH: &str = "penguin-renderer/assets/meshes/";
 
@@ -139,8 +138,4 @@ impl Mesh {
 
         (verts, verts_count)
     }
-}
-
-fn vec3_from_f32_arr(arr: [f32; 3]) -> Vec3 {
-    Vec3::new(arr[0], arr[1], arr[2])
 }

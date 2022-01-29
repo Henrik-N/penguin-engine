@@ -22,6 +22,7 @@ pub use pipeline::*;
 mod render_pass;
 pub use render_pass::*;
 
+pub use resources::*;
 pub mod resources {
     pub use super::descriptor_sets::resource::*;
 }
