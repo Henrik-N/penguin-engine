@@ -11,4 +11,4 @@ lot of new things, like if an ECS-library would fit into a renderer, and because
 feature complete with MSVC, I've decided to use some of the concepts I've learned in this project on a clean slate using C++20. Doing that is forcing me not to simply
 reuse any code from this project. Several of the new features in C++20 are also very similar to features in Rust, and I think learning how to take advantage of them
 is going to benefit my knowledge in both languages. 
-After having built up a better ground structure in the C++ project, and with less dependencies, I am going to come back to this project and improve this as well.
+As I rebuild a better ground structure in the C++ project, and one with less dependencies, I'll push those changes into this repo as well. 
